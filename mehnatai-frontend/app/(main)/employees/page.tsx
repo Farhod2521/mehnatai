@@ -1,15 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Search, Filter, ArrowUpDown, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import CircularProgress from "@/components/CircularProgress";
 import StatusBadge from "@/components/StatusBadge";
-import { employees, EmployeeStatus } from "@/lib/mockData";
+import { employeesApi, type Employee } from "@/lib/api";
 
 const ITEMS_PER_PAGE = 8;
-const departments = ["Hammasi", "IT bo'limi", "HR bo'limi", "Sotuv bo'limi", "Marketing"];
-const statuses: (EmployeeStatus | "Hammasi")[] = ["Hammasi", "YUQORI", "O'RTA", "RIVOJLANISH KERAK"];
+
+const STATUS_MAP: Record<string, string> = {
+  yuqori: "YUQORI",
+  orta: "O'RTA",
+  rivojlanish: "RIVOJLANISH KERAK",
+};
 
 const S = {
   card: {
@@ -28,101 +32,99 @@ const S = {
     background: "#FAFAFA",
     borderBottom: "1px solid #E5E7EB",
   },
-  td: {
-    padding: "14px 20px",
-    fontSize: "13.5px",
-    color: "#374151",
-  },
+  td: { padding: "14px 20px", fontSize: "13.5px", color: "#374151" },
 };
+
+function Skeleton() {
+  return (
+    <tr>
+      {Array(6).fill(0).map((_, i) => (
+        <td key={i} style={S.td}>
+          <div style={{
+            height: 20, borderRadius: 6,
+            background: "linear-gradient(90deg,#F3F4F6 25%,#E9EAEC 50%,#F3F4F6 75%)",
+            backgroundSize: "200% 100%", animation: "shimmer 1.4s infinite",
+          }} />
+        </td>
+      ))}
+    </tr>
+  );
+}
 
 export default function EmployeesPage() {
   const [search, setSearch] = useState("");
-  const [dept, setDept] = useState("Hammasi");
-  const [status, setStatus] = useState<EmployeeStatus | "Hammasi">("Hammasi");
+  const [dept, setDept] = useState("");
+  const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
-  const [sortBy, setSortBy] = useState<"name" | "score">("name");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [showFilters, setShowFilters] = useState(false);
 
-  const filtered = useMemo(() => {
-    let list = [...employees];
-    if (search) {
-      const q = search.toLowerCase();
-      list = list.filter(e => e.name.toLowerCase().includes(q) || e.position.toLowerCase().includes(q));
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  const fetchEmployees = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await employeesApi.list({
+        page,
+        page_size: ITEMS_PER_PAGE,
+        search: search || undefined,
+        department: dept || undefined,
+        status: status || undefined,
+      });
+      setEmployees(data.items);
+      setTotal(data.total);
+      setTotalPages(data.total_pages);
+    } catch {
+      setEmployees([]);
+    } finally {
+      setLoading(false);
     }
-    if (dept !== "Hammasi") list = list.filter(e => e.department === dept);
-    if (status !== "Hammasi") list = list.filter(e => e.status === status);
-    list.sort((a, b) => {
-      if (sortBy === "score") return sortDir === "asc" ? a.score - b.score : b.score - a.score;
-      return sortDir === "asc" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-    });
-    return list;
-  }, [search, dept, status, sortBy, sortDir]);
+  }, [page, search, dept, status]);
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  useEffect(() => {
+    const timer = setTimeout(fetchEmployees, search ? 400 : 0);
+    return () => clearTimeout(timer);
+  }, [fetchEmployees, search]);
 
-  const toggleSort = (field: "name" | "score") => {
-    if (sortBy === field) setSortDir(d => d === "asc" ? "desc" : "asc");
-    else { setSortBy(field); setSortDir("asc"); }
+  const handleSearch = (val: string) => {
+    setSearch(val);
     setPage(1);
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <style>{`@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`}</style>
 
-      {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
           <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#111827" }}>Xodimlar ro'yxati</h1>
           <p style={{ fontSize: "13px", color: "#6B7280", marginTop: "3px" }}>
-            Kompaniyaning jami {employees.length} ta faol xodimi mavjud
+            Jami {total} ta faol xodim
           </p>
         </div>
-        <div style={{ display: "flex", gap: "8px" }}>
-          <button
-            onClick={() => setShowFilters(s => !s)}
-            style={{
-              display: "flex", alignItems: "center", gap: "6px",
-              padding: "9px 16px", borderRadius: "10px", border: "1px solid #E5E7EB",
-              background: showFilters ? "#F0F2F5" : "#fff", color: "#6B7280",
-              fontSize: "13px", fontWeight: 500, cursor: "pointer",
-            }}
-          >
-            <Filter size={14} /> Filtrlar
-          </button>
-          <button
-            style={{
-              display: "flex", alignItems: "center", gap: "6px",
-              padding: "9px 16px", borderRadius: "10px", border: "1px solid #E5E7EB",
-              background: "#fff", color: "#6B7280", fontSize: "13px", fontWeight: 500, cursor: "pointer",
-            }}
-            onClick={() => toggleSort(sortBy === "name" ? "score" : "name")}
-          >
-            <ArrowUpDown size={14} /> Saralash
-          </button>
-          <button
-            style={{
-              display: "flex", alignItems: "center", gap: "6px",
-              padding: "9px 16px", borderRadius: "10px", border: "none",
-              background: "linear-gradient(135deg, #00B8A0, #009984)",
-              color: "white", fontSize: "13px", fontWeight: 600, cursor: "pointer",
-              boxShadow: "0 4px 12px rgba(0,184,160,0.3)",
-            }}
-          >
-            <Download size={14} /> Hisobot (PDF)
-          </button>
-        </div>
+        <button
+          onClick={() => setShowFilters(s => !s)}
+          style={{
+            display: "flex", alignItems: "center", gap: "6px",
+            padding: "9px 16px", borderRadius: "10px", border: "1px solid #E5E7EB",
+            background: showFilters ? "#F0F2F5" : "#fff", color: "#6B7280",
+            fontSize: "13px", fontWeight: 500, cursor: "pointer",
+          }}
+        >
+          <Filter size={14} /> Filtrlar
+        </button>
       </div>
 
-      {/* Search + filter bar */}
+      {/* Search + filters */}
       <div style={{ ...S.card, padding: "16px" }}>
         <div style={{ position: "relative" }}>
           <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF" }} />
           <input
             type="text"
             value={search}
-            onChange={e => { setSearch(e.target.value); setPage(1); }}
+            onChange={e => handleSearch(e.target.value)}
             placeholder="Xodimlarni qidirish (ism, lavozim)..."
             style={{
               width: "100%", paddingLeft: "36px", paddingRight: "16px",
@@ -136,24 +138,40 @@ export default function EmployeesPage() {
 
         {showFilters && (
           <div style={{ display: "flex", gap: "12px", marginTop: "12px", flexWrap: "wrap" }}>
-            {[
-              { label: "Bo'lim", value: dept, options: departments, onChange: (v: string) => { setDept(v); setPage(1); } },
-              { label: "Status", value: status, options: statuses, onChange: (v: string) => { setStatus(v as EmployeeStatus | "Hammasi"); setPage(1); } },
-            ].map(({ label, value, options, onChange }) => (
-              <div key={label}>
-                <div style={{ fontSize: "11px", fontWeight: 600, color: "#9CA3AF", marginBottom: "5px" }}>{label}</div>
-                <select
-                  value={value}
-                  onChange={e => onChange(e.target.value)}
-                  style={{
-                    padding: "7px 12px", fontSize: "13px", borderRadius: "8px",
-                    border: "1px solid #E5E7EB", color: "#374151", background: "#fff", outline: "none",
-                  }}
-                >
-                  {options.map(o => <option key={o}>{o}</option>)}
-                </select>
-              </div>
-            ))}
+            <div>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "#9CA3AF", marginBottom: "5px" }}>BO'LIM</div>
+              <select
+                value={dept}
+                onChange={e => { setDept(e.target.value); setPage(1); }}
+                style={{ padding: "7px 12px", fontSize: "13px", borderRadius: "8px", border: "1px solid #E5E7EB", color: "#374151", background: "#fff", outline: "none" }}
+              >
+                <option value="">Hammasi</option>
+                <option value="IT">IT</option>
+                <option value="HR">HR</option>
+                <option value="Sotuv">Sotuv</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Moliya">Moliya</option>
+              </select>
+            </div>
+            <div>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "#9CA3AF", marginBottom: "5px" }}>STATUS</div>
+              <select
+                value={status}
+                onChange={e => { setStatus(e.target.value); setPage(1); }}
+                style={{ padding: "7px 12px", fontSize: "13px", borderRadius: "8px", border: "1px solid #E5E7EB", color: "#374151", background: "#fff", outline: "none" }}
+              >
+                <option value="">Hammasi</option>
+                <option value="yuqori">YUQORI</option>
+                <option value="orta">O'RTA</option>
+                <option value="rivojlanish">RIVOJLANISH KERAK</option>
+              </select>
+            </div>
+            <button
+              onClick={() => { setDept(""); setStatus(""); setSearch(""); setPage(1); }}
+              style={{ alignSelf: "flex-end", padding: "7px 14px", borderRadius: "8px", border: "1px solid #E5E7EB", background: "#fff", color: "#EF4444", fontSize: "13px", cursor: "pointer" }}
+            >
+              Tozalash
+            </button>
           </div>
         )}
       </div>
@@ -163,115 +181,98 @@ export default function EmployeesPage() {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr>
-              <th style={S.th}>
-                <button onClick={() => toggleSort("name")} style={{ display: "flex", alignItems: "center", gap: "4px", background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", fontSize: "11px", fontWeight: 700 }}>
-                  XODIM <ArrowUpDown size={11} />
-                </button>
-              </th>
+              <th style={S.th}><div style={{ display: "flex", alignItems: "center", gap: 4 }}>XODIM <ArrowUpDown size={11} /></div></th>
               <th style={S.th}>LAVOZIMI</th>
               <th style={S.th}>BO'LIM</th>
               <th style={S.th}>STATUS</th>
-              <th style={S.th}>
-                <button onClick={() => toggleSort("score")} style={{ display: "flex", alignItems: "center", gap: "4px", background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", fontSize: "11px", fontWeight: 700 }}>
-                  SAMARADORLIK <ArrowUpDown size={11} />
-                </button>
-              </th>
+              <th style={S.th}>SAMARADORLIK</th>
               <th style={S.th}>AMALLAR</th>
             </tr>
           </thead>
           <tbody>
-            {paginated.map((emp, i) => (
-              <tr
-                key={emp.id}
-                style={{
-                  borderBottom: i < paginated.length - 1 ? "1px solid #F3F4F6" : "none",
-                  transition: "background 0.1s",
-                }}
-                onMouseEnter={e => (e.currentTarget.style.background = "#FAFAFA")}
-                onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-              >
-                <td style={S.td}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <div style={{
-                      width: "40px", height: "40px", borderRadius: "50%", flexShrink: 0,
-                      background: "linear-gradient(135deg, #00B8A0, #009984)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      color: "white", fontSize: "13px", fontWeight: 700,
-                    }}>
-                      {emp.initials}
-                    </div>
-                    <div>
-                      <div style={{ fontSize: "13.5px", fontWeight: 600, color: "#111827" }}>{emp.name}</div>
-                      <div style={{ fontSize: "11.5px", color: "#9CA3AF", marginTop: "1px" }}>{emp.experience} tajriba</div>
-                    </div>
-                  </div>
-                </td>
-                <td style={S.td}>{emp.position}</td>
-                <td style={S.td}>{emp.department}</td>
-                <td style={S.td}>
-                  <StatusBadge status={emp.status} />
-                </td>
-                <td style={S.td}>
-                  <CircularProgress value={emp.score} size={44} strokeWidth={3.5} color="auto" textSize="text-[10px]" />
-                </td>
-                <td style={S.td}>
-                  <Link
-                    href={`/employees/${emp.id}`}
-                    style={{
-                      display: "inline-flex", alignItems: "center", gap: "4px",
-                      fontSize: "13px", fontWeight: 600, color: "#00B8A0", textDecoration: "none",
-                    }}
+            {loading
+              ? Array(ITEMS_PER_PAGE).fill(0).map((_, i) => <Skeleton key={i} />)
+              : employees.map((emp, i) => (
+                  <tr
+                    key={emp.id}
+                    style={{ borderBottom: i < employees.length - 1 ? "1px solid #F3F4F6" : "none" }}
+                    onMouseEnter={e => (e.currentTarget.style.background = "#FAFAFA")}
+                    onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                   >
-                    Ko'rish <ChevronRight size={14} />
-                  </Link>
-                </td>
-              </tr>
-            ))}
+                    <td style={S.td}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <div style={{
+                          width: "40px", height: "40px", borderRadius: "50%", flexShrink: 0,
+                          background: "linear-gradient(135deg, #00B8A0, #009984)",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          color: "white", fontSize: "13px", fontWeight: 700,
+                        }}>
+                          {emp.avatar_initials}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: "13.5px", fontWeight: 600, color: "#111827" }}>
+                            {emp.first_name} {emp.last_name}
+                          </div>
+                          <div style={{ fontSize: "11.5px", color: "#9CA3AF", marginTop: "1px" }}>
+                            {emp.experience_years} yil tajriba
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style={S.td}>{emp.position}</td>
+                    <td style={S.td}>{emp.department}</td>
+                    <td style={S.td}>
+                      <StatusBadge status={STATUS_MAP[emp.status] as "YUQORI" | "O'RTA" | "RIVOJLANISH KERAK"} />
+                    </td>
+                    <td style={S.td}>
+                      <CircularProgress value={emp.usi_score} size={44} strokeWidth={3.5} color="auto" textSize="text-[10px]" />
+                    </td>
+                    <td style={S.td}>
+                      <Link
+                        href={`/employees/${emp.id}`}
+                        style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: 600, color: "#00B8A0", textDecoration: "none" }}
+                      >
+                        Ko'rish <ChevronRight size={14} />
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+            }
           </tbody>
         </table>
 
         {/* Pagination */}
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-          padding: "14px 20px", borderTop: "1px solid #F3F4F6",
-        }}>
+        {!loading && employees.length === 0 && (
+          <div style={{ padding: "40px", textAlign: "center", color: "#9CA3AF", fontSize: "14px" }}>
+            Xodimlar topilmadi
+          </div>
+        )}
+
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 20px", borderTop: "1px solid #F3F4F6" }}>
           <span style={{ fontSize: "12.5px", color: "#9CA3AF" }}>
-            {filtered.length} ta natijadan {(page - 1) * ITEMS_PER_PAGE + 1}–{Math.min(page * ITEMS_PER_PAGE, filtered.length)} ko'rsatilmoqda
+            {total} ta natijadan {(page - 1) * ITEMS_PER_PAGE + 1}–{Math.min(page * ITEMS_PER_PAGE, total)} ko'rsatilmoqda
           </span>
           <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
             <button
-              onClick={() => setPage(p => Math.max(1, p - 1))}
-              disabled={page === 1}
+              onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
               style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1px solid #E5E7EB", background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: page === 1 ? 0.4 : 1 }}
             >
               <ChevronLeft size={15} color="#6B7280" />
             </button>
             {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map(p => (
-              <button
-                key={p}
-                onClick={() => setPage(p)}
-                style={{
-                  width: "32px", height: "32px", borderRadius: "8px", fontSize: "13px", fontWeight: 500,
-                  border: "none", cursor: "pointer", transition: "all 0.15s",
-                  background: page === p ? "#00B8A0" : "transparent",
-                  color: page === p ? "#fff" : "#6B7280",
-                }}
-              >
+              <button key={p} onClick={() => setPage(p)} style={{ width: "32px", height: "32px", borderRadius: "8px", fontSize: "13px", fontWeight: 500, border: "none", cursor: "pointer", background: page === p ? "#00B8A0" : "transparent", color: page === p ? "#fff" : "#6B7280" }}>
                 {p}
               </button>
             ))}
             {totalPages > 5 && (
               <>
                 <span style={{ color: "#9CA3AF", fontSize: "13px" }}>...</span>
-                <button onClick={() => setPage(totalPages)} style={{ width: "32px", height: "32px", borderRadius: "8px", border: "none", background: "transparent", cursor: "pointer", color: "#6B7280", fontSize: "13px" }}>
-                  {totalPages}
-                </button>
+                <button onClick={() => setPage(totalPages)} style={{ width: "32px", height: "32px", borderRadius: "8px", border: "none", background: "transparent", cursor: "pointer", color: "#6B7280", fontSize: "13px" }}>{totalPages}</button>
               </>
             )}
             <button
-              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1px solid #E5E7EB", background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: page === totalPages ? 0.4 : 1 }}
+              onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
+              style={{ width: "32px", height: "32px", borderRadius: "8px", border: "1px solid #E5E7EB", background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: page >= totalPages ? 0.4 : 1 }}
             >
               <ChevronRight size={15} color="#6B7280" />
             </button>

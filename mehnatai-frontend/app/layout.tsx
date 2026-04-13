@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "MehnatAI — Xodimlar samaradorligi baholash tizimi",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="uz" className="h-full">
-      <body className="h-full">{children}</body>
+      <body className="h-full">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

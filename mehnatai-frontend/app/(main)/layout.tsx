@@ -1,8 +1,26 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import RobotAssistant from "@/components/RobotAssistant";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
+  const { role } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (role === null) {
+      router.push("/login");
+    } else if (role === "xodim") {
+      router.push("/xodim");
+    }
+  }, [role, router]);
+
+  if (role !== "rahbar" && role !== "hr") return null;
+
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "#F0F2F5" }}>
       <Sidebar />

@@ -1,0 +1,79 @@
+version: "3.9"
+
+services:
+  # ─── PostgreSQL Database ───────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: mehnatai_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mehnatai
+      POSTGRES_PASSWORD: mehnatai_secret
+      POSTGRES_DB: mehnatai_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mehnatai -d mehnatai_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── FastAPI Backend ───────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./mehnatai-backend
+      dockerfile: Dockerfile
+    container_name: mehnatai_backend
+    restart: unless-stopped
+    env_file: ./mehnatai-backend/.env
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./mehnatai-backend:/app
+    command: >
+      sh -c "
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+  # ─── Next.js Frontend ─────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./mehnatai-frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+    container_name: mehnatai_frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  # ─── pgAdmin (optional, for DB management) ────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: mehnatai_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mehnatai.uz
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    profiles:
+      - tools
+
+volumes:
+  postgres_data:
+    driver: local
