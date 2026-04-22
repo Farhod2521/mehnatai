@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import {
   CheckCircle2, Circle, ChevronRight, ChevronDown,
-  Plus, Clock, AlertCircle, TrendingUp, Star, Target,
+  Clock, AlertCircle, TrendingUp, Star, Target,
   CalendarDays, Flame,
 } from "lucide-react";
 import CircularProgress from "@/components/CircularProgress";
@@ -287,18 +287,6 @@ export default function XodimDashboard() {
                   {f === "all" ? "Barchasi" : f === "pending" ? "Kutmoqda" : "Bajarilgan"}
                 </button>
               ))}
-              <button
-                onClick={async () => {
-                  if (!empId) return;
-                  const title = prompt("Yangi vazifa nomi:");
-                  if (!title?.trim()) return;
-                  const t = await tasksApi.create({ employee_id: empId, title: title.trim(), priority: "medium" });
-                  setTasks(prev => [...prev, t]);
-                }}
-                style={{ display: "flex", alignItems: "center", gap: "5px", padding: "6px 12px", borderRadius: "8px", background: "linear-gradient(135deg,#6366F1,#4F46E5)", border: "none", color: "white", fontSize: "12px", fontWeight: 600, cursor: "pointer" }}
-              >
-                <Plus size={13} /> Qo'shish
-              </button>
             </div>
           </div>
 

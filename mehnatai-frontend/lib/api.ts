@@ -178,6 +178,18 @@ export interface PaginatedEmployees {
   total_pages: number;
 }
 
+export interface EmployeeCreate {
+  first_name: string;
+  last_name: string;
+  position: string;
+  department: string;
+  experience_years?: number;
+  email?: string;
+  phone?: string;
+  hired_date?: string;
+  bio?: string;
+}
+
 export const employeesApi = {
   list: (params: {
     page?: number;
@@ -197,11 +209,16 @@ export const employeesApi = {
 
   get: (id: number) => apiFetch<Employee>(`/employees/${id}`),
 
-  update: (id: number, data: Partial<Employee>) =>
+  create: (data: EmployeeCreate) =>
+    apiFetch<Employee>("/employees", { method: "POST", body: JSON.stringify(data) }),
+
+  update: (id: number, data: Partial<EmployeeCreate>) =>
     apiFetch<Employee>(`/employees/${id}`, {
       method: "PATCH",
       body: JSON.stringify(data),
     }),
+
+  delete: (id: number) => apiFetch<void>(`/employees/${id}`, { method: "DELETE" }),
 };
 
 // ─── KPI ───────────────────────────────────────────────────────────────────
@@ -232,6 +249,17 @@ export interface KpiSummary {
 export const kpiApi = {
   list: (employeeId: number) => apiFetch<KpiRecord[]>(`/kpi/employee/${employeeId}`),
   summary: (employeeId: number) => apiFetch<KpiSummary>(`/kpi/employee/${employeeId}/summary`),
+  create: (data: {
+    employee_id: number;
+    month: number;
+    year: number;
+    code_quality: number;
+    deadline_adherence: number;
+    bug_fix_speed: number;
+    documentation: number;
+    team_participation: number;
+    new_technologies: number;
+  }) => apiFetch<KpiRecord>("/kpi", { method: "POST", body: JSON.stringify(data) }),
 };
 
 // ─── Evaluations ───────────────────────────────────────────────────────────
@@ -280,6 +308,7 @@ export const evaluationsApi = {
     teamwork?: number;
     is_anonymous?: boolean;
   }) => apiFetch<Evaluation>("/evaluations", { method: "POST", body: JSON.stringify(data) }),
+  delete: (id: number) => apiFetch<void>(`/evaluations/${id}`, { method: "DELETE" }),
 };
 
 // ─── Tasks ─────────────────────────────────────────────────────────────────
@@ -323,8 +352,37 @@ export const tasksApi = {
     title: string;
     priority?: string;
     due_date?: string;
+    description?: string;
     parent_id?: number;
   }) => apiFetch<Task>("/tasks", { method: "POST", body: JSON.stringify(data) }),
+  delete: (taskId: number) => apiFetch<void>(`/tasks/${taskId}`, { method: "DELETE" }),
+};
+
+// ─── Users (HR manages employee accounts) ─────────────────────────────────
+
+export interface UserAccount {
+  id: number;
+  username: string;
+  email: string;
+  role: "rahbar" | "xodim" | "hr";
+  is_active: boolean;
+  employee_id: number | null;
+}
+
+export interface UserAccountCreate {
+  username: string;
+  email: string;
+  password: string;
+  role?: "xodim" | "hr";
+  employee_id?: number;
+}
+
+export const usersApi = {
+  create: (data: UserAccountCreate) =>
+    apiFetch<UserAccount>("/users", { method: "POST", body: JSON.stringify(data) }),
+
+  checkEmployee: (employeeId: number) =>
+    apiFetch<UserAccount | null>(`/users/by-employee/${employeeId}`),
 };
 
 // ─── AI ────────────────────────────────────────────────────────────────────
@@ -355,8 +413,23 @@ export interface UsiResult {
   label: string;
 }
 
+export interface ClusterMember {
+  id: number;
+  full_name: string;
+  usi_score: number;
+  department: string;
+}
+
+export interface ClusterGroup {
+  cluster: string;
+  count: number;
+  members: ClusterMember[];
+}
+
 export const aiApi = {
   predictions: (employeeId: number) => apiFetch<AiPrediction[]>(`/ai/predictions/${employeeId}`),
+  createPrediction: (employeeId: number) =>
+    apiFetch<AiPrediction>(`/ai/predictions/${employeeId}`, { method: "POST" }),
   usi: (employeeId: number) => apiFetch<UsiResult>(`/ai/usi/${employeeId}`),
-  clusters: () => apiFetch<{ cluster: string; count: number; members: object[] }[]>("/ai/clusters"),
+  clusters: () => apiFetch<ClusterGroup[]>("/ai/clusters"),
 };

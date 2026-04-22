@@ -1,14 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useRef, useEffect, useState } from "react";
 import { Plus, Star, ChevronRight } from "lucide-react";
-import { employees } from "@/lib/mockData";
+import { employeesApi, evaluationsApi, type Employee } from "@/lib/api";
 
 const evalTypes = [
-  { type: "Choraklik Baholash", who: "Rahbar", when: "Har 3 oyda", weight: "30%", color: "#00B8A0", bg: "#E8F8F6" },
-  { type: "360 Daraja Feedback", who: "8-12 hamkasb", when: "Yiliga 2 marta", weight: "25%", color: "#6366F1", bg: "#EEF2FF" },
-  { type: "Mijoz Feedback", who: "Tashqi mijoz", when: "Loyiha tugaganda", weight: "20%", color: "#F59E0B", bg: "#FEF3C7" },
-  { type: "KPI Avtomatik", who: "Tizim", when: "Har kuni", weight: "25%", color: "#10B981", bg: "#D1FAE5" },
+  {
+    type: "Choraklik Baholash", who: "Rahbar", when: "Har 3 oyda", weight: "30%",
+    color: "#00B8A0", bg: "#E8F8F6",
+    lottie: "https://lottie.host/fa8dd28c-8d7f-4fea-bb70-9326722c738a/3ANm0EqgWc.lottie",
+  },
+  {
+    type: "360 Daraja Feedback", who: "8-12 hamkasb", when: "Yiliga 2 marta", weight: "25%",
+    color: "#6366F1", bg: "#EEF2FF",
+    lottie: "https://lottie.host/68f19cfd-e60d-4bfc-9d67-d7a0f0b15160/rx9RVUk7kx.lottie",
+  },
+  {
+    type: "Mijoz Feedback", who: "Tashqi mijoz", when: "Loyiha tugaganda", weight: "20%",
+    color: "#F59E0B", bg: "#FEF3C7",
+    lottie: "https://lottie.host/d977baa5-4b4b-4ef3-b553-57438375b586/XuuPtmYx0P.lottie",
+  },
+  {
+    type: "KPI Avtomatik", who: "Tizim", when: "Har kuni", weight: "25%",
+    color: "#10B981", bg: "#D1FAE5",
+    lottie: "https://lottie.host/dd1d0219-9f16-4e71-8efc-b63124a510c9/ehnmhTRNYX.lottie",
+  },
 ];
 
 const recentEvals = [
@@ -18,6 +34,87 @@ const recentEvals = [
   { employee: "Nigora Mansurova", type: "Mijoz Feedback", score: 82, date: "10 Aprel, 2024", by: "Mijoz" },
   { employee: "Javohir Meliboev", type: "Choraklik Baholash", score: 68, date: "05 Mart, 2024", by: "Rahbar" },
 ];
+
+function loadLottieScript() {
+  if (!document.querySelector('script[data-dotlottie-wc]')) {
+    const s = document.createElement("script");
+    s.src = "https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js";
+    s.type = "module";
+    s.setAttribute("data-dotlottie-wc", "1");
+    document.head.appendChild(s);
+  }
+}
+
+interface EvalTypeCardProps {
+  type: string;
+  who: string;
+  when: string;
+  weight: string;
+  color: string;
+  bg: string;
+  lottie: string;
+}
+
+const EvalTypeCard = memo(function EvalTypeCard({ type, who, when, weight, color, bg, lottie }: EvalTypeCardProps) {
+  const lottieRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    loadLottieScript();
+    if (lottieRef.current && lottieRef.current.childElementCount === 0) {
+      const el = document.createElement("dotlottie-wc");
+      el.setAttribute("src", lottie);
+      el.setAttribute("style", "width:200px;height:200px");
+      el.setAttribute("autoplay", "");
+      el.setAttribute("loop", "");
+      lottieRef.current.appendChild(el);
+    }
+  }, [lottie]);
+
+  return (
+    <div style={{
+      background: "#ffffff",
+      borderRadius: "16px",
+      border: "1px solid #E5E7EB",
+      boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+      padding: "20px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      minHeight: "230px",
+      overflow: "hidden",
+      position: "relative",
+    }}>
+      {/* Lottie top-right */}
+      <div ref={lottieRef} style={{
+        position: "absolute",
+        top: "-10px",
+        right: "-10px",
+        opacity: 0.95,
+        pointerEvents: "none",
+      }} />
+
+      {/* Weight badge */}
+      <div style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "4px 12px",
+        borderRadius: "20px",
+        background: bg,
+        alignSelf: "flex-start",
+      }}>
+        <span style={{ fontSize: "16px", fontWeight: 800, color }}>{weight}</span>
+      </div>
+
+      {/* Info bottom */}
+      <div>
+        <div style={{ fontSize: "14px", fontWeight: 700, color: "#111827", marginBottom: "6px" }}>{type}</div>
+        <div style={{ fontSize: "12px", color: "#9CA3AF" }}>Kim: {who}</div>
+        <div style={{ fontSize: "12px", color: "#9CA3AF" }}>Qachon: {when}</div>
+      </div>
+    </div>
+  );
+});
 
 function StarRating({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   return (
@@ -66,10 +163,47 @@ export default function BaholashPage() {
   const [stars, setStars] = useState({ jamoa: 0, muloqot: 0, ishonch: 0, yordam: 0, ruh: 0 });
   const [comment, setComment] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [empList, setEmpList] = useState<Employee[]>([]);
+  const [saving, setSaving] = useState(false);
 
-  const handleSubmit = () => {
-    setSubmitted(true);
-    setTimeout(() => { setSubmitted(false); setTab("list"); }, 2000);
+  useEffect(() => {
+    employeesApi.list({ page_size: 100 })
+      .then(d => setEmpList(d.items))
+      .catch(() => {});
+  }, []);
+
+  const EVAL_TYPE_MAP: Record<string, "rahbar" | "peer_360" | "mijoz"> = {
+    "Choraklik Baholash": "rahbar",
+    "360 Daraja Feedback": "peer_360",
+    "Mijoz Feedback": "mijoz",
+    "KPI Avtomatik": "rahbar",
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedEmp) return;
+    setSaving(true);
+    try {
+      const empId = Number(selectedEmp);
+      const scoresArr: number[] = Object.values(scores).map(Number).filter(Boolean);
+      const starsArr: number[] = Object.values(stars);
+      const avgScore = scoresArr.length
+        ? (scoresArr.reduce((a: number, b: number) => a + b, 0) / scoresArr.length) * 10
+        : (starsArr.reduce((a: number, b: number) => a + b, 0) / 5) * 20;
+
+      await evaluationsApi.create({
+        employee_id: empId,
+        eval_type: EVAL_TYPE_MAP[formType] ?? "rahbar",
+        overall_score: Math.min(10, Math.max(0, avgScore / 10)),
+        work_quality: scores.texnik ? Number(scores.texnik) : undefined,
+        punctuality: scores.muddat ? Number(scores.muddat) : undefined,
+        teamwork: scores.jamoa ? Number(scores.jamoa) : undefined,
+        comment: comment || undefined,
+        is_anonymous: formType === "360 Daraja Feedback",
+      });
+      setSubmitted(true);
+      setTimeout(() => { setSubmitted(false); setTab("list"); }, 2000);
+    } catch { /* */ }
+    finally { setSaving(false); }
   };
 
   const scoreColor = (s: number) => s >= 80 ? "#10B981" : s >= 60 ? "#F59E0B" : "#EF4444";
@@ -110,17 +244,10 @@ export default function BaholashPage() {
         </div>
       </div>
 
-      {/* Type cards */}
+      {/* Type cards with Lottie */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
         {evalTypes.map(et => (
-          <div key={et.type} style={{ ...S.card, padding: "16px" }}>
-            <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: et.bg, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "12px" }}>
-              <span style={{ fontSize: "18px", fontWeight: 800, color: et.color }}>{et.weight}</span>
-            </div>
-            <div style={{ fontSize: "13.5px", fontWeight: 700, color: "#111827" }}>{et.type}</div>
-            <div style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "4px" }}>Kim: {et.who}</div>
-            <div style={{ fontSize: "12px", color: "#9CA3AF" }}>Qachon: {et.when}</div>
-          </div>
+          <EvalTypeCard key={et.type} {...et} />
         ))}
       </div>
 
@@ -187,7 +314,7 @@ export default function BaholashPage() {
                 <label style={S.label}>Xodim tanlash</label>
                 <select value={selectedEmp} onChange={e => setSelectedEmp(e.target.value)} style={S.input}>
                   <option value="">— Xodimni tanlang —</option>
-                  {employees.map(e => <option key={e.id} value={e.id}>{e.name} — {e.position}</option>)}
+                  {empList.map((e: Employee) => <option key={e.id} value={String(e.id)}>{e.first_name} {e.last_name} — {e.position}</option>)}
                 </select>
               </div>
 
@@ -250,17 +377,18 @@ export default function BaholashPage() {
 
               <button
                 onClick={handleSubmit}
-                disabled={!selectedEmp}
+                disabled={!selectedEmp || saving}
                 style={{
                   padding: "12px", borderRadius: "12px", border: "none",
-                  background: submitted ? "#10B981" : "linear-gradient(135deg, #00B8A0, #009984)",
-                  color: "#fff", fontSize: "14px", fontWeight: 700, cursor: selectedEmp ? "pointer" : "not-allowed",
+                  background: submitted ? "#10B981" : saving ? "#9CA3AF" : "linear-gradient(135deg, #00B8A0, #009984)",
+                  color: "#fff", fontSize: "14px", fontWeight: 700,
+                  cursor: (selectedEmp && !saving) ? "pointer" : "not-allowed",
                   opacity: !selectedEmp ? 0.6 : 1,
                   boxShadow: selectedEmp ? "0 4px 12px rgba(0,184,160,0.3)" : "none",
                   transition: "all 0.2s",
                 }}
               >
-                {submitted ? "✓ Baholash muvaffaqiyatli saqlandi!" : "Baholashni saqlash"}
+                {submitted ? "✓ Baholash muvaffaqiyatli saqlandi!" : saving ? "Saqlanmoqda..." : "Baholashni saqlash"}
               </button>
             </div>
           </div>

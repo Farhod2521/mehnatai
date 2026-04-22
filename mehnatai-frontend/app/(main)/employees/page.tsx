@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
 import CircularProgress from "@/components/CircularProgress";
 import StatusBadge from "@/components/StatusBadge";
-import { employeesApi, type Employee } from "@/lib/api";
+import { employeesApi, type Employee, type EmployeeCreate } from "@/lib/api";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -14,6 +14,8 @@ const STATUS_MAP: Record<string, string> = {
   orta: "O'RTA",
   rivojlanish: "RIVOJLANISH KERAK",
 };
+
+const DEPARTMENTS = ["IT", "HR", "Sotuv", "Marketing", "Moliya", "Boshqaruv"];
 
 const S = {
   card: {
@@ -33,6 +35,24 @@ const S = {
     borderBottom: "1px solid #E5E7EB",
   },
   td: { padding: "14px 20px", fontSize: "13.5px", color: "#374151" },
+  input: {
+    width: "100%",
+    padding: "10px 12px",
+    fontSize: "13.5px",
+    borderRadius: "10px",
+    border: "1px solid #E5E7EB",
+    background: "#F9FAFB",
+    color: "#111827",
+    outline: "none",
+    fontFamily: "inherit",
+  } as React.CSSProperties,
+  label: {
+    fontSize: "11.5px",
+    fontWeight: 600,
+    color: "#6B7280",
+    marginBottom: "5px",
+    display: "block",
+  } as React.CSSProperties,
 };
 
 function Skeleton() {
@@ -51,12 +71,169 @@ function Skeleton() {
   );
 }
 
+const EMPTY_FORM: EmployeeCreate = {
+  first_name: "", last_name: "", position: "",
+  department: "IT", experience_years: 0,
+  email: "", phone: "", hired_date: "", bio: "",
+};
+
+function AddEmployeeModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+  const [form, setForm] = useState<EmployeeCreate>(EMPTY_FORM);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const set = (field: keyof EmployeeCreate, val: string | number) =>
+    setForm(f => ({ ...f, [field]: val }));
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.first_name || !form.last_name || !form.position) {
+      setError("Ism, familiya va lavozim majburiy");
+      return;
+    }
+    setSaving(true);
+    setError("");
+    try {
+      const payload: EmployeeCreate = {
+        ...form,
+        email: form.email || undefined,
+        phone: form.phone || undefined,
+        hired_date: form.hired_date || undefined,
+        bio: form.bio || undefined,
+      };
+      await employeesApi.create(payload);
+      onSuccess();
+      onClose();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Xatolik yuz berdi");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      zIndex: 1000, padding: "20px",
+    }}>
+      <div style={{
+        background: "#fff", borderRadius: "20px", width: "100%", maxWidth: "560px",
+        boxShadow: "0 20px 60px rgba(0,0,0,0.15)", maxHeight: "90vh", overflow: "auto",
+      }}>
+        {/* Header */}
+        <div style={{ padding: "20px 24px", borderBottom: "1px solid #E5E7EB", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <div style={{ fontSize: "17px", fontWeight: 700, color: "#111827" }}>Yangi Xodim Qo'shish</div>
+            <div style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "2px" }}>Ma'lumotlarni to'ldiring</div>
+          </div>
+          <button onClick={onClose} style={{ background: "#F3F4F6", border: "none", borderRadius: "8px", width: "32px", height: "32px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <X size={16} color="#6B7280" />
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
+
+          {/* Name row */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div>
+              <label style={S.label}>Ism *</label>
+              <input style={S.input} placeholder="Azizbek" value={form.first_name}
+                onChange={e => set("first_name", e.target.value)} />
+            </div>
+            <div>
+              <label style={S.label}>Familiya *</label>
+              <input style={S.input} placeholder="Fayzullaev" value={form.last_name}
+                onChange={e => set("last_name", e.target.value)} />
+            </div>
+          </div>
+
+          {/* Position + Department */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div>
+              <label style={S.label}>Lavozim *</label>
+              <input style={S.input} placeholder="Senior Developer" value={form.position}
+                onChange={e => set("position", e.target.value)} />
+            </div>
+            <div>
+              <label style={S.label}>Bo'lim *</label>
+              <select style={S.input} value={form.department}
+                onChange={e => set("department", e.target.value)}>
+                {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* Experience + Hired date */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div>
+              <label style={S.label}>Tajriba (yil)</label>
+              <input style={S.input} type="number" min={0} max={50} placeholder="3"
+                value={form.experience_years || ""}
+                onChange={e => set("experience_years", Number(e.target.value))} />
+            </div>
+            <div>
+              <label style={S.label}>Ishga kirgan sana</label>
+              <input style={S.input} type="date" value={form.hired_date || ""}
+                onChange={e => set("hired_date", e.target.value)} />
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div>
+              <label style={S.label}>Email</label>
+              <input style={S.input} type="email" placeholder="azizbek@company.uz"
+                value={form.email || ""} onChange={e => set("email", e.target.value)} />
+            </div>
+            <div>
+              <label style={S.label}>Telefon</label>
+              <input style={S.input} placeholder="+998 90 123 45 67"
+                value={form.phone || ""} onChange={e => set("phone", e.target.value)} />
+            </div>
+          </div>
+
+          {/* Bio */}
+          <div>
+            <label style={S.label}>Qo'shimcha ma'lumot</label>
+            <textarea
+              style={{ ...S.input, resize: "none" as const, minHeight: "70px" }}
+              placeholder="Xodim haqida qisqacha..."
+              value={form.bio || ""}
+              onChange={e => set("bio", e.target.value)}
+            />
+          </div>
+
+          {error && (
+            <div style={{ padding: "10px 14px", borderRadius: "10px", background: "#FEE2E2", color: "#DC2626", fontSize: "13px" }}>
+              {error}
+            </div>
+          )}
+
+          <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+            <button type="button" onClick={onClose}
+              style={{ padding: "10px 20px", borderRadius: "10px", border: "1px solid #E5E7EB", background: "#fff", color: "#6B7280", fontSize: "13px", fontWeight: 500, cursor: "pointer" }}>
+              Bekor qilish
+            </button>
+            <button type="submit" disabled={saving}
+              style={{ padding: "10px 24px", borderRadius: "10px", border: "none", background: saving ? "#9CA3AF" : "linear-gradient(135deg,#00B8A0,#009984)", color: "#fff", fontSize: "13px", fontWeight: 700, cursor: saving ? "not-allowed" : "pointer", boxShadow: "0 4px 12px rgba(0,184,160,0.3)" }}>
+              {saving ? "Saqlanmoqda..." : "Qo'shish"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export default function EmployeesPage() {
   const [search, setSearch] = useState("");
   const [dept, setDept] = useState("");
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
 
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [total, setTotal] = useState(0);
@@ -97,6 +274,13 @@ export default function EmployeesPage() {
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <style>{`@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`}</style>
 
+      {showAdd && (
+        <AddEmployeeModal
+          onClose={() => setShowAdd(false)}
+          onSuccess={() => { fetchEmployees(); }}
+        />
+      )}
+
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
           <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#111827" }}>Xodimlar ro'yxati</h1>
@@ -104,17 +288,31 @@ export default function EmployeesPage() {
             Jami {total} ta faol xodim
           </p>
         </div>
-        <button
-          onClick={() => setShowFilters(s => !s)}
-          style={{
-            display: "flex", alignItems: "center", gap: "6px",
-            padding: "9px 16px", borderRadius: "10px", border: "1px solid #E5E7EB",
-            background: showFilters ? "#F0F2F5" : "#fff", color: "#6B7280",
-            fontSize: "13px", fontWeight: 500, cursor: "pointer",
-          }}
-        >
-          <Filter size={14} /> Filtrlar
-        </button>
+        <div style={{ display: "flex", gap: "8px" }}>
+          <button
+            onClick={() => setShowFilters(s => !s)}
+            style={{
+              display: "flex", alignItems: "center", gap: "6px",
+              padding: "9px 16px", borderRadius: "10px", border: "1px solid #E5E7EB",
+              background: showFilters ? "#F0F2F5" : "#fff", color: "#6B7280",
+              fontSize: "13px", fontWeight: 500, cursor: "pointer",
+            }}
+          >
+            <Filter size={14} /> Filtrlar
+          </button>
+          <button
+            onClick={() => setShowAdd(true)}
+            style={{
+              display: "flex", alignItems: "center", gap: "6px",
+              padding: "9px 18px", borderRadius: "10px", border: "none",
+              background: "linear-gradient(135deg,#00B8A0,#009984)", color: "#fff",
+              fontSize: "13px", fontWeight: 700, cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(0,184,160,0.3)",
+            }}
+          >
+            <Plus size={14} /> Xodim qo'shish
+          </button>
+        </div>
       </div>
 
       {/* Search + filters */}
@@ -146,11 +344,7 @@ export default function EmployeesPage() {
                 style={{ padding: "7px 12px", fontSize: "13px", borderRadius: "8px", border: "1px solid #E5E7EB", color: "#374151", background: "#fff", outline: "none" }}
               >
                 <option value="">Hammasi</option>
-                <option value="IT">IT</option>
-                <option value="HR">HR</option>
-                <option value="Sotuv">Sotuv</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Moliya">Moliya</option>
+                {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
             </div>
             <div>
@@ -241,7 +435,6 @@ export default function EmployeesPage() {
           </tbody>
         </table>
 
-        {/* Pagination */}
         {!loading && employees.length === 0 && (
           <div style={{ padding: "40px", textAlign: "center", color: "#9CA3AF", fontSize: "14px" }}>
             Xodimlar topilmadi

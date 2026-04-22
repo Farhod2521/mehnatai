@@ -1,8 +1,47 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
+
+// Lottie chap paneli — memo bilan ajratilgan, forma state o'zgarganda qayta render bo'lmaydi
+const LeftPanel = memo(function LeftPanel() {
+  const lottieRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Script bir marta yuklanadi
+    if (!document.querySelector('script[data-lottie-wc]')) {
+      const s = document.createElement("script");
+      s.src = "https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js";
+      s.type = "module";
+      s.setAttribute("data-lottie-wc", "1");
+      document.head.appendChild(s);
+    }
+
+    // Lottie elementi bir marta DOM ga qo'shiladi
+    if (lottieRef.current && lottieRef.current.childElementCount === 0) {
+      const el = document.createElement("dotlottie-wc");
+      el.setAttribute("src", "https://lottie.host/706a437a-adfe-4d77-beb3-b3607746d6b2/kCkx99wfCl.lottie");
+      el.setAttribute("style", "width:420px;height:420px");
+      el.setAttribute("autoplay", "");
+      el.setAttribute("loop", "");
+      lottieRef.current.appendChild(el);
+    }
+  }, []);
+
+  return (
+    <div className="left">
+      <div className="g g1" /><div className="g g2" /><div className="g g3" />
+      <div className="g g4" /><div className="g g5" /><div className="g g6" />
+      <div className="g g7" /><div className="g g8" />
+      <div className="lottie-box" ref={lottieRef} />
+      <div className="left-label">
+        <span className="live-dot" />
+        MehnatAI · AI asosida HR tizimi
+      </div>
+    </div>
+  );
+});
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -66,35 +105,8 @@ export default function LoginPage() {
   return (
     <div className="root">
 
-      {/* ═══════ LEFT ═══════ */}
-      <div className="left">
-
-        {/* Geometric shapes – scattered */}
-        <div className="g g1" />
-        <div className="g g2" />
-        <div className="g g3" />
-        <div className="g g4" />
-        <div className="g g5" />
-        <div className="g g6" />
-        <div className="g g7" />
-        <div className="g g8" />
-
-        {/* Lottie */}
-        <div className="lottie-box">
-          <div dangerouslySetInnerHTML={{
-            __html: `<dotlottie-wc
-              src="https://lottie.host/706a437a-adfe-4d77-beb3-b3607746d6b2/kCkx99wfCl.lottie"
-              style="width:420px;height:420px" autoplay loop>
-            </dotlottie-wc>`
-          }} />
-        </div>
-
-        {/* Bottom label */}
-        <div className="left-label">
-          <span className="live-dot" />
-          MehnatAI · AI asosida HR tizimi
-        </div>
-      </div>
+      {/* ═══════ LEFT — memo bilan ajratilgan, qayta render bo'lmaydi ═══════ */}
+      <LeftPanel />
 
       {/* ═══════ RIGHT ═══════ */}
       <div className="right">

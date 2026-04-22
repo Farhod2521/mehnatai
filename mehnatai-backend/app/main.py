@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import engine, Base
-from app.routers import auth, employees, kpi, evaluations, tasks, ai, dashboard
+from app.routers import auth, employees, kpi, evaluations, tasks, ai, dashboard, users
 
 
 @asynccontextmanager
@@ -41,6 +41,7 @@ app.include_router(evaluations.router, prefix=f"{API_PREFIX}/evaluations", tags=
 app.include_router(tasks.router,       prefix=f"{API_PREFIX}/tasks",       tags=["Tasks"])
 app.include_router(ai.router,          prefix=f"{API_PREFIX}/ai",          tags=["AI"])
 app.include_router(dashboard.router,   prefix=f"{API_PREFIX}/dashboard",   tags=["Dashboard"])
+app.include_router(users.router,       prefix=f"{API_PREFIX}/users",        tags=["Users"])
 
 
 @app.get("/", tags=["Health"])

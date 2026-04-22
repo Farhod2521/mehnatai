@@ -30,7 +30,7 @@ class UserOut(BaseModel):
 
 class UserCreate(BaseModel):
     username: str
-    email: EmailStr
+    email: str | None = None
     password: str
     role: RoleEnum = RoleEnum.xodim
     employee_id: int | None = None

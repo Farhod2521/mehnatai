@@ -34,7 +34,7 @@ function StatBig({ n, suffix, label, active }: { n: number; suffix: string; labe
   const v = useCountUp(n, active);
   return (
     <div style={{ textAlign: "center" }}>
-      <div style={{ fontSize: "clamp(40px,4.5vw,58px)", fontWeight: 900, color: "#00B894", lineHeight: 1, fontFamily: "'Plus Jakarta Sans',sans-serif" }}>
+      <div style={{ fontSize: "clamp(40px,4.5vw,58px)", fontWeight: 900, color: "#00B894", lineHeight: 1, fontFamily: "'Inter',sans-serif" }}>
         {v}{suffix}
       </div>
       <div style={{ fontSize: "12px", fontWeight: 600, color: "#9DB5AE", letterSpacing: "1.5px", textTransform: "uppercase", marginTop: "8px" }}>{label}</div>
@@ -90,7 +90,7 @@ export default function Landing() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="white"/></svg>
           </div>
           <div>
-            <span style={{ fontSize: "17px", fontWeight: 800, color: "#0D3D30", fontFamily: "'Plus Jakarta Sans',sans-serif", letterSpacing: "-0.3px" }}>MehnatAI</span>
+            <span style={{ fontSize: "17px", fontWeight: 800, color: "#0D3D30", fontFamily: "'Inter',sans-serif", letterSpacing: "-0.3px" }}>MehnatAI</span>
             <span style={{ display: "block", fontSize: "7px", fontWeight: 700, color: "#B0C9C2", letterSpacing: "2.5px" }}>DIGITAL INTELLIGENCE</span>
           </div>
         </div>
@@ -152,7 +152,7 @@ export default function Landing() {
               <h1 style={{
                 fontSize: "clamp(38px,4.2vw,60px)", fontWeight: 900, lineHeight: 1.06,
                 color: "#0D1F1A", letterSpacing: "-1.5px",
-                fontFamily: "'Plus Jakarta Sans',sans-serif", marginBottom: "22px",
+                fontFamily: "'Inter',sans-serif", marginBottom: "22px",
               }}>
                 Xodimlar<br />samaradorligini<br />
                 <span style={{ background: "linear-gradient(90deg,#00B894,#34D399)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -363,7 +363,7 @@ export default function Landing() {
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "64px" }}>
             <Pill color="#F87171">MUAMMO TAVSIFI</Pill>
-            <h2 style={{ fontSize: "clamp(26px,3.5vw,42px)", fontWeight: 800, color: "#0D1F1A", letterSpacing: "-0.8px", fontFamily: "'Plus Jakarta Sans',sans-serif", marginTop: "18px", marginBottom: "12px" }}>
+            <h2 style={{ fontSize: "clamp(26px,3.5vw,42px)", fontWeight: 800, color: "#0D1F1A", letterSpacing: "-0.8px", fontFamily: "'Inter',sans-serif", marginTop: "18px", marginBottom: "12px" }}>
               An'anaviy usullar nima uchun<br /><span style={{ color: "#F87171" }}>ishlamaydi</span>?
             </h2>
             <p style={{ fontSize: "15px", color: "#7A9E94", maxWidth: "460px", margin: "0 auto", lineHeight: 1.7 }}>
@@ -405,7 +405,7 @@ export default function Landing() {
         <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
           <div>
             <Pill color="#00B894">USI FORMULA</Pill>
-            <h2 style={{ fontSize: "clamp(26px,3.2vw,40px)", fontWeight: 800, color: "#0D1F1A", letterSpacing: "-0.8px", fontFamily: "'Plus Jakarta Sans',sans-serif", margin: "18px 0 14px", lineHeight: 1.2 }}>
+            <h2 style={{ fontSize: "clamp(26px,3.2vw,40px)", fontWeight: 800, color: "#0D1F1A", letterSpacing: "-0.8px", fontFamily: "'Inter',sans-serif", margin: "18px 0 14px", lineHeight: 1.2 }}>
               Ko'p manbali ob'ektiv<br />baholash metodologiyasi
             </h2>
             <p style={{ fontSize: "15px", color: "#5A7A72", lineHeight: 1.8, marginBottom: "30px" }}>
@@ -483,7 +483,7 @@ export default function Landing() {
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "linear-gradient(135deg,#F0FBF8 0%,white 50%,#EEF3F8 100%)", zIndex: 0 }} />
         <div style={{ position: "relative", maxWidth: "1100px", margin: "0 auto", zIndex: 1 }}>
           <div style={{ textAlign: "center", marginBottom: "60px" }}>
-            <h2 style={{ fontSize: "clamp(26px,3.5vw,42px)", fontWeight: 800, color: "#0D1F1A", letterSpacing: "-0.8px", fontFamily: "'Plus Jakarta Sans',sans-serif", marginBottom: "10px" }}>
+            <h2 style={{ fontSize: "clamp(26px,3.5vw,42px)", fontWeight: 800, color: "#0D1F1A", letterSpacing: "-0.8px", fontFamily: "'Inter',sans-serif", marginBottom: "10px" }}>
               Raqamlarda <span style={{ color: "#00B894" }}>ishonchimiz</span>
             </h2>
             <p style={{ fontSize: "15px", color: "#7A9E94" }}>Real kompaniyalar bilan sinab ko'rilgan</p>
@@ -528,7 +528,7 @@ export default function Landing() {
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "60px" }}>
             <Pill color="#60A5FA">ROLLAR TIZIMI</Pill>
-            <h2 style={{ fontSize: "clamp(26px,3.5vw,42px)", fontWeight: 800, color: "#0D1F1A", letterSpacing: "-0.8px", fontFamily: "'Plus Jakarta Sans',sans-serif", margin: "18px 0" }}>
+            <h2 style={{ fontSize: "clamp(26px,3.5vw,42px)", fontWeight: 800, color: "#0D1F1A", letterSpacing: "-0.8px", fontFamily: "'Inter',sans-serif", margin: "18px 0" }}>
               Har bir rol uchun maxsus panel
             </h2>
           </div>
@@ -546,7 +546,7 @@ export default function Landing() {
                 onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = "#E5EDE9"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)"; }}
               >
                 <div style={{ fontSize: "42px", marginBottom: "14px" }}>{icon}</div>
-                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#0D1F1A", fontFamily: "'Plus Jakarta Sans',sans-serif", marginBottom: "4px" }}>{role}</h3>
+                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#0D1F1A", fontFamily: "'Inter',sans-serif", marginBottom: "4px" }}>{role}</h3>
                 <div style={{ fontSize: "12px", color: "#9DB5AE", marginBottom: "20px" }}>{sub}</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "9px", marginBottom: "22px" }}>
                   {powers.map(p => (
@@ -588,7 +588,7 @@ export default function Landing() {
             <div style={{ width: "30px", height: "30px", borderRadius: "9px", background: "linear-gradient(135deg,#00B894,#009975)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(0,184,148,0.25)" }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="white"/></svg>
             </div>
-            <span style={{ fontSize: "16px", fontWeight: 800, color: "#0D1F1A", fontFamily: "'Plus Jakarta Sans',sans-serif" }}>MehnatAI</span>
+            <span style={{ fontSize: "16px", fontWeight: 800, color: "#0D1F1A", fontFamily: "'Inter',sans-serif" }}>MehnatAI</span>
             <span style={{ fontSize: "8px", fontWeight: 600, color: "#B0C9C2", letterSpacing: "2px" }}>v1.0 · 2024</span>
           </div>
           <div style={{ display: "flex", gap: "24px" }}>
