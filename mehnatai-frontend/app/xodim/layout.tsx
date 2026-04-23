@@ -1,33 +1,36 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth";
+import { employeesApi, type Employee } from "@/lib/api";
 import Link from "next/link";
 import {
-  LayoutDashboard,
-  CheckSquare,
-  Calendar,
-  TrendingUp,
-  LogOut,
-  User,
+  LayoutDashboard, CheckSquare, Calendar,
+  TrendingUp, LogOut, User, Settings,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
 
 const navItems = [
-  { href: "/xodim", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/xodim/vazifalar", label: "Vazifalar", icon: CheckSquare },
-  { href: "/xodim/kalendar", label: "Kalendar", icon: Calendar },
-  { href: "/xodim/kpi", label: "Mening KPI", icon: TrendingUp },
+  { href: "/xodim",           label: "Dashboard",   icon: LayoutDashboard, exact: true },
+  { href: "/xodim/vazifalar", label: "Vazifalar",   icon: CheckSquare },
+  { href: "/xodim/kalendar",  label: "Kalendar",    icon: Calendar },
+  { href: "/xodim/kpi",       label: "Mening KPI",  icon: TrendingUp },
+  { href: "/xodim/sozlamalar",label: "Profil",       icon: Settings },
 ];
 
-function XodimSidebar() {
+interface EmpCtx { employee: Employee | null }
+
+function XodimSidebar({ employee }: EmpCtx) {
   const pathname = usePathname();
   const { logout } = useAuth();
   const router = useRouter();
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname === href || pathname.startsWith(href + "/");
+
+  const initials = employee
+    ? `${employee.first_name[0] ?? ""}${employee.last_name[0] ?? ""}`.toUpperCase()
+    : "?";
 
   return (
     <aside style={{
@@ -36,7 +39,6 @@ function XodimSidebar() {
       borderRight: "1px solid #E5E7EB",
       display: "flex", flexDirection: "column", height: "100%",
     }}>
-      {/* Logo */}
       <div style={{ padding: "24px 16px 20px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div style={{
@@ -69,13 +71,17 @@ function XodimSidebar() {
             width: "36px", height: "36px", borderRadius: "50%",
             background: "linear-gradient(135deg, #6366F1, #4F46E5)",
             display: "flex", alignItems: "center", justifyContent: "center",
-            flexShrink: 0,
+            flexShrink: 0, color: "white", fontWeight: 700, fontSize: "13px",
           }}>
-            <User size={16} color="white" />
+            {employee ? initials : <User size={16} color="white" />}
           </div>
-          <div>
-            <div style={{ fontSize: "13px", fontWeight: 700, color: "#111827" }}>Azizbek F.</div>
-            <div style={{ fontSize: "11px", color: "#6366F1", fontWeight: 500 }}>Senior Developer</div>
+          <div style={{ overflow: "hidden" }}>
+            <div style={{ fontSize: "13px", fontWeight: 700, color: "#111827", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {employee ? `${employee.first_name} ${employee.last_name[0]}.` : "Yuklanmoqda..."}
+            </div>
+            <div style={{ fontSize: "11px", color: "#6366F1", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {employee?.position ?? "—"}
+            </div>
           </div>
         </div>
       </div>
@@ -112,12 +118,12 @@ function XodimSidebar() {
             color: "#6B7280", fontWeight: 600, fontSize: "13px",
             cursor: "pointer", transition: "all 0.15s",
           }}
-          onMouseEnter={(e) => {
+          onMouseEnter={e => {
             (e.currentTarget as HTMLButtonElement).style.background = "#FEF2F2";
             (e.currentTarget as HTMLButtonElement).style.borderColor = "#FECACA";
             (e.currentTarget as HTMLButtonElement).style.color = "#EF4444";
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={e => {
             (e.currentTarget as HTMLButtonElement).style.background = "transparent";
             (e.currentTarget as HTMLButtonElement).style.borderColor = "#E5E7EB";
             (e.currentTarget as HTMLButtonElement).style.color = "#6B7280";
@@ -131,7 +137,11 @@ function XodimSidebar() {
   );
 }
 
-function XodimHeader() {
+function XodimHeader({ employee }: EmpCtx) {
+  const initials = employee
+    ? `${employee.first_name[0] ?? ""}${employee.last_name[0] ?? ""}`.toUpperCase()
+    : "?";
+
   return (
     <header style={{
       height: "60px",
@@ -142,24 +152,18 @@ function XodimHeader() {
     }}>
       <div>
         <span style={{ fontSize: "14px", fontWeight: 600, color: "#374151" }}>Salom, </span>
-        <span style={{ fontSize: "14px", fontWeight: 700, color: "#6366F1" }}>Azizbek Fayzullaev</span>
+        <span style={{ fontSize: "14px", fontWeight: 700, color: "#6366F1" }}>
+          {employee ? `${employee.first_name} ${employee.last_name}` : "..."}
+        </span>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <div style={{
-          padding: "6px 14px", borderRadius: "20px",
-          background: "#D1FAE5", color: "#065F46",
-          fontSize: "12px", fontWeight: 600,
-        }}>
-          Samaradorlik: 92%
-        </div>
         <div style={{
           width: "36px", height: "36px", borderRadius: "50%",
           background: "linear-gradient(135deg, #6366F1, #4F46E5)",
           display: "flex", alignItems: "center", justifyContent: "center",
-          color: "white", fontWeight: 700, fontSize: "13px",
-          cursor: "pointer",
+          color: "white", fontWeight: 700, fontSize: "13px", cursor: "pointer",
         }}>
-          AF
+          {initials}
         </div>
       </div>
     </header>
@@ -167,24 +171,29 @@ function XodimHeader() {
 }
 
 export default function XodimLayout({ children }: { children: React.ReactNode }) {
-  const { role } = useAuth();
+  const { role, user } = useAuth();
   const router = useRouter();
+  const [employee, setEmployee] = useState<Employee | null>(null);
 
   useEffect(() => {
-    if (role === null) {
-      router.push("/login");
-    } else if (role === "rahbar") {
-      router.push("/dashboard");
-    }
+    if (role === null) { router.push("/login"); return; }
+    if (role === "rahbar") { router.push("/dashboard"); return; }
+    if (role === "hr") { router.push("/hr"); return; }
   }, [role, router]);
+
+  useEffect(() => {
+    if (user?.employee_id) {
+      employeesApi.get(user.employee_id).then(setEmployee).catch(() => {});
+    }
+  }, [user?.employee_id]);
 
   if (role !== "xodim") return null;
 
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "#F5F3FF" }}>
-      <XodimSidebar />
+      <XodimSidebar employee={employee} />
       <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
-        <XodimHeader />
+        <XodimHeader employee={employee} />
         <main style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
           {children}
         </main>

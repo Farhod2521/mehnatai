@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 function useInView(threshold = 0.2) {
   const ref = useRef<HTMLDivElement>(null);
@@ -129,6 +131,8 @@ const NAV_LINKS = [
 ];
 
 export default function Landing() {
+  const { user, role } = useAuth();
+  const router = useRouter();
   const [scrollY, setScrollY] = useState(0);
   const statsRef = useInView(0.3);
 
@@ -144,7 +148,9 @@ export default function Landing() {
 
   const navSolid = scrollY > 40;
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const dashboardHref = role === "rahbar" ? "/dashboard" : role === "hr" ? "/hr" : "/xodim";
+
+  async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault();
     if (!form.name || !form.phone) return;
     setFormSending(true);
@@ -192,23 +198,50 @@ export default function Landing() {
         </div>
 
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          <Link href="/login" style={{
-            padding: "9px 20px", borderRadius: "10px", fontSize: "13.5px", fontWeight: 600,
-            color: "#4A7A6D", textDecoration: "none",
-            border: "1px solid #D4EAE4", background: "transparent", transition: "all 0.2s",
-          }}
-            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#EDF8F5"; (e.currentTarget as HTMLAnchorElement).style.color = "#00B894"; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; (e.currentTarget as HTMLAnchorElement).style.color = "#4A7A6D"; }}
-          >Kirish</Link>
-          <a href="#boglanish" style={{
-            padding: "10px 22px", borderRadius: "10px", fontSize: "13.5px", fontWeight: 700,
-            color: "white", textDecoration: "none",
-            background: "linear-gradient(135deg,#00B894,#009975)",
-            boxShadow: "0 4px 16px rgba(0,184,148,0.3)", transition: "all 0.2s",
-          }}
-            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-1px)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 24px rgba(0,184,148,0.4)"; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 4px 16px rgba(0,184,148,0.3)"; }}
-          >Boshlash →</a>
+          {user ? (
+            <button
+              onClick={() => router.push(dashboardHref)}
+              style={{
+                display: "flex", alignItems: "center", gap: "8px",
+                padding: "8px 18px", borderRadius: "10px", fontSize: "13.5px", fontWeight: 600,
+                color: "#0D3D30", border: "1px solid #B2D8CE", background: "#EDF8F5",
+                cursor: "pointer", transition: "all 0.2s",
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "#D4F0E8"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "#EDF8F5"; }}
+            >
+              <div style={{
+                width: "26px", height: "26px", borderRadius: "50%",
+                background: "linear-gradient(135deg,#00B894,#009975)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: "11px", fontWeight: 800, color: "white", flexShrink: 0,
+              }}>
+                {(user.username?.[0] ?? "?").toUpperCase()}
+              </div>
+              <span>{user.username}</span>
+              <span style={{ fontSize: "11px", color: "#9CA3AF" }}>→ Panel</span>
+            </button>
+          ) : (
+            <>
+              <Link href="/login" style={{
+                padding: "9px 20px", borderRadius: "10px", fontSize: "13.5px", fontWeight: 600,
+                color: "#4A7A6D", textDecoration: "none",
+                border: "1px solid #D4EAE4", background: "transparent", transition: "all 0.2s",
+              }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#EDF8F5"; (e.currentTarget as HTMLAnchorElement).style.color = "#00B894"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; (e.currentTarget as HTMLAnchorElement).style.color = "#4A7A6D"; }}
+              >Kirish</Link>
+              <a href="#boglanish" style={{
+                padding: "10px 22px", borderRadius: "10px", fontSize: "13.5px", fontWeight: 700,
+                color: "white", textDecoration: "none",
+                background: "linear-gradient(135deg,#00B894,#009975)",
+                boxShadow: "0 4px 16px rgba(0,184,148,0.3)", transition: "all 0.2s",
+              }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-1px)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 24px rgba(0,184,148,0.4)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 4px 16px rgba(0,184,148,0.3)"; }}
+              >Boshlash →</a>
+            </>
+          )}
         </div>
       </nav>
 

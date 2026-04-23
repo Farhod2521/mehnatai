@@ -45,4 +45,5 @@ class TaskStats(BaseModel):
     done: int
     pending: int
     in_progress: int
+    hr_check: int = 0
     completion_rate: float

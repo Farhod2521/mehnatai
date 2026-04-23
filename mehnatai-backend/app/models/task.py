@@ -17,6 +17,7 @@ class PriorityEnum(str, enum.Enum):
 class TaskStatusEnum(str, enum.Enum):
     pending = "pending"
     in_progress = "in_progress"
+    hr_check = "hr_check"   # employee marked done, waiting for HR approval
     done = "done"
 
 

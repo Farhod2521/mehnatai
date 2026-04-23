@@ -320,7 +320,7 @@ export interface Task {
   title: string;
   description: string | null;
   priority: "high" | "medium" | "low";
-  status: "pending" | "in_progress" | "done";
+  status: "pending" | "in_progress" | "hr_check" | "done";
   due_date: string | null;
   is_done: boolean;
   created_at: string;
@@ -334,6 +334,7 @@ export interface TaskStats {
   done: number;
   pending: number;
   in_progress: number;
+  hr_check: number;
   completion_rate: number;
 }
 
@@ -344,9 +345,12 @@ export const tasksApi = {
     if (params.root_only) q.set("root_only", "true");
     return apiFetch<Task[]>(`/tasks/employee/${employeeId}?${q}`);
   },
+  hrPending: () => apiFetch<Task[]>("/tasks/hr-pending"),
   stats: (employeeId: number) => apiFetch<TaskStats>(`/tasks/employee/${employeeId}/stats`),
-  update: (taskId: number, data: { is_done?: boolean; status?: string; title?: string }) =>
+  update: (taskId: number, data: { is_done?: boolean; status?: string; title?: string; due_date?: string; priority?: string }) =>
     apiFetch<Task>(`/tasks/${taskId}`, { method: "PATCH", body: JSON.stringify(data) }),
+  approve: (taskId: number) =>
+    apiFetch<Task>(`/tasks/${taskId}/approve`, { method: "PATCH" }),
   create: (data: {
     employee_id: number;
     title: string;

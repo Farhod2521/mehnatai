@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CheckCircle2, Circle, ChevronRight, ChevronDown, Plus, Flame, AlertCircle, Filter } from "lucide-react";
+import { CheckCircle2, Circle, ChevronRight, ChevronDown, Plus, Flame, AlertCircle, Filter, Clock } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { tasksApi, type Task } from "@/lib/api";
 
@@ -11,11 +11,12 @@ const PRIORITY_COLOR: Record<string, { bg: string; color: string; label: string 
   low:    { bg: "#DCFCE7", color: "#16A34A", label: "Past" },
 };
 
-const STATUS_LABEL: Record<string, string> = {
-  pending: "Kutmoqda",
-  in_progress: "Jarayonda",
-  done: "Bajarildi",
-};
+function statusBadge(task: Task) {
+  if (task.status === "done")     return { bg: "#D1FAE5", color: "#065F46", label: "Bajarildi" };
+  if (task.status === "hr_check") return { bg: "#FEF3C7", color: "#92400E", label: "HR tekshirmoqda" };
+  if (task.status === "in_progress") return { bg: "#EEF2FF", color: "#4F46E5", label: "Jarayonda" };
+  return { bg: "#F3F4F6", color: "#6B7280", label: "Kutmoqda" };
+}
 
 function TaskRow({ task, depth, onToggle, openIds, onToggleOpen }: {
   task: Task; depth: number;
@@ -26,14 +27,17 @@ function TaskRow({ task, depth, onToggle, openIds, onToggleOpen }: {
   const hasChildren = task.children?.length > 0;
   const isOpen = openIds.has(task.id);
   const p = PRIORITY_COLOR[task.priority];
+  const s = statusBadge(task);
   const today = new Date().toISOString().slice(0, 10);
   const isToday = task.due_date === today;
-  const isOverdue = !!task.due_date && task.due_date < today && !task.is_done;
+  const isOverdue = !!task.due_date && task.due_date < today && task.status !== "done";
+  const isHrCheck = task.status === "hr_check";
+  const isDone = task.status === "done";
 
   return (
     <>
       <tr
-        style={{ borderBottom: "1px solid #F3F4F6" }}
+        style={{ borderBottom: "1px solid #F3F4F6", opacity: isDone ? 0.6 : 1 }}
         onMouseEnter={e => (e.currentTarget.style.background = "#FAFAFA")}
         onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
       >
@@ -46,10 +50,19 @@ function TaskRow({ task, depth, onToggle, openIds, onToggleOpen }: {
             ) : (
               <span style={{ width: 14 }} />
             )}
-            <button onClick={() => onToggle(task.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", flexShrink: 0 }}>
-              {task.is_done ? <CheckCircle2 size={17} color="#10B981" /> : <Circle size={17} color="#D1D5DB" />}
+            <button
+              onClick={() => !isHrCheck && !isDone && onToggle(task.id)}
+              style={{ background: "none", border: "none", cursor: isHrCheck || isDone ? "default" : "pointer", padding: 0, display: "flex", flexShrink: 0 }}
+              title={isHrCheck ? "HR tekshirmoqda, kuting" : isDone ? "Bajarildi" : "Bajarildi deb belgilash"}
+            >
+              {isDone
+                ? <CheckCircle2 size={17} color="#10B981" />
+                : isHrCheck
+                  ? <Clock size={17} color="#D97706" />
+                  : <Circle size={17} color="#D1D5DB" />
+              }
             </button>
-            <span style={{ fontSize: "13.5px", fontWeight: depth === 0 ? 600 : 400, color: task.is_done ? "#9CA3AF" : "#111827", textDecoration: task.is_done ? "line-through" : "none" }}>
+            <span style={{ fontSize: "13.5px", fontWeight: depth === 0 ? 600 : 400, color: isDone ? "#9CA3AF" : "#111827", textDecoration: isDone ? "line-through" : "none" }}>
               {task.title}
             </span>
           </div>
@@ -67,8 +80,8 @@ function TaskRow({ task, depth, onToggle, openIds, onToggleOpen }: {
           ) : <span style={{ color: "#D1D5DB", fontSize: "12px" }}>—</span>}
         </td>
         <td style={{ padding: "12px 16px" }}>
-          <span style={{ fontSize: "11.5px", padding: "3px 10px", borderRadius: "6px", fontWeight: 600, background: task.is_done ? "#D1FAE5" : task.status === "in_progress" ? "#EEF2FF" : "#F3F4F6", color: task.is_done ? "#065F46" : task.status === "in_progress" ? "#4F46E5" : "#6B7280" }}>
-            {STATUS_LABEL[task.status] ?? task.status}
+          <span style={{ fontSize: "11.5px", padding: "3px 10px", borderRadius: "6px", fontWeight: 600, background: s.bg, color: s.color }}>
+            {s.label}
           </span>
         </td>
       </tr>
@@ -79,13 +92,15 @@ function TaskRow({ task, depth, onToggle, openIds, onToggleOpen }: {
   );
 }
 
+type Filter = "all" | "pending" | "in_progress" | "hr_check" | "done";
+
 export default function VazifalarPage() {
   const { user } = useAuth();
   const empId = user?.employee_id;
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [openIds, setOpenIds] = useState<Set<number>>(new Set());
-  const [filter, setFilter] = useState<"all" | "pending" | "in_progress" | "done">("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -105,10 +120,11 @@ export default function VazifalarPage() {
     })();
   }, [empId]);
 
-  const toggleDone = async (id: number) => {
+  const markDone = async (id: number) => {
     const task = findTask(tasks, id);
-    if (!task) return;
-    const updated = await tasksApi.update(id, { is_done: !task.is_done }).catch(() => null);
+    if (!task || task.status === "hr_check" || task.status === "done") return;
+    // sends is_done:true → backend sets status=hr_check
+    const updated = await tasksApi.update(id, { is_done: true }).catch(() => null);
     if (updated) setTasks(prev => updateTask(prev, id, updated));
   };
 
@@ -141,8 +157,19 @@ export default function VazifalarPage() {
   }
 
   const filteredTasks = filter === "all" ? tasks
-    : filter === "done" ? tasks.filter(t => t.is_done)
-    : tasks.filter(t => t.status === filter && !t.is_done);
+    : filter === "done"     ? tasks.filter(t => t.status === "done")
+    : filter === "hr_check" ? tasks.filter(t => t.status === "hr_check")
+    : tasks.filter(t => t.status === filter);
+
+  const hrCheckCount = tasks.filter(t => t.status === "hr_check").length;
+
+  const FILTERS: { key: Filter; label: string }[] = [
+    { key: "all",         label: "Barchasi" },
+    { key: "pending",     label: "Kutmoqda" },
+    { key: "in_progress", label: "Jarayonda" },
+    { key: "hr_check",    label: `HR tekshirmoqda${hrCheckCount > 0 ? ` (${hrCheckCount})` : ""}` },
+    { key: "done",        label: "Bajarilgan" },
+  ];
 
   const S = {
     card: { background: "#ffffff", borderRadius: "16px", border: "1px solid #E5E7EB", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" } as React.CSSProperties,
@@ -164,13 +191,21 @@ export default function VazifalarPage() {
         </button>
       </div>
 
+      {/* HR check info banner */}
+      {hrCheckCount > 0 && (
+        <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: "12px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "10px" }}>
+          <Clock size={16} color="#D97706" />
+          <span style={{ fontSize: "13px", color: "#92400E", fontWeight: 500 }}>
+            <b>{hrCheckCount} ta vazifangiz</b> HR tasdiqlashini kutmoqda. HR tasdiqlasidan keyin "Bajarildi" bo'ladi.
+          </span>
+        </div>
+      )}
+
       {/* Add task form */}
       {adding && (
         <div style={{ ...S.card, padding: "16px", display: "flex", gap: "10px" }}>
           <input
-            autoFocus
-            type="text"
-            value={newTitle}
+            autoFocus type="text" value={newTitle}
             onChange={e => setNewTitle(e.target.value)}
             onKeyDown={e => { if (e.key === "Enter") addTask(); if (e.key === "Escape") { setAdding(false); setNewTitle(""); } }}
             placeholder="Vazifa nomini yozing..."
@@ -182,11 +217,15 @@ export default function VazifalarPage() {
       )}
 
       {/* Filter bar */}
-      <div style={{ display: "flex", gap: "8px" }}>
+      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
         <Filter size={14} color="#9CA3AF" style={{ alignSelf: "center" }} />
-        {(["all", "pending", "in_progress", "done"] as const).map(f => (
-          <button key={f} onClick={() => setFilter(f)} style={{ padding: "6px 14px", borderRadius: "8px", border: "none", fontSize: "12.5px", fontWeight: 600, cursor: "pointer", background: filter === f ? "#6366F1" : "#F3F4F6", color: filter === f ? "white" : "#6B7280" }}>
-            {f === "all" ? "Barchasi" : f === "pending" ? "Kutmoqda" : f === "in_progress" ? "Jarayonda" : "Bajarilgan"}
+        {FILTERS.map(({ key, label }) => (
+          <button key={key} onClick={() => setFilter(key)} style={{
+            padding: "6px 14px", borderRadius: "8px", border: "none", fontSize: "12.5px", fontWeight: 600, cursor: "pointer",
+            background: filter === key ? (key === "hr_check" ? "#FEF3C7" : "#6366F1") : "#F3F4F6",
+            color: filter === key ? (key === "hr_check" ? "#92400E" : "white") : "#6B7280",
+          }}>
+            {label}
           </button>
         ))}
       </div>
@@ -199,7 +238,7 @@ export default function VazifalarPage() {
               <th style={S.th}>VAZIFA NOMI</th>
               <th style={{ ...S.th, width: 120 }}>USTUVORLIK</th>
               <th style={{ ...S.th, width: 140 }}>MUDDAT</th>
-              <th style={{ ...S.th, width: 130 }}>HOLAT</th>
+              <th style={{ ...S.th, width: 160 }}>HOLAT</th>
             </tr>
           </thead>
           <tbody>
@@ -209,7 +248,7 @@ export default function VazifalarPage() {
               <tr><td colSpan={4} style={{ padding: "40px", textAlign: "center", color: "#9CA3AF" }}>Vazifalar topilmadi</td></tr>
             ) : (
               filteredTasks.map(task => (
-                <TaskRow key={task.id} task={task} depth={0} onToggle={toggleDone} openIds={openIds} onToggleOpen={toggleOpen} />
+                <TaskRow key={task.id} task={task} depth={0} onToggle={markDone} openIds={openIds} onToggleOpen={toggleOpen} />
               ))
             )}
           </tbody>

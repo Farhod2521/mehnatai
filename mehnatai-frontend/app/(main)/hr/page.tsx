@@ -13,8 +13,8 @@ import {
 import CircularProgress from "@/components/CircularProgress";
 import Link from "next/link";
 import {
-  dashboardApi, employeesApi,
-  type DashboardStats, type TopPerformer, type Employee,
+  dashboardApi, employeesApi, tasksApi,
+  type DashboardStats, type TopPerformer, type Employee, type Task,
 } from "@/lib/api";
 
 /* ─── helpers ─────────────────────────────────────────────────── */
@@ -42,22 +42,32 @@ export default function HrDashboard() {
   const [top, setTop]             = useState<TopPerformer[]>([]);
   const [atRisk, setAtRisk]       = useState<Employee[]>([]);
   const [deptData, setDeptData]   = useState<{ name: string; count: number }[]>([]);
+  const [allEmployees, setAllEmployees] = useState<Employee[]>([]);
   const [loading, setLoading]     = useState(true);
+
+  // HR task state
+  const [hrTasks, setHrTasks]     = useState<Task[]>([]);
+  const [approving, setApproving] = useState<number | null>(null);
+  const [showAssign, setShowAssign] = useState(false);
+  const [assignForm, setAssignForm] = useState({ employee_id: "", title: "", priority: "medium", due_date: "" });
+  const [assigning, setAssigning] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
-        const [s, t, risk, all] = await Promise.all([
+        const [s, t, risk, all, pending] = await Promise.all([
           dashboardApi.stats(),
           dashboardApi.topPerformers(5),
           employeesApi.list({ status: "rivojlanish", page_size: 5 }),
           employeesApi.list({ page_size: 100 }),
+          tasksApi.hrPending(),
         ]);
         setStats(s);
         setTop(t);
         setAtRisk(risk.items);
+        setAllEmployees(all.items);
+        setHrTasks(pending);
 
-        // build department breakdown
         const deptMap: Record<string, number> = {};
         for (const emp of all.items) {
           deptMap[emp.department] = (deptMap[emp.department] ?? 0) + 1;
@@ -121,6 +131,35 @@ export default function HrDashboard() {
         { name: "Rivojlanish", value: stats.employees.rivojlanish },
       ]
     : [];
+
+  const approveTask = async (id: number) => {
+    setApproving(id);
+    try {
+      await tasksApi.approve(id);
+      setHrTasks(prev => prev.filter(t => t.id !== id));
+    } catch { /* ignore */ } finally {
+      setApproving(null);
+    }
+  };
+
+  const submitAssign = async () => {
+    if (!assignForm.employee_id || !assignForm.title.trim()) return;
+    setAssigning(true);
+    try {
+      await tasksApi.create({
+        employee_id: Number(assignForm.employee_id),
+        title: assignForm.title.trim(),
+        priority: assignForm.priority,
+        due_date: assignForm.due_date || undefined,
+      });
+      setAssignForm({ employee_id: "", title: "", priority: "medium", due_date: "" });
+      setShowAssign(false);
+    } catch { /* ignore */ } finally {
+      setAssigning(false);
+    }
+  };
+
+  const empById = (id: number) => allEmployees.find(e => e.id === id);
 
   const S = {
     card: {
@@ -383,6 +422,146 @@ export default function HrDashboard() {
               ))}
             </div>
           )}
+        </div>
+      </div>
+
+      {/* ── HR Task Management ───────────────────────────────────── */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+
+        {/* Pending HR approval */}
+        <div style={S.card}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div>
+              <div style={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>HR Tekshiruv</div>
+              <div style={{ fontSize: "12px", color: "#9CA3AF", marginTop: 2 }}>
+                Tasdiqlashni kutayotgan vazifalar
+              </div>
+            </div>
+            {hrTasks.length > 0 && (
+              <span style={{ fontSize: "12px", fontWeight: 700, padding: "3px 10px", borderRadius: "8px", background: "#FEF3C7", color: "#92400E" }}>
+                {hrTasks.length} ta
+              </span>
+            )}
+          </div>
+
+          {loading ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {[1,2,3].map(i => <Skeleton key={i} h={56} />)}
+            </div>
+          ) : hrTasks.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "28px 0" }}>
+              <UserCheck size={32} color="#10B981" style={{ margin: "0 auto 10px" }} />
+              <p style={{ fontSize: "13px", color: "#9CA3AF" }}>Tekshiruv kutayotgan vazifa yo'q</p>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, maxHeight: "340px", overflowY: "auto" }}>
+              {hrTasks.map(task => {
+                const emp = empById(task.employee_id);
+                const today = new Date().toISOString().slice(0, 10);
+                const overdue = !!task.due_date && task.due_date < today;
+                return (
+                  <div key={task.id} style={{ padding: "12px", borderRadius: "10px", background: "#FFFBEB", border: "1px solid #FDE68A", display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: "13.5px", fontWeight: 600, color: "#111827" }}>{task.title}</div>
+                        <div style={{ fontSize: "11.5px", color: "#9CA3AF", marginTop: "3px" }}>
+                          {emp ? `${emp.first_name} ${emp.last_name} · ${emp.position}` : `Xodim #${task.employee_id}`}
+                        </div>
+                      </div>
+                      {task.due_date && (
+                        <span style={{ fontSize: "11px", fontWeight: 600, padding: "2px 8px", borderRadius: "6px", background: overdue ? "#FEE2E2" : "#F3F4F6", color: overdue ? "#DC2626" : "#6B7280", flexShrink: 0 }}>
+                          {task.due_date}
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => approveTask(task.id)}
+                      disabled={approving === task.id}
+                      style={{ width: "100%", padding: "8px", borderRadius: "8px", border: "none", background: approving === task.id ? "#E5E7EB" : "linear-gradient(135deg,#10B981,#059669)", color: "white", fontSize: "12.5px", fontWeight: 700, cursor: approving === task.id ? "not-allowed" : "pointer" }}
+                    >
+                      {approving === task.id ? "Tasdiqlanmoqda..." : "✓ Tasdiqlash"}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Assign task */}
+        <div style={S.card}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div>
+              <div style={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>Vazifa berish</div>
+              <div style={{ fontSize: "12px", color: "#9CA3AF", marginTop: 2 }}>Xodimga yangi topshiriq qo'shish</div>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {/* Employee select */}
+            <div>
+              <label style={{ fontSize: "11px", fontWeight: 700, color: "#6B7280", display: "block", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Xodim</label>
+              <select
+                value={assignForm.employee_id}
+                onChange={e => setAssignForm(f => ({ ...f, employee_id: e.target.value }))}
+                style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1.5px solid #E5E7EB", fontSize: "13px", outline: "none", background: "white", color: "#111827" }}
+              >
+                <option value="">— Xodimni tanlang —</option>
+                {allEmployees.map(emp => (
+                  <option key={emp.id} value={emp.id}>
+                    {emp.first_name} {emp.last_name} ({emp.position})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Title */}
+            <div>
+              <label style={{ fontSize: "11px", fontWeight: 700, color: "#6B7280", display: "block", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Vazifa nomi</label>
+              <input
+                type="text"
+                value={assignForm.title}
+                onChange={e => setAssignForm(f => ({ ...f, title: e.target.value }))}
+                placeholder="Vazifa nomini yozing..."
+                style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1.5px solid #E5E7EB", fontSize: "13px", outline: "none", boxSizing: "border-box" }}
+              />
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+              {/* Priority */}
+              <div>
+                <label style={{ fontSize: "11px", fontWeight: 700, color: "#6B7280", display: "block", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Ustuvorlik</label>
+                <select
+                  value={assignForm.priority}
+                  onChange={e => setAssignForm(f => ({ ...f, priority: e.target.value }))}
+                  style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1.5px solid #E5E7EB", fontSize: "13px", outline: "none", background: "white" }}
+                >
+                  <option value="high">Yuqori</option>
+                  <option value="medium">O'rta</option>
+                  <option value="low">Past</option>
+                </select>
+              </div>
+
+              {/* Due date */}
+              <div>
+                <label style={{ fontSize: "11px", fontWeight: 700, color: "#6B7280", display: "block", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Muddat</label>
+                <input
+                  type="date"
+                  value={assignForm.due_date}
+                  onChange={e => setAssignForm(f => ({ ...f, due_date: e.target.value }))}
+                  style={{ width: "100%", padding: "10px 12px", borderRadius: "10px", border: "1.5px solid #E5E7EB", fontSize: "13px", outline: "none", boxSizing: "border-box" }}
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={submitAssign}
+              disabled={assigning || !assignForm.employee_id || !assignForm.title.trim()}
+              style={{ padding: "11px", borderRadius: "10px", border: "none", background: assigning || !assignForm.employee_id || !assignForm.title.trim() ? "#E5E7EB" : "linear-gradient(135deg,#6366F1,#4F46E5)", color: assigning || !assignForm.employee_id || !assignForm.title.trim() ? "#9CA3AF" : "white", fontSize: "13.5px", fontWeight: 700, cursor: "pointer", transition: "all 0.2s" }}
+            >
+              {assigning ? "Berilmoqda..." : "Vazifa berish"}
+            </button>
+          </div>
         </div>
       </div>
 
