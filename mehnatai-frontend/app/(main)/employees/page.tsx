@@ -2,10 +2,73 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
+import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight, Plus, X, Copy, Check, Key } from "lucide-react";
 import CircularProgress from "@/components/CircularProgress";
 import StatusBadge from "@/components/StatusBadge";
-import { employeesApi, type Employee, type EmployeeCreate } from "@/lib/api";
+import { employeesApi, usersApi, type Employee, type EmployeeCreate } from "@/lib/api";
+
+function genPassword(len = 8): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+  return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+}
+
+interface Credentials { username: string; password: string; }
+
+function CredentialModal({ creds, onClose }: { creds: Credentials; onClose: () => void }) {
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+  const copy = (text: string, field: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1100, padding: "20px" }}>
+      <div style={{ background: "#fff", borderRadius: "20px", width: "100%", maxWidth: "420px", boxShadow: "0 24px 64px rgba(0,0,0,0.18)", overflow: "hidden" }}>
+        {/* Header */}
+        <div style={{ background: "linear-gradient(135deg,#00B8A0,#009984)", padding: "24px", textAlign: "center" }}>
+          <div style={{ width: "52px", height: "52px", borderRadius: "14px", background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
+            <Key size={24} color="white" />
+          </div>
+          <div style={{ fontSize: "18px", fontWeight: 700, color: "white" }}>Login ma'lumotlari tayyor!</div>
+          <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.8)", marginTop: "4px" }}>Xodimga quyidagi ma'lumotlarni bering</div>
+        </div>
+
+        {/* Credentials */}
+        <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
+          {[
+            { label: "Login (telefon)", value: creds.username, field: "login" },
+            { label: "Parol", value: creds.password, field: "password" },
+          ].map(({ label, value, field }) => (
+            <div key={field} style={{ padding: "14px 16px", borderRadius: "12px", background: "#F9FAFB", border: "1px solid #E5E7EB" }}>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "#9CA3AF", marginBottom: "4px" }}>{label}</div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span style={{ fontSize: "16px", fontWeight: 700, color: "#111827", fontFamily: "monospace", letterSpacing: "0.5px" }}>{value}</span>
+                <button onClick={() => copy(value, field)} style={{ display: "flex", alignItems: "center", gap: "4px", padding: "5px 10px", borderRadius: "7px", border: "none", background: copiedField === field ? "#D1FAE5" : "#E8F8F6", color: copiedField === field ? "#065F46" : "#00B8A0", fontSize: "12px", fontWeight: 600, cursor: "pointer" }}>
+                  {copiedField === field ? <Check size={13} /> : <Copy size={13} />}
+                  {copiedField === field ? "Nusxalandi" : "Nusxalash"}
+                </button>
+              </div>
+            </div>
+          ))}
+
+          <button onClick={() => copy(`Login: ${creds.username}\nParol: ${creds.password}`, "all")} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", padding: "11px", borderRadius: "10px", border: "1.5px dashed #D1D5DB", background: "transparent", color: "#6B7280", fontSize: "13px", fontWeight: 500, cursor: "pointer" }}>
+            {copiedField === "all" ? <Check size={14} color="#10B981" /> : <Copy size={14} />}
+            {copiedField === "all" ? "Hammasi nusxalandi!" : "Ikkalasini nusxalash"}
+          </button>
+
+          <div style={{ padding: "10px 14px", borderRadius: "10px", background: "#FFFBEB", border: "1px solid #FDE68A", fontSize: "12px", color: "#92400E" }}>
+            ⚠️ Ushbu parol faqat bir marta ko'rsatiladi. Xodimga yetkazing.
+          </div>
+
+          <button onClick={onClose} style={{ padding: "11px", borderRadius: "10px", border: "none", background: "linear-gradient(135deg,#00B8A0,#009984)", color: "#fff", fontSize: "14px", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(0,184,160,0.3)" }}>
+            Yopish
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const ITEMS_PER_PAGE = 8;
 
@@ -81,11 +144,12 @@ function AddEmployeeModal({ onClose, onSuccess }: { onClose: () => void; onSucce
   const [form, setForm] = useState<EmployeeCreate>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [creds, setCreds] = useState<Credentials | null>(null);
 
   const set = (field: keyof EmployeeCreate, val: string | number) =>
     setForm(f => ({ ...f, [field]: val }));
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!form.first_name || !form.last_name || !form.position) {
       setError("Ism, familiya va lavozim majburiy");
@@ -101,15 +165,29 @@ function AddEmployeeModal({ onClose, onSuccess }: { onClose: () => void; onSucce
         hired_date: form.hired_date || undefined,
         bio: form.bio || undefined,
       };
-      await employeesApi.create(payload);
+      const emp = await employeesApi.create(payload);
       onSuccess();
-      onClose();
+
+      if (form.phone) {
+        const username = form.phone.startsWith("+") ? form.phone : `+${form.phone}`;
+        const password = genPassword();
+        try {
+          await usersApi.create({ username, password, role: "xodim", employee_id: emp.id });
+          setCreds({ username, password });
+        } catch {
+          onClose();
+        }
+      } else {
+        onClose();
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Xatolik yuz berdi");
     } finally {
       setSaving(false);
     }
   };
+
+  if (creds) return <CredentialModal creds={creds} onClose={onClose} />;
 
   return (
     <div style={{
