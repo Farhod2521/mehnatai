@@ -53,6 +53,74 @@ function Pill({ children, color }: { children: React.ReactNode; color: string })
   );
 }
 
+type ShapeType = "circle" | "ring" | "diamond" | "triangle" | "dot" | "cross";
+
+interface ShapeDef {
+  shape: ShapeType; size: number; color: string; opacity: number;
+  top?: string; left?: string; right?: string; bottom?: string;
+  duration: number; delay: number; animType: 1 | 2 | 3;
+}
+
+const SHAPES: ShapeDef[] = [
+  { shape: "circle",   size: 14, color: "#00B894", opacity: 0.22, top: "14%",  left: "3.5%",  duration: 6,  delay: 0,   animType: 1 },
+  { shape: "ring",     size: 24, color: "#60A5FA", opacity: 0.28, top: "48%",  left: "1.5%",  duration: 8,  delay: 1.5, animType: 2 },
+  { shape: "diamond",  size: 11, color: "#A78BFA", opacity: 0.22, top: "74%",  left: "5%",    duration: 7,  delay: 0.8, animType: 3 },
+  { shape: "dot",      size: 7,  color: "#F59E0B", opacity: 0.40, top: "28%",  left: "10%",   duration: 5,  delay: 2,   animType: 1 },
+  { shape: "triangle", size: 13, color: "#34D399", opacity: 0.22, top: "87%",  left: "4%",    duration: 9,  delay: 1,   animType: 2 },
+  { shape: "cross",    size: 12, color: "#60A5FA", opacity: 0.20, top: "62%",  left: "9%",    duration: 7,  delay: 3,   animType: 1 },
+  { shape: "ring",     size: 16, color: "#A78BFA", opacity: 0.22, top: "8%",   left: "22%",   duration: 10, delay: 1.8, animType: 3 },
+  { shape: "dot",      size: 5,  color: "#00B894", opacity: 0.30, top: "92%",  left: "28%",   duration: 6,  delay: 0.3, animType: 2 },
+  { shape: "circle",   size: 10, color: "#A78BFA", opacity: 0.22, top: "18%",  right: "3%",   duration: 7,  delay: 0.5, animType: 2 },
+  { shape: "diamond",  size: 15, color: "#00B894", opacity: 0.20, top: "52%",  right: "2%",   duration: 6,  delay: 1.2, animType: 1 },
+  { shape: "ring",     size: 20, color: "#F59E0B", opacity: 0.25, top: "82%",  right: "6%",   duration: 8,  delay: 0,   animType: 3 },
+  { shape: "dot",      size: 9,  color: "#60A5FA", opacity: 0.32, top: "38%",  right: "12%",  duration: 5,  delay: 2.5, animType: 1 },
+  { shape: "triangle", size: 11, color: "#F87171", opacity: 0.20, top: "70%",  right: "4%",   duration: 9,  delay: 0.7, animType: 2 },
+  { shape: "cross",    size: 10, color: "#34D399", opacity: 0.22, top: "10%",  right: "18%",  duration: 7,  delay: 1.4, animType: 3 },
+  { shape: "circle",   size: 8,  color: "#F59E0B", opacity: 0.25, top: "95%",  right: "20%",  duration: 6,  delay: 0.9, animType: 1 },
+];
+
+function FloatingShape({ s }: { s: ShapeDef }) {
+  const pos: React.CSSProperties = {
+    position: "absolute", zIndex: 0, pointerEvents: "none",
+    top: s.top, left: s.left, right: s.right, bottom: s.bottom,
+    opacity: s.opacity,
+    animation: `floatShape${s.animType} ${s.duration}s ease-in-out ${s.delay}s infinite`,
+  };
+
+  if (s.shape === "circle") return (
+    <div style={{ ...pos, width: s.size, height: s.size, borderRadius: "50%", background: s.color }} />
+  );
+  if (s.shape === "dot") return (
+    <div style={{ ...pos, width: s.size, height: s.size, borderRadius: "50%", background: s.color }} />
+  );
+  if (s.shape === "ring") return (
+    <div style={{ ...pos, width: s.size, height: s.size, borderRadius: "50%", border: `2px solid ${s.color}`, background: "transparent" }} />
+  );
+  if (s.shape === "diamond") return (
+    <div style={{ ...pos }}>
+      <div style={{ width: s.size, height: s.size, background: s.color, transform: "rotate(45deg)" }} />
+    </div>
+  );
+  if (s.shape === "triangle") return (
+    <div style={{ ...pos, width: 0, height: 0, background: "transparent", borderLeft: `${s.size * 0.6}px solid transparent`, borderRight: `${s.size * 0.6}px solid transparent`, borderBottom: `${s.size}px solid ${s.color}` }} />
+  );
+  if (s.shape === "cross") return (
+    <div style={{ ...pos, width: s.size, height: s.size, position: "absolute" }}>
+      <div style={{ position: "absolute", top: "50%", left: 0, width: "100%", height: "2px", background: s.color, transform: "translateY(-50%)", borderRadius: "1px" }} />
+      <div style={{ position: "absolute", left: "50%", top: 0, width: "2px", height: "100%", background: s.color, transform: "translateX(-50%)", borderRadius: "1px" }} />
+    </div>
+  );
+  return null;
+}
+
+function FloatingShapes() {
+  return (
+    <>
+      {SHAPES.map((s, i) => <FloatingShape key={i} s={s} />)}
+    </>
+  );
+}
+
 const NAV_LINKS = [
   { label: "Platforma", href: "#platforma" },
   { label: "AI Algoritmlar", href: "#algoritmlar" },
@@ -149,6 +217,7 @@ export default function Landing() {
         <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(#D4EDE620 1px,transparent 1px),linear-gradient(90deg,#D4EDE620 1px,transparent 1px)", backgroundSize: "60px 60px", zIndex: 0 }} />
         <div style={{ position: "absolute", top: "-80px", left: "10%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle,rgba(0,184,148,0.1) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
         <div style={{ position: "absolute", bottom: "0", right: "5%", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle,rgba(96,165,250,0.07) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+        <FloatingShapes />
 
         <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: "1200px", margin: "0 auto", padding: "80px 48px 60px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }}>
@@ -687,6 +756,20 @@ export default function Landing() {
       <style>{`
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
         @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        @keyframes floatShape1 {
+          0%,100% { transform: translateY(0px) translateX(0px); }
+          33%     { transform: translateY(-18px) translateX(6px); }
+          66%     { transform: translateY(-8px) translateX(-10px); }
+        }
+        @keyframes floatShape2 {
+          0%,100% { transform: translateY(0px) rotate(0deg); }
+          50%     { transform: translateY(-22px) rotate(180deg); }
+        }
+        @keyframes floatShape3 {
+          0%,100% { transform: translateY(0px) translateX(0px) scale(1); }
+          25%     { transform: translateY(-14px) translateX(10px) scale(1.15); }
+          75%     { transform: translateY(-20px) translateX(-8px) scale(0.9); }
+        }
         *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
         html { scroll-behavior:smooth; }
         ::-webkit-scrollbar { width:5px; }
