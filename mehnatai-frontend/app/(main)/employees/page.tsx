@@ -145,9 +145,22 @@ function AddEmployeeModal({ onClose, onSuccess }: { onClose: () => void; onSucce
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [creds, setCreds] = useState<Credentials | null>(null);
+  const [autoPass, setAutoPass] = useState(() => genPassword());
+  const [showPass, setShowPass] = useState(false);
+  const [copied, setCopied] = useState<"login" | "pass" | null>(null);
 
   const set = (field: keyof EmployeeCreate, val: string | number) =>
     setForm(f => ({ ...f, [field]: val }));
+
+  const phoneLogin = form.phone
+    ? (form.phone.startsWith("+") ? form.phone : `+${form.phone}`)
+    : "";
+
+  const copyField = (text: string, field: "login" | "pass") => {
+    navigator.clipboard.writeText(text);
+    setCopied(field);
+    setTimeout(() => setCopied(null), 2000);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -168,12 +181,10 @@ function AddEmployeeModal({ onClose, onSuccess }: { onClose: () => void; onSucce
       const emp = await employeesApi.create(payload);
       onSuccess();
 
-      if (form.phone) {
-        const username = form.phone.startsWith("+") ? form.phone : `+${form.phone}`;
-        const password = genPassword();
+      if (phoneLogin) {
         try {
-          await usersApi.create({ username, password, role: "xodim", employee_id: emp.id });
-          setCreds({ username, password });
+          await usersApi.create({ username: phoneLogin, password: autoPass, role: "xodim", employee_id: emp.id });
+          setCreds({ username: phoneLogin, password: autoPass });
         } catch {
           onClose();
         }
@@ -266,11 +277,71 @@ function AddEmployeeModal({ onClose, onSuccess }: { onClose: () => void; onSucce
                 value={form.email || ""} onChange={e => set("email", e.target.value)} />
             </div>
             <div>
-              <label style={S.label}>Telefon</label>
-              <input style={S.input} placeholder="+998 90 123 45 67"
+              <label style={S.label}>Telefon (login bo'ladi)</label>
+              <input style={S.input} placeholder="+998901234567"
                 value={form.phone || ""} onChange={e => set("phone", e.target.value)} />
             </div>
           </div>
+
+          {/* Auto credentials — telefon kiritilganda ko'rinadi */}
+          {phoneLogin && (
+            <div style={{ borderRadius: "14px", border: "1.5px solid #D1FAE5", background: "#F0FDF4", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <Key size={15} color="#00B8A0" />
+                <span style={{ fontSize: "12px", fontWeight: 700, color: "#065F46", letterSpacing: "0.3px" }}>TIZIMGA KIRISH MA'LUMOTLARI</span>
+              </div>
+
+              {/* Login */}
+              <div>
+                <label style={{ ...S.label, color: "#065F46" }}>Login</label>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                  <input readOnly value={phoneLogin}
+                    style={{ ...S.input, background: "#fff", color: "#065F46", fontWeight: 600, fontFamily: "monospace", flex: 1, cursor: "default" }} />
+                  <button type="button" onClick={() => copyField(phoneLogin, "login")}
+                    style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "4px", padding: "8px 12px", borderRadius: "8px", border: "none", background: copied === "login" ? "#D1FAE5" : "#E8F8F6", color: copied === "login" ? "#065F46" : "#00B8A0", fontSize: "12px", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>
+                    {copied === "login" ? <Check size={13} /> : <Copy size={13} />}
+                    {copied === "login" ? "Nusxalandi" : "Nusxalash"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Parol */}
+              <div>
+                <label style={{ ...S.label, color: "#065F46" }}>Parol (avtomatik)</label>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                  <div style={{ position: "relative", flex: 1 }}>
+                    <input
+                      readOnly
+                      value={autoPass}
+                      type={showPass ? "text" : "password"}
+                      style={{ ...S.input, background: "#fff", color: "#065F46", fontWeight: 700, fontFamily: "monospace", fontSize: "15px", letterSpacing: "2px", width: "100%", paddingRight: "44px" }}
+                    />
+                    <button type="button" onClick={() => setShowPass(v => !v)}
+                      style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", display: "flex", alignItems: "center" }}>
+                      {showPass
+                        ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M1 1l22 22"/></svg>
+                        : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      }
+                    </button>
+                  </div>
+                  <button type="button" onClick={() => setAutoPass(genPassword())}
+                    style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "4px", padding: "8px 12px", borderRadius: "8px", border: "none", background: "#E8F8F6", color: "#00B8A0", fontSize: "12px", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                    Yangilash
+                  </button>
+                  <button type="button" onClick={() => copyField(autoPass, "pass")}
+                    style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "4px", padding: "8px 12px", borderRadius: "8px", border: "none", background: copied === "pass" ? "#D1FAE5" : "#E8F8F6", color: copied === "pass" ? "#065F46" : "#00B8A0", fontSize: "12px", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>
+                    {copied === "pass" ? <Check size={13} /> : <Copy size={13} />}
+                    {copied === "pass" ? "Nusxalandi" : "Nusxalash"}
+                  </button>
+                </div>
+              </div>
+
+              <div style={{ fontSize: "11.5px", color: "#065F46", opacity: 0.7 }}>
+                ⚠️ Parolni xodimga yetkazishni unutmang — keyinchalik o'zgartirish mumkin.
+              </div>
+            </div>
+          )}
 
           {/* Bio */}
           <div>
