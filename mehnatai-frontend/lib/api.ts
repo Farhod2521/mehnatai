@@ -371,7 +371,7 @@ export interface UserAccount {
 
 export interface UserAccountCreate {
   username: string;
-  email: string;
+  email?: string;
   password: string;
   role?: "xodim" | "hr";
   employee_id?: number;
