@@ -116,45 +116,43 @@ function TaskRow({ task, depth, onToggle, openIds, onToggleOpen }: {
   );
 }
 
+/* ─── helpers ──────────────────────────────────────────────────────────── */
+function genPass(len = 8): string {
+  const chars = "abcdefghjkmnpqrstuvwxyz23456789";
+  return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+}
+
 /* ─── LoginModal ───────────────────────────────────────────────────────── */
 function LoginModal({ employee, onClose }: { employee: Employee; onClose: () => void }) {
-  const [phone, setPhone] = useState("");        // faqat raqamlar: "901234567"
-  const [displayPhone, setDisplayPhone] = useState(""); // formatlangan: "90 123 45 67"
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const initPhone = employee.phone
+    ? employee.phone.replace(/\D/g, "").replace(/^998/, "")
+    : "";
+
+  const phone = initPhone;
+  const [autoPass, setAutoPass] = useState(() => genPass());
   const [showPass, setShowPass] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [created, setCreated] = useState<UserAccount | null>(null);
+  const [copied, setCopied] = useState<"phone" | "pass" | null>(null);
 
-  const formatPhone = (digits: string) => {
-    const d = digits.slice(0, 9);
-    let out = "";
-    if (d.length > 0) out += d.slice(0, 2);
-    if (d.length > 2) out += " " + d.slice(2, 5);
-    if (d.length > 5) out += " " + d.slice(5, 7);
-    if (d.length > 7) out += " " + d.slice(7, 9);
-    return out;
+  const username = phone.length === 9 ? `+998${phone}` : (phone.startsWith("+") ? phone : "");
+
+  const copyText = (text: string, field: "phone" | "pass") => {
+    navigator.clipboard.writeText(text);
+    setCopied(field);
+    setTimeout(() => setCopied(null), 2000);
   };
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/\D/g, "").slice(0, 9);
-    setPhone(raw);
-    setDisplayPhone(formatPhone(raw));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setError("");
-    if (phone.length < 9) { setError("Telefon raqamni to'liq kiriting (9 ta raqam)"); return; }
-    if (password.length < 6) { setError("Parol kamida 6 ta belgi bo'lishi kerak"); return; }
-    if (password !== confirm) { setError("Parollar mos kelmayapti"); return; }
+    if (!username) { setError("Telefon raqamni to'liq kiriting (9 ta raqam)"); return; }
     setSaving(true);
     try {
-      const username = "+998" + phone;
       const result = await usersApi.create({
         username,
-        password,
+        password: autoPass,
         role: "xodim",
         employee_id: employee.id,
       });
@@ -214,73 +212,55 @@ function LoginModal({ employee, onClose }: { employee: Employee; onClose: () => 
             <form onSubmit={handleSubmit}>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
 
-                {/* Telefon raqam */}
+                {/* Login (telefon) — read-only */}
                 <div>
-                  <label style={{ fontSize: "12px", fontWeight: 700, color: "#6B7280", display: "block", marginBottom: "7px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Telefon raqam *</label>
+                  <label style={{ fontSize: "12px", fontWeight: 700, color: "#6B7280", display: "block", marginBottom: "7px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Login (telefon raqam)</label>
                   <div style={{ display: "flex", alignItems: "center", background: "#F6FAF9", border: "1.5px solid #DFF0EC", borderRadius: "12px", overflow: "hidden" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "7px", padding: "0 12px 0 14px", background: "#EDF8F5", borderRight: "1.5px solid #DFF0EC", height: "48px", flexShrink: 0 }}>
-                      <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
-                        <rect width="20" height="4.67" fill="#1EB6E8"/>
-                        <rect y="4.67" width="20" height="4.66" fill="#FFFFFF"/>
-                        <rect y="9.33" width="20" height="4.67" fill="#3BB54A"/>
-                        <rect y="4.2" width="20" height="0.9" fill="#E8112D"/>
-                        <rect y="8.9" width="20" height="0.9" fill="#E8112D"/>
-                        <circle cx="4.2" cy="2.33" r="1.3" fill="white"/>
-                        <circle cx="4.8" cy="2.33" r="1.0" fill="#1EB6E8"/>
-                        <circle cx="6.5" cy="1.3" r="0.35" fill="white"/>
-                        <circle cx="7.2" cy="2.0" r="0.35" fill="white"/>
-                        <circle cx="6.5" cy="2.7" r="0.35" fill="white"/>
-                        <circle cx="7.5" cy="1.0" r="0.35" fill="white"/>
-                        <circle cx="7.5" cy="3.0" r="0.35" fill="white"/>
-                      </svg>
-                      <span style={{ fontSize: "14px", fontWeight: 700, color: "#00B8A0", whiteSpace: "nowrap" }}>+998</span>
-                    </div>
-                    <input
-                      type="tel"
-                      inputMode="numeric"
-                      value={displayPhone}
-                      onChange={handlePhoneChange}
-                      placeholder="90 123 45 67"
-                      maxLength={12}
-                      style={{ flex: 1, padding: "13px 14px", background: "transparent", border: "none", outline: "none", fontSize: "15px", fontWeight: 500, letterSpacing: "1px", color: "#0D3D30", fontFamily: "inherit" }}
-                    />
-                    <span style={{ padding: "0 12px", fontSize: "11px", fontWeight: 600, color: phone.length === 9 ? "#00B8A0" : "#C0D8D2" }}>{phone.length}/9</span>
+                    <span style={{ flex: 1, padding: "13px 14px", fontSize: "15px", fontWeight: 600, color: "#0D3D30", letterSpacing: "1px" }}>
+                      {username || <span style={{ color: "#9CA3AF", fontWeight: 400 }}>Telefon raqam kiritilmagan</span>}
+                    </span>
+                    {username && (
+                      <button type="button" onClick={() => copyText(username, "phone")} style={{ padding: "0 14px", background: "none", border: "none", cursor: "pointer", color: copied === "phone" ? "#00B8A0" : "#9CA3AF", display: "flex", alignItems: "center", height: "48px" }}>
+                        {copied === "phone"
+                          ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#00B8A0" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          : <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" strokeWidth="1.8"/></svg>
+                        }
+                      </button>
+                    )}
                   </div>
+                  <p style={{ fontSize: "11px", color: "#9CA3AF", marginTop: "5px" }}>Xodimning telefon raqami avtomatik login sifatida ishlatiladi</p>
                 </div>
 
-                {/* Parol */}
+                {/* Parol — auto-generated */}
                 <div>
-                  <label style={{ fontSize: "12px", fontWeight: 700, color: "#6B7280", display: "block", marginBottom: "7px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Parol * (kamida 6 belgi)</label>
-                  <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                  <label style={{ fontSize: "12px", fontWeight: 700, color: "#6B7280", display: "block", marginBottom: "7px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Parol (avtomatik yaratilgan)</label>
+                  <div style={{ display: "flex", alignItems: "center", background: "#FAFAFA", border: "1.5px solid #E5E7EB", borderRadius: "12px", overflow: "hidden" }}>
                     <input
+                      readOnly
                       type={showPass ? "text" : "password"}
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      style={{ width: "100%", padding: "13px 42px 13px 14px", borderRadius: "12px", border: "1.5px solid #E5E7EB", fontSize: "14px", outline: "none", fontFamily: "inherit", boxSizing: "border-box" }}
+                      value={autoPass}
+                      style={{ flex: 1, padding: "13px 14px", background: "transparent", border: "none", outline: "none", fontSize: "15px", fontWeight: 600, letterSpacing: "2px", color: "#111827", fontFamily: "monospace" }}
                     />
-                    <button type="button" onClick={() => setShowPass(v => !v)} style={{ position: "absolute", right: "12px", background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", display: "flex" }}>
+                    {/* eye */}
+                    <button type="button" onClick={() => setShowPass(v => !v)} style={{ padding: "0 8px", background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", display: "flex", alignItems: "center", height: "48px" }}>
                       {showPass
                         ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
                         : <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" strokeWidth="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.8"/></svg>
                       }
                     </button>
+                    {/* refresh */}
+                    <button type="button" onClick={() => setAutoPass(genPass())} style={{ padding: "0 8px", background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", display: "flex", alignItems: "center", height: "48px" }}>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M23 4v6h-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><path d="M1 20v-6h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </button>
+                    {/* copy */}
+                    <button type="button" onClick={() => copyText(autoPass, "pass")} style={{ padding: "0 12px 0 8px", background: "none", border: "none", cursor: "pointer", color: copied === "pass" ? "#00B8A0" : "#9CA3AF", display: "flex", alignItems: "center", height: "48px" }}>
+                      {copied === "pass"
+                        ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#00B8A0" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        : <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" strokeWidth="1.8"/></svg>
+                      }
+                    </button>
                   </div>
-                </div>
-
-                {/* Parolni tasdiqlash */}
-                <div>
-                  <label style={{ fontSize: "12px", fontWeight: 700, color: "#6B7280", display: "block", marginBottom: "7px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Parolni tasdiqlang *</label>
-                  <input
-                    type="password"
-                    value={confirm}
-                    onChange={e => setConfirm(e.target.value)}
-                    placeholder="••••••••"
-                    style={{ width: "100%", padding: "13px 14px", borderRadius: "12px", border: `1.5px solid ${confirm && confirm !== password ? "#EF4444" : "#E5E7EB"}`, fontSize: "14px", outline: "none", fontFamily: "inherit", boxSizing: "border-box" }}
-                  />
-                  {confirm && confirm !== password && (
-                    <p style={{ fontSize: "11px", color: "#EF4444", marginTop: "4px" }}>Parollar mos kelmayapti</p>
-                  )}
+                  <p style={{ fontSize: "11px", color: "#9CA3AF", marginTop: "5px" }}>Parolni xodimga yetkazib bering. Yangilash uchun ↺ tugmasini bosing.</p>
                 </div>
 
                 {error && (
@@ -294,7 +274,7 @@ function LoginModal({ employee, onClose }: { employee: Employee; onClose: () => 
                   <button type="button" onClick={onClose} style={{ flex: 1, padding: "13px", borderRadius: "12px", background: "#F3F4F6", border: "none", color: "#374151", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}>
                     Bekor qilish
                   </button>
-                  <button type="submit" disabled={saving} style={{ flex: 1, padding: "13px", borderRadius: "12px", background: "linear-gradient(135deg, #00B8A0, #009984)", border: "none", color: "white", fontSize: "14px", fontWeight: 700, cursor: saving ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", opacity: saving ? 0.8 : 1 }}>
+                  <button type="submit" disabled={saving || !username} style={{ flex: 1, padding: "13px", borderRadius: "12px", background: "linear-gradient(135deg, #00B8A0, #009984)", border: "none", color: "white", fontSize: "14px", fontWeight: 700, cursor: (saving || !username) ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", opacity: (saving || !username) ? 0.7 : 1 }}>
                     {saving ? <><Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} /> Yaratilmoqda...</> : "Akkaunt yaratish"}
                   </button>
                 </div>
@@ -317,7 +297,7 @@ function AddTaskForm({ employeeId, onAdd }: { employeeId: number; onAdd: (t: Tas
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!title.trim()) { setError("Vazifa nomi kiritilishi shart"); return; }
     setSaving(true);
