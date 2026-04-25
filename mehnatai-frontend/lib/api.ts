@@ -260,6 +260,10 @@ export const kpiApi = {
     team_participation: number;
     new_technologies: number;
   }) => apiFetch<KpiRecord>("/kpi", { method: "POST", body: JSON.stringify(data) }),
+  update: (id: number, data: Partial<KpiRecord>) =>
+    apiFetch<KpiRecord>(`/kpi/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
+  delete: (id: number) =>
+    apiFetch<void>(`/kpi/${id}`, { method: "DELETE" }),
 };
 
 // ─── Evaluations ───────────────────────────────────────────────────────────
@@ -436,4 +440,5 @@ export const aiApi = {
     apiFetch<AiPrediction>(`/ai/predictions/${employeeId}`, { method: "POST" }),
   usi: (employeeId: number) => apiFetch<UsiResult>(`/ai/usi/${employeeId}`),
   clusters: () => apiFetch<ClusterGroup[]>("/ai/clusters"),
+  updateClusters: () => apiFetch<Record<string, unknown>>("/ai/clusters/update", { method: "POST" }),
 };

@@ -10,6 +10,7 @@ from app.core.deps import get_current_user, require_hr
 from app.schemas.ai_prediction import AiPredictionOut, UsiCalculationResult
 from app.services.usi import calculate_usi
 from app.services.ai import generate_prediction
+from app.services.kmeans import run_kmeans_clustering
 
 router = APIRouter()
 
@@ -82,3 +83,16 @@ async def get_clusters(
         })
 
     return [{"cluster": k, "count": len(v), "members": v} for k, v in clusters.items()]
+
+
+@router.post("/clusters/update", response_model=dict)
+async def update_clusters(
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(require_hr),
+):
+    """
+    Run K-Means (k=3) on all employees and update their cluster labels.
+    Uses scikit-learn KMeans with features: USI, KPI, rahbar_score, peer_360.
+    """
+    result = await run_kmeans_clustering(db)
+    return result

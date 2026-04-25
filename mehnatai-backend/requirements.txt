@@ -15,3 +15,7 @@ pydantic-settings==2.6.1
 
 # Utilities
 python-multipart==0.0.19
+
+# Machine Learning (K-Means clustering, USI prediction)
+scikit-learn==1.5.2
+numpy==1.26.4

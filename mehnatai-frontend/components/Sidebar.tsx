@@ -6,12 +6,13 @@ import { useAuth } from "@/lib/auth";
 import {
   LayoutDashboard, Users, ClipboardCheck,
   Activity, FileBarChart, Settings, Plus,
-  UserCog, BarChart3,
+  UserCog, BarChart3, ListTodo,
 } from "lucide-react";
 
 const RAHBAR_NAV = [
   { href: "/dashboard",   label: "Dashboard",   icon: LayoutDashboard },
   { href: "/employees",   label: "Xodimlar",    icon: Users },
+  { href: "/vazifalar",   label: "Vazifalar",   icon: ListTodo },
   { href: "/baholash",    label: "Baholash",    icon: ClipboardCheck },
   { href: "/monitoring",  label: "Monitoring",  icon: Activity },
   { href: "/hisobotlar",  label: "Hisobotlar",  icon: FileBarChart },
@@ -19,12 +20,13 @@ const RAHBAR_NAV = [
 ];
 
 const HR_NAV = [
-  { href: "/hr",          label: "HR Dashboard", icon: LayoutDashboard },
-  { href: "/employees",   label: "Xodimlar",     icon: Users },
-  { href: "/baholash",    label: "Baholash",     icon: ClipboardCheck },
-  { href: "/hisobotlar",  label: "Hisobotlar",   icon: FileBarChart },
-  { href: "/hr/kpi",      label: "KPI Boshqaruv",icon: BarChart3 },
-  { href: "/sozlamalar",  label: "Sozlamalar",   icon: Settings },
+  { href: "/hr",             label: "HR Dashboard",  icon: LayoutDashboard },
+  { href: "/employees",      label: "Xodimlar",      icon: Users },
+  { href: "/baholash",       label: "Baholash",      icon: ClipboardCheck },
+  { href: "/hr/kpi",         label: "KPI Boshqaruv", icon: BarChart3 },
+  { href: "/hr/vazifalar",   label: "Vazifalar",     icon: ListTodo },
+  { href: "/hisobotlar",     label: "Hisobotlar",    icon: FileBarChart },
+  { href: "/sozlamalar",     label: "Sozlamalar",    icon: Settings },
 ];
 
 export default function Sidebar() {

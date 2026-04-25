@@ -22,6 +22,7 @@ from app.models.kpi import KpiRecord
 from app.models.evaluation import Evaluation, EvalTypeEnum
 from app.models.employee import ClusterEnum
 from app.services.usi import calculate_usi
+from app.services.kmeans import assign_cluster_by_usi
 
 
 async def generate_prediction(employee_id: int, db: AsyncSession) -> AiPrediction:
@@ -72,12 +73,8 @@ async def generate_prediction(employee_id: int, db: AsyncSession) -> AiPredictio
 
 
 def _assign_cluster(usi: float) -> ClusterEnum:
-    """K-Means stub: thresholds derived from Elbow Method (Silhouette ≈ 0.68)."""
-    if usi >= 80:
-        return ClusterEnum.yulduz
-    elif usi >= 60:
-        return ClusterEnum.barqaror
-    return ClusterEnum.rivojlanish
+    """Single-employee cluster assignment (batch K-Means via /ai/clusters/update)."""
+    return assign_cluster_by_usi(usi)
 
 
 def _generate_recommendations(cluster: ClusterEnum, usi_result) -> str:

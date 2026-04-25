@@ -532,7 +532,6 @@ export default function EmployeeProfilePage({ params }: { params: Promise<{ id: 
   const taskPct = taskTotal > 0 ? Math.round((taskDone / taskTotal) * 100) : 0;
 
   const isHR = role === "hr" || role === "rahbar";
-  const isRahbar = role === "rahbar";
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -879,10 +878,10 @@ export default function EmployeeProfilePage({ params }: { params: Promise<{ id: 
                   {employee.first_name}ning vazifalari
                 </div>
                 <div style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "2px" }}>
-                  {isRahbar ? "Rahbar sifatida vazifalar belgilashingiz mumkin" : "Xodimga biriktirilgan vazifalar"}
+                  {isHR ? "Rahbar/HR sifatida vazifalar belgilashingiz mumkin" : "Xodimga biriktirilgan vazifalar"}
                 </div>
               </div>
-              {isRahbar && (
+              {isHR && (
                 <AddTaskForm employeeId={empId} onAdd={t => setTasks(prev => [t, ...prev])} />
               )}
             </div>
@@ -909,7 +908,7 @@ export default function EmployeeProfilePage({ params }: { params: Promise<{ id: 
               <div style={{ padding: "60px 24px", textAlign: "center" }}>
                 <ClipboardList size={40} color="#E5E7EB" style={{ margin: "0 auto 12px", display: "block" }} />
                 <p style={{ fontSize: "14px", color: "#9CA3AF", marginBottom: "4px" }}>Vazifalar yo'q</p>
-                {isRahbar && <p style={{ fontSize: "12px", color: "#D1D5DB" }}>Yuqoridagi "Vazifa qo'shish" tugmasidan foydalaning</p>}
+                {isHR && <p style={{ fontSize: "12px", color: "#D1D5DB" }}>Yuqoridagi "Vazifa qo'shish" tugmasidan foydalaning</p>}
               </div>
             ) : (
               <div style={{ maxHeight: "480px", overflowY: "auto" }}>
