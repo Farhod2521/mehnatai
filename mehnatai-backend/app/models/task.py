@@ -47,3 +47,4 @@ class Task(Base):
     employee: Mapped["Employee"] = relationship("Employee", back_populates="tasks")
     parent: Mapped["Task | None"] = relationship("Task", remote_side=[id], back_populates="children")
     children: Mapped[list["Task"]] = relationship("Task", back_populates="parent", cascade="all, delete-orphan")
+    reports: Mapped[list["TaskReport"]] = relationship("TaskReport", back_populates="task", cascade="all, delete-orphan")  # type: ignore[name-defined]

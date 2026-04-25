@@ -317,6 +317,18 @@ export const evaluationsApi = {
 
 // ─── Tasks ─────────────────────────────────────────────────────────────────
 
+export interface TaskReport {
+  id: number;
+  task_id: number;
+  uploaded_by_id: number | null;
+  original_name: string;
+  file_path: string;
+  mime_type: string | null;
+  file_size: number | null;
+  comment: string | null;
+  uploaded_at: string;
+}
+
 export interface Task {
   id: number;
   employee_id: number;
@@ -330,6 +342,7 @@ export interface Task {
   created_at: string;
   updated_at: string;
   children: Task[];
+  reports: TaskReport[];
 }
 
 export interface TaskStats {
@@ -391,6 +404,34 @@ export const usersApi = {
 
   checkEmployee: (employeeId: number) =>
     apiFetch<UserAccount | null>(`/users/by-employee/${employeeId}`),
+};
+
+// ─── Task Reports ──────────────────────────────────────────────────────────
+
+export const taskReportsApi = {
+  list: (taskId: number) => apiFetch<TaskReport[]>(`/tasks/${taskId}/reports`),
+
+  upload: async (taskId: number, files: File[], comment: string): Promise<TaskReport[]> => {
+    const token = getAccessToken();
+    const form = new FormData();
+    files.forEach(f => form.append("files", f));
+    form.append("comment", comment);
+    const res = await fetch(`${BASE}/tasks/${taskId}/reports`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: form,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: res.statusText }));
+      throw new Error(err.detail ?? "Yuklashda xatolik");
+    }
+    return res.json();
+  },
+
+  downloadUrl: (reportId: number): string =>
+    `${BASE}/tasks/reports/${reportId}/download?token=${getAccessToken() ?? ""}`,
+
+  delete: (reportId: number) => apiFetch<void>(`/tasks/reports/${reportId}`, { method: "DELETE" }),
 };
 
 // ─── AI ────────────────────────────────────────────────────────────────────

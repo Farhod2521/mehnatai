@@ -1,6 +1,7 @@
 from datetime import datetime, date
 from pydantic import BaseModel
 from app.models.task import PriorityEnum, TaskStatusEnum
+from app.schemas.task_report import TaskReportOut
 
 
 class TaskBase(BaseModel):
@@ -32,6 +33,7 @@ class TaskOut(TaskBase):
     created_at: datetime
     updated_at: datetime
     children: list["TaskOut"] = []
+    reports: list[TaskReportOut] = []
 
     model_config = {"from_attributes": True}
 
