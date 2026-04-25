@@ -13,6 +13,16 @@ from app.schemas.task import TaskCreate, TaskUpdate, TaskOut, TaskStats
 router = APIRouter()
 
 
+async def _get_task_with_children(task_id: int, db: AsyncSession) -> Task | None:
+    """Fetch a single task with its full children tree eagerly loaded."""
+    result = await db.execute(
+        select(Task)
+        .options(selectinload(Task.children).selectinload(Task.children).selectinload(Task.children))
+        .where(Task.id == task_id)
+    )
+    return result.scalar_one_or_none()
+
+
 @router.get("/hr-pending", response_model=list[TaskOut])
 async def get_hr_pending_tasks(
     db: AsyncSession = Depends(get_db),
@@ -22,7 +32,10 @@ async def get_hr_pending_tasks(
     if current_user.role not in [RoleEnum.hr, RoleEnum.rahbar]:
         raise HTTPException(status_code=403, detail="Faqat HR va Rahbar ko'ra oladi")
     result = await db.execute(
-        select(Task).where(Task.status == TaskStatusEnum.hr_check).order_by(Task.updated_at.desc())
+        select(Task)
+        .options(selectinload(Task.children).selectinload(Task.children))
+        .where(Task.status == TaskStatusEnum.hr_check)
+        .order_by(Task.updated_at.desc())
     )
     tasks = result.scalars().all()
     return [TaskOut.model_validate(t) for t in tasks]
@@ -36,7 +49,11 @@ async def get_employee_tasks(
     db: AsyncSession = Depends(get_db),
     _: User = Depends(get_current_user),
 ):
-    query = select(Task).where(Task.employee_id == employee_id)
+    query = (
+        select(Task)
+        .options(selectinload(Task.children).selectinload(Task.children).selectinload(Task.children))
+        .where(Task.employee_id == employee_id)
+    )
     if status:
         query = query.where(Task.status == status)
     if root_only:
@@ -44,14 +61,6 @@ async def get_employee_tasks(
 
     result = await db.execute(query.order_by(Task.created_at))
     tasks = result.scalars().all()
-
-    def build_tree(task: Task) -> TaskOut:
-        out = TaskOut.model_validate(task)
-        out.children = [build_tree(child) for child in task.children]
-        return out
-
-    if root_only:
-        return [build_tree(t) for t in tasks]
     return [TaskOut.model_validate(t) for t in tasks]
 
 
@@ -97,7 +106,7 @@ async def create_task(
     task = Task(**body.model_dump())
     db.add(task)
     await db.flush()
-    await db.refresh(task)
+    task = await _get_task_with_children(task.id, db)
     return TaskOut.model_validate(task)
 
 
@@ -107,8 +116,7 @@ async def get_task(
     db: AsyncSession = Depends(get_db),
     _: User = Depends(get_current_user),
 ):
-    result = await db.execute(select(Task).where(Task.id == task_id))
-    task = result.scalar_one_or_none()
+    task = await _get_task_with_children(task_id, db)
     if not task:
         raise HTTPException(status_code=404, detail="Vazifa topilmadi")
     return TaskOut.model_validate(task)
@@ -134,7 +142,7 @@ async def approve_task(
     task.is_done = True
     task.status = TaskStatusEnum.done
     await db.flush()
-    await db.refresh(task)
+    task = await _get_task_with_children(task_id, db)
     return TaskOut.model_validate(task)
 
 
@@ -161,7 +169,7 @@ async def update_task(
         task.status = TaskStatusEnum.in_progress
 
     await db.flush()
-    await db.refresh(task)
+    task = await _get_task_with_children(task_id, db)
     return TaskOut.model_validate(task)
 
 
