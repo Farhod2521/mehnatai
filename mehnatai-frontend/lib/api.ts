@@ -351,7 +351,7 @@ export const tasksApi = {
   },
   hrPending: () => apiFetch<Task[]>("/tasks/hr-pending"),
   stats: (employeeId: number) => apiFetch<TaskStats>(`/tasks/employee/${employeeId}/stats`),
-  update: (taskId: number, data: { is_done?: boolean; status?: string; title?: string; due_date?: string; priority?: string }) =>
+  update: (taskId: number, data: { is_done?: boolean; status?: string; title?: string; description?: string; due_date?: string; priority?: string }) =>
     apiFetch<Task>(`/tasks/${taskId}`, { method: "PATCH", body: JSON.stringify(data) }),
   approve: (taskId: number) =>
     apiFetch<Task>(`/tasks/${taskId}/approve`, { method: "PATCH" }),
