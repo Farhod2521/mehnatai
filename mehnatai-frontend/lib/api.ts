@@ -428,8 +428,18 @@ export const taskReportsApi = {
     return res.json();
   },
 
-  downloadUrl: (reportId: number): string =>
-    `${BASE}/tasks/reports/${reportId}/download?token=${getAccessToken() ?? ""}`,
+  download: async (reportId: number, originalName: string): Promise<void> => {
+    const token = getAccessToken();
+    const res = await fetch(`${BASE}/tasks/reports/${reportId}/download`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) throw new Error("Fayl topilmadi");
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = originalName; a.click();
+    URL.revokeObjectURL(url);
+  },
 
   delete: (reportId: number) => apiFetch<void>(`/tasks/reports/${reportId}`, { method: "DELETE" }),
 };

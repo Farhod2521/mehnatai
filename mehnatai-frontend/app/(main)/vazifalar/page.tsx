@@ -721,12 +721,12 @@ function XodimTaskCard({ task, onMarkDone, onUpdate }: {
         <div style={{ padding: "0 20px 16px 20px", display: "flex", flexDirection: "column", gap: "6px" }}>
           <div style={{ fontSize: "11px", fontWeight: 700, color: "#9CA3AF", marginBottom: "4px" }}>YUKLANGAN FAYLLAR</div>
           {task.reports.map(r => (
-            <a key={r.id} href={taskReportsApi.downloadUrl(r.id)} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", background: "#F9FAFB", borderRadius: "10px", border: "1px solid #E5E7EB", textDecoration: "none" }}>
+            <button key={r.id} onClick={() => taskReportsApi.download(r.id, r.original_name)} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", background: "#F9FAFB", borderRadius: "10px", border: "1px solid #E5E7EB", textDecoration: "none", cursor: "pointer", width: "100%" }}>
               <FileText size={14} color="#6366F1" />
               <span style={{ flex: 1, fontSize: "13px", color: "#374151", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.original_name}</span>
               {r.file_size && <span style={{ fontSize: "10px", color: "#9CA3AF", flexShrink: 0 }}>{r.file_size > 1048576 ? `${(r.file_size / 1048576).toFixed(1)} MB` : `${(r.file_size / 1024).toFixed(0)} KB`}</span>}
               <Download size={13} color="#9CA3AF" />
-            </a>
+            </button>
           ))}
           {task.reports[0]?.comment && (
             <div style={{ fontSize: "12px", color: "#6B7280", fontStyle: "italic", padding: "8px 12px", background: "#F3F4F6", borderRadius: "8px", marginTop: "4px" }}>"{task.reports[0].comment}"</div>

@@ -107,12 +107,12 @@ function TaskCard({ task, onApprove, approving }: {
         <div style={{ padding: "0 22px 18px 78px", display: "flex", flexDirection: "column", gap: "8px" }}>
           <div style={{ fontSize: "11px", fontWeight: 700, color: "#9CA3AF", marginBottom: "4px", letterSpacing: "0.05em" }}>XODIM YUKLAGAN FAYLLAR</div>
           {reports.map(r => (
-            <a key={r.id} href={taskReportsApi.downloadUrl(r.id)} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 14px", background: "#F9FAFB", borderRadius: "10px", border: "1px solid #E5E7EB", textDecoration: "none" }}>
+            <button key={r.id} onClick={() => taskReportsApi.download(r.id, r.original_name)} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 14px", background: "#F9FAFB", borderRadius: "10px", border: "1px solid #E5E7EB", cursor: "pointer", width: "100%" }}>
               <FileText size={15} color="#6366F1" style={{ flexShrink: 0 }} />
               <span style={{ flex: 1, fontSize: "13px", color: "#374151", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 500 }}>{r.original_name}</span>
               {r.file_size && <span style={{ fontSize: "10px", color: "#9CA3AF", flexShrink: 0 }}>{fmtBytes(r.file_size)}</span>}
               <Download size={13} color="#9CA3AF" style={{ flexShrink: 0 }} />
-            </a>
+            </button>
           ))}
           {reports[0]?.comment && (
             <div style={{ fontSize: "12px", color: "#6B7280", fontStyle: "italic", padding: "10px 14px", background: "#F0FDF9", borderRadius: "10px", border: "1px solid #99F6E4", marginTop: "4px" }}>
