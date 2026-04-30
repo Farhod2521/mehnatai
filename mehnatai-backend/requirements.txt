@@ -19,3 +19,6 @@ python-multipart==0.0.19
 # Machine Learning (K-Means clustering, USI prediction)
 scikit-learn==1.5.2
 numpy==1.26.4
+
+# OpenAI (GPT-4o-mini — AI Tavsiyalar)
+openai==1.54.4

@@ -1,576 +1,338 @@
 {
   "_meta": {
-    "description": "MehnatAI — K-Means uchun test ma'lumotlari. 9 ta xodim: 3 yulduz / 3 barqaror / 3 rivojlanish.",
-    "how_to_import": "python import_data.py",
-    "clusters": {
-      "yulduz":      "usi_score >= 80 (indekslar: 0, 1, 2)",
-      "barqaror":    "usi_score 60-79 (indekslar: 3, 4, 5)",
-      "rivojlanish": "usi_score < 60 (indekslar: 6, 7, 8)"
-    }
+    "description": "MehnatAI — 21 ta o'zbek xodimi, KPI, baholash, vazifalar, loginlar",
+    "today": "2026-04-30",
+    "clusters": "7 yulduz / 8 barqaror / 6 rivojlanish",
+    "logins": "Barcha xodimlar paroli: 123 | hr: hr123 | rahbar (Ra'no): rahbar123"
   },
 
   "employees": [
-    {
-      "_index": 0,
-      "_cluster": "yulduz",
-      "first_name": "Jasur",
-      "last_name": "Mirzayev",
-      "position": "Senior Backend Developer",
-      "department": "IT",
-      "status": "yuqori",
-      "usi_score": 93.5,
-      "experience_years": 6,
-      "email": "jasur.mirzayev@mehnatai.uz",
-      "phone": "+998901234561",
-      "hired_date": "2019-03-10",
-      "cluster": "yulduz",
-      "bio": "Python va FastAPI bo'yicha ekspert. Mikroservis arxitekturasini loyihalaydi."
-    },
-    {
-      "_index": 1,
-      "_cluster": "yulduz",
-      "first_name": "Feruza",
-      "last_name": "Abdullayeva",
-      "position": "Data Analyst",
-      "department": "IT",
-      "status": "yuqori",
-      "usi_score": 88.0,
-      "experience_years": 4,
-      "email": "feruza.abdullayeva@mehnatai.uz",
-      "phone": "+998901234562",
-      "hired_date": "2020-07-15",
-      "cluster": "yulduz",
-      "bio": "Ma'lumotlar tahlili va vizualizatsiya bo'yicha mutaxassis. SQL va Python bilan ishlaydi."
-    },
-    {
-      "_index": 2,
-      "_cluster": "yulduz",
-      "first_name": "Sanjar",
-      "last_name": "Xolmatov",
-      "position": "Project Manager",
-      "department": "Boshqaruv",
-      "status": "yuqori",
-      "usi_score": 84.5,
-      "experience_years": 7,
-      "email": "sanjar.xolmatov@mehnatai.uz",
-      "phone": "+998901234563",
-      "hired_date": "2018-11-01",
-      "cluster": "yulduz",
-      "bio": "Agile va Scrum metodologiyalari bo'yicha sertifikatlangan loyiha menejeri."
-    },
-    {
-      "_index": 3,
-      "_cluster": "barqaror",
-      "first_name": "Dilnoza",
-      "last_name": "Yusupova",
-      "position": "Frontend Developer",
-      "department": "IT",
-      "status": "yuqori",
-      "usi_score": 74.0,
-      "experience_years": 3,
-      "email": "dilnoza.yusupova@mehnatai.uz",
-      "phone": "+998901234564",
-      "hired_date": "2022-02-14",
-      "cluster": "barqaror",
-      "bio": "React va Next.js bilan ishlaydigan frontend dasturchi."
-    },
-    {
-      "_index": 4,
-      "_cluster": "barqaror",
-      "first_name": "Otabek",
-      "last_name": "Nazarov",
-      "position": "HR Specialist",
-      "department": "HR",
-      "status": "orta",
-      "usi_score": 68.5,
-      "experience_years": 3,
-      "email": "otabek.nazarov@mehnatai.uz",
-      "phone": "+998901234565",
-      "hired_date": "2022-05-20",
-      "cluster": "barqaror",
-      "bio": "Xodimlarni jalb qilish va onboarding jarayonlarini boshqaradi."
-    },
-    {
-      "_index": 5,
-      "_cluster": "barqaror",
-      "first_name": "Mohira",
-      "last_name": "Tosheva",
-      "position": "Marketing Manager",
-      "department": "Marketing",
-      "status": "orta",
-      "usi_score": 71.0,
-      "experience_years": 4,
-      "email": "mohira.tosheva@mehnatai.uz",
-      "phone": "+998901234566",
-      "hired_date": "2021-09-01",
-      "cluster": "barqaror",
-      "bio": "Raqamli marketing va ijtimoiy tarmoqlar strategiyasi bo'yicha mutaxassis."
-    },
-    {
-      "_index": 6,
-      "_cluster": "rivojlanish",
-      "first_name": "Ulugbek",
-      "last_name": "Razzaqov",
-      "position": "Junior Developer",
-      "department": "IT",
-      "status": "rivojlanish",
-      "usi_score": 48.0,
-      "experience_years": 1,
-      "email": "ulugbek.razzaqov@mehnatai.uz",
-      "phone": "+998901234567",
-      "hired_date": "2024-01-15",
-      "cluster": "rivojlanish",
-      "bio": "Yangi xodim, Python asoslarini o'rganmoqda."
-    },
-    {
-      "_index": 7,
-      "_cluster": "rivojlanish",
-      "first_name": "Gulnora",
-      "last_name": "Sobirova",
-      "position": "Sales Representative",
-      "department": "Sotuv",
-      "status": "rivojlanish",
-      "usi_score": 42.5,
-      "experience_years": 1,
-      "email": "gulnora.sobirova@mehnatai.uz",
-      "phone": "+998901234568",
-      "hired_date": "2024-03-01",
-      "cluster": "rivojlanish",
-      "bio": "Mijozlar bilan ishlashda tajriba orttirmoqda."
-    },
-    {
-      "_index": 8,
-      "_cluster": "rivojlanish",
-      "first_name": "Bekzod",
-      "last_name": "Qodirov",
-      "position": "Finance Analyst",
-      "department": "Moliya",
-      "status": "rivojlanish",
-      "usi_score": 55.0,
-      "experience_years": 2,
-      "email": "bekzod.qodirov@mehnatai.uz",
-      "phone": "+998901234569",
-      "hired_date": "2023-06-10",
-      "cluster": "rivojlanish",
-      "bio": "Moliyaviy hisobotlarni tahlil qilishni o'rganmoqda."
-    }
+    {"_i":0,"_c":"yulduz","first_name":"Jasur","last_name":"Mirzayev","position":"Senior Backend Developer","department":"IT","status":"yuqori","usi_score":93.0,"experience_years":6,"email":"jasur@mehnatai.uz","phone":"+998901110001","hired_date":"2019-03-10","cluster":"yulduz","bio":"Python, FastAPI, PostgreSQL bo'yicha ekspert. Mikroservis arxitekturasini loyihalaydi."},
+    {"_i":1,"_c":"yulduz","first_name":"Firdavs","last_name":"Yunusov","position":"Senior Backend Developer","department":"IT","status":"yuqori","usi_score":88.5,"experience_years":5,"email":"firdavs@mehnatai.uz","phone":"+998901110002","hired_date":"2020-01-15","cluster":"yulduz","bio":"Django va FastAPI mutaxassisi. CI/CD va DevOps tajribasi bor."},
+    {"_i":2,"_c":"yulduz","first_name":"Dilnoza","last_name":"Yusupova","position":"Senior Frontend Developer","department":"IT","status":"yuqori","usi_score":84.0,"experience_years":4,"email":"dilnoza@mehnatai.uz","phone":"+998901110003","hired_date":"2021-02-01","cluster":"yulduz","bio":"React, Next.js va TypeScript bo'yicha senior mutaxassis."},
+    {"_i":3,"_c":"yulduz","first_name":"Sanjar","last_name":"Xolmatov","position":"Senior Mobile Developer","department":"IT","status":"yuqori","usi_score":87.0,"experience_years":5,"email":"sanjar@mehnatai.uz","phone":"+998901110004","hired_date":"2020-06-10","cluster":"yulduz","bio":"Flutter va React Native bo'yicha senior dasturchi."},
+    {"_i":4,"_c":"yulduz","first_name":"Feruza","last_name":"Abdullayeva","position":"HR Manager","department":"HR","status":"yuqori","usi_score":82.0,"experience_years":5,"email":"feruza@mehnatai.uz","phone":"+998901110005","hired_date":"2020-09-01","cluster":"yulduz","bio":"HR jarayonlarini to'liq boshqaradi, onboarding va performance review mutaxassisi."},
+    {"_i":5,"_c":"yulduz","first_name":"Alisher","last_name":"Umarov","position":"Project Manager","department":"Boshqaruv","status":"yuqori","usi_score":91.0,"experience_years":7,"email":"alisher@mehnatai.uz","phone":"+998901110006","hired_date":"2018-11-01","cluster":"yulduz","bio":"Agile/Scrum sertifikatlangan loyiha menejeri. 10+ loyiha muvaffaqiyatli yakunlagan."},
+
+    {"_i":6,"_c":"barqaror","first_name":"Sherzod","last_name":"Toshqo'ziyev","position":"Middle Backend Developer","department":"IT","status":"yuqori","usi_score":74.0,"experience_years":3,"email":"sherzod@mehnatai.uz","phone":"+998901110007","hired_date":"2022-03-15","cluster":"barqaror","bio":"Python backend dasturchisi. REST API va ma'lumotlar bazasi bilan ishlaydi."},
+    {"_i":7,"_c":"barqaror","first_name":"Bobur","last_name":"Xasanov","position":"Middle Backend Developer","department":"IT","status":"orta","usi_score":69.0,"experience_years":3,"email":"bobur@mehnatai.uz","phone":"+998901110008","hired_date":"2022-07-01","cluster":"barqaror","bio":"Flask va SQLAlchemy bilan ishlaydi. Microservice arxitekturasini o'rganmoqda."},
+    {"_i":8,"_c":"barqaror","first_name":"Sardor","last_name":"Ergashev","position":"Middle Frontend Developer","department":"IT","status":"orta","usi_score":71.0,"experience_years":3,"email":"sardor@mehnatai.uz","phone":"+998901110009","hired_date":"2022-05-20","cluster":"barqaror","bio":"React va Vue.js bilan ishlaydi. UI/UX dizaynga qiziqadi."},
+    {"_i":9,"_c":"barqaror","first_name":"Zafar","last_name":"Qodirov","position":"Middle Mobile Developer","department":"IT","status":"orta","usi_score":66.0,"experience_years":3,"email":"zafar@mehnatai.uz","phone":"+998901110010","hired_date":"2022-09-01","cluster":"barqaror","bio":"Flutter dasturchi. iOS va Android uchun mobile ilovalar yaratadi."},
+    {"_i":10,"_c":"barqaror","first_name":"Otabek","last_name":"Nazarov","position":"HR Specialist","department":"HR","status":"orta","usi_score":65.0,"experience_years":3,"email":"otabek@mehnatai.uz","phone":"+998901110011","hired_date":"2022-05-10","cluster":"barqaror","bio":"Xodimlarni jalb qilish va onboarding jarayonlarini boshqaradi."},
+    {"_i":11,"_c":"barqaror","first_name":"Gulnora","last_name":"Sobirova","position":"Sales Manager","department":"Sotuv","status":"yuqori","usi_score":76.0,"experience_years":4,"email":"gulnora@mehnatai.uz","phone":"+998901110012","hired_date":"2021-08-15","cluster":"barqaror","bio":"B2B sotuv bo'yicha tajribali menejer. Yirik korporativ mijozlar bilan ishlaydi."},
+    {"_i":12,"_c":"barqaror","first_name":"Bekzod","last_name":"Qodirov","position":"Senior Finance Analyst","department":"Moliya","status":"yuqori","usi_score":78.0,"experience_years":4,"email":"bekzod@mehnatai.uz","phone":"+998901110013","hired_date":"2021-04-01","cluster":"barqaror","bio":"Moliyaviy modellashtirish va byudjet rejalashtirish mutaxassisi."},
+    {"_i":13,"_c":"barqaror","first_name":"Mohira","last_name":"Karimova","position":"Marketing Manager","department":"Marketing","status":"orta","usi_score":72.0,"experience_years":4,"email":"mohira@mehnatai.uz","phone":"+998901110014","hired_date":"2021-09-01","cluster":"barqaror","bio":"Raqamli marketing va ijtimoiy tarmoqlar strategiyasi mutaxassisi."},
+
+    {"_i":14,"_c":"rivojlanish","first_name":"Ulugbek","last_name":"Razzaqov","position":"Junior Backend Developer","department":"IT","status":"rivojlanish","usi_score":48.0,"experience_years":1,"email":"ulugbek@mehnatai.uz","phone":"+998901110015","hired_date":"2024-01-15","cluster":"rivojlanish","bio":"Python asoslarini o'rganmoqda. Birinchi korporativ tajribasi."},
+    {"_i":15,"_c":"rivojlanish","first_name":"Kamola","last_name":"Nazarova","position":"Junior Frontend Developer","department":"IT","status":"rivojlanish","usi_score":45.0,"experience_years":1,"email":"kamola@mehnatai.uz","phone":"+998901110016","hired_date":"2024-03-01","cluster":"rivojlanish","bio":"HTML, CSS va JavaScript o'rganmoqda. React bilan tanishmoqda."},
+    {"_i":16,"_c":"rivojlanish","first_name":"Aziza","last_name":"Rahimova","position":"Junior Mobile Developer","department":"IT","status":"rivojlanish","usi_score":52.0,"experience_years":1,"email":"aziza@mehnatai.uz","phone":"+998901110017","hired_date":"2023-10-01","cluster":"rivojlanish","bio":"Dart va Flutter asoslarini o'rganmoqda."},
+    {"_i":17,"_c":"rivojlanish","first_name":"Nodir","last_name":"Hamidov","position":"Sales Representative","department":"Sotuv","status":"rivojlanish","usi_score":42.0,"experience_years":1,"email":"nodir@mehnatai.uz","phone":"+998901110018","hired_date":"2024-02-01","cluster":"rivojlanish","bio":"Mijozlar bilan muloqotda tajriba orttirmoqda."},
+    {"_i":18,"_c":"rivojlanish","first_name":"Mavluda","last_name":"Tosheva","position":"Junior Finance Analyst","department":"Moliya","status":"rivojlanish","usi_score":55.0,"experience_years":2,"email":"mavluda@mehnatai.uz","phone":"+998901110019","hired_date":"2023-06-01","cluster":"rivojlanish","bio":"Moliyaviy hisobotlarni tahlil qilishni o'rganmoqda."},
+    {"_i":19,"_c":"rivojlanish","first_name":"Jahongir","last_name":"Sobirov","position":"Marketing Specialist","department":"Marketing","status":"rivojlanish","usi_score":58.0,"experience_years":2,"email":"jahongir@mehnatai.uz","phone":"+998901110020","hired_date":"2023-08-15","cluster":"rivojlanish","bio":"Kontent marketing va SMM bo'yicha bilim orttirmoqda."},
+
+    {"_i":20,"_c":"yulduz","first_name":"Ra'no","last_name":"Anarkulova","position":"Bosh Direktor","department":"Boshqaruv","status":"yuqori","usi_score":96.0,"experience_years":12,"email":"rano@mehnatai.uz","phone":"+998900000001","hired_date":"2015-04-01","cluster":"yulduz","bio":"Kompaniya bosh direktori. 12 yillik boshqaruv tajribasiga ega. Strategik rivojlanish va korporativ madaniyatni shakllantiradi."}
+  ],
+
+  "users": [
+    {"username":"+998900000001","email":"rano@mehnatai.uz","password":"rahbar123","role":"rahbar","employee_index":20},
+    {"username":"+998901110005","email":"feruza@mehnatai.uz","password":"hr123","role":"hr","employee_index":4},
+    {"username":"+998901110001","email":"jasur@mehnatai.uz","password":"123","role":"xodim","employee_index":0},
+    {"username":"+998901110002","email":"firdavs@mehnatai.uz","password":"123","role":"xodim","employee_index":1},
+    {"username":"+998901110003","email":"dilnoza@mehnatai.uz","password":"123","role":"xodim","employee_index":2},
+    {"username":"+998901110004","email":"sanjar@mehnatai.uz","password":"123","role":"xodim","employee_index":3},
+    {"username":"+998901110006","email":"alisher@mehnatai.uz","password":"123","role":"xodim","employee_index":5},
+    {"username":"+998901110007","email":"sherzod@mehnatai.uz","password":"123","role":"xodim","employee_index":6},
+    {"username":"+998901110008","email":"bobur@mehnatai.uz","password":"123","role":"xodim","employee_index":7},
+    {"username":"+998901110009","email":"sardor@mehnatai.uz","password":"123","role":"xodim","employee_index":8},
+    {"username":"+998901110010","email":"zafar@mehnatai.uz","password":"123","role":"xodim","employee_index":9},
+    {"username":"+998901110011","email":"otabek@mehnatai.uz","password":"123","role":"xodim","employee_index":10},
+    {"username":"+998901110012","email":"gulnora@mehnatai.uz","password":"123","role":"xodim","employee_index":11},
+    {"username":"+998901110013","email":"bekzod@mehnatai.uz","password":"123","role":"xodim","employee_index":12},
+    {"username":"+998901110014","email":"mohira@mehnatai.uz","password":"123","role":"xodim","employee_index":13},
+    {"username":"+998901110015","email":"ulugbek@mehnatai.uz","password":"123","role":"xodim","employee_index":14},
+    {"username":"+998901110016","email":"kamola@mehnatai.uz","password":"123","role":"xodim","employee_index":15},
+    {"username":"+998901110017","email":"aziza@mehnatai.uz","password":"123","role":"xodim","employee_index":16},
+    {"username":"+998901110018","email":"nodir@mehnatai.uz","password":"123","role":"xodim","employee_index":17},
+    {"username":"+998901110019","email":"mavluda@mehnatai.uz","password":"123","role":"xodim","employee_index":18},
+    {"username":"+998901110020","email":"jahongir@mehnatai.uz","password":"123","role":"xodim","employee_index":19}
   ],
 
   "kpi_records": [
-    {
-      "_note": "Jasur Mirzayev (index 0) — yulduz, KPI ~91",
-      "employee_index": 0,
-      "month": 2, "year": 2026,
-      "code_quality": 94, "deadline_adherence": 92, "bug_fix_speed": 90,
-      "documentation": 85, "team_participation": 93, "new_technologies": 91,
-      "kpi_avg": 90.83
-    },
-    {
-      "employee_index": 0,
-      "month": 3, "year": 2026,
-      "code_quality": 95, "deadline_adherence": 91, "bug_fix_speed": 92,
-      "documentation": 86, "team_participation": 94, "new_technologies": 92,
-      "kpi_avg": 91.67
-    },
-    {
-      "employee_index": 0,
-      "month": 4, "year": 2026,
-      "code_quality": 96, "deadline_adherence": 93, "bug_fix_speed": 91,
-      "documentation": 87, "team_participation": 95, "new_technologies": 93,
-      "kpi_avg": 92.5
-    },
+    {"ei":0,"month":2,"year":2026,"code_quality":95,"deadline_adherence":93,"bug_fix_speed":91,"documentation":88,"team_participation":94,"new_technologies":92,"kpi_avg":92.17},
+    {"ei":0,"month":3,"year":2026,"code_quality":96,"deadline_adherence":94,"bug_fix_speed":92,"documentation":89,"team_participation":95,"new_technologies":93,"kpi_avg":93.17},
+    {"ei":0,"month":4,"year":2026,"code_quality":96,"deadline_adherence":94,"bug_fix_speed":93,"documentation":90,"team_participation":95,"new_technologies":94,"kpi_avg":93.67},
 
-    {
-      "_note": "Feruza Abdullayeva (index 1) — yulduz, KPI ~86",
-      "employee_index": 1,
-      "month": 2, "year": 2026,
-      "code_quality": 88, "deadline_adherence": 87, "bug_fix_speed": 82,
-      "documentation": 90, "team_participation": 85, "new_technologies": 84,
-      "kpi_avg": 86.0
-    },
-    {
-      "employee_index": 1,
-      "month": 3, "year": 2026,
-      "code_quality": 89, "deadline_adherence": 88, "bug_fix_speed": 83,
-      "documentation": 91, "team_participation": 86, "new_technologies": 85,
-      "kpi_avg": 87.0
-    },
-    {
-      "employee_index": 1,
-      "month": 4, "year": 2026,
-      "code_quality": 90, "deadline_adherence": 89, "bug_fix_speed": 84,
-      "documentation": 92, "team_participation": 87, "new_technologies": 86,
-      "kpi_avg": 88.0
-    },
+    {"ei":1,"month":2,"year":2026,"code_quality":90,"deadline_adherence":88,"bug_fix_speed":87,"documentation":84,"team_participation":90,"new_technologies":88,"kpi_avg":87.83},
+    {"ei":1,"month":3,"year":2026,"code_quality":91,"deadline_adherence":89,"bug_fix_speed":88,"documentation":85,"team_participation":91,"new_technologies":89,"kpi_avg":88.83},
+    {"ei":1,"month":4,"year":2026,"code_quality":91,"deadline_adherence":90,"bug_fix_speed":89,"documentation":86,"team_participation":92,"new_technologies":90,"kpi_avg":89.67},
 
-    {
-      "_note": "Sanjar Xolmatov (index 2) — yulduz, KPI ~83",
-      "employee_index": 2,
-      "month": 2, "year": 2026,
-      "code_quality": 85, "deadline_adherence": 88, "bug_fix_speed": 80,
-      "documentation": 82, "team_participation": 90, "new_technologies": 78,
-      "kpi_avg": 83.83
-    },
-    {
-      "employee_index": 2,
-      "month": 3, "year": 2026,
-      "code_quality": 86, "deadline_adherence": 89, "bug_fix_speed": 81,
-      "documentation": 83, "team_participation": 91, "new_technologies": 79,
-      "kpi_avg": 84.83
-    },
-    {
-      "employee_index": 2,
-      "month": 4, "year": 2026,
-      "code_quality": 87, "deadline_adherence": 90, "bug_fix_speed": 82,
-      "documentation": 84, "team_participation": 92, "new_technologies": 80,
-      "kpi_avg": 85.83
-    },
+    {"ei":2,"month":2,"year":2026,"code_quality":86,"deadline_adherence":84,"bug_fix_speed":82,"documentation":88,"team_participation":85,"new_technologies":83,"kpi_avg":84.67},
+    {"ei":2,"month":3,"year":2026,"code_quality":87,"deadline_adherence":85,"bug_fix_speed":83,"documentation":89,"team_participation":86,"new_technologies":84,"kpi_avg":85.67},
+    {"ei":2,"month":4,"year":2026,"code_quality":88,"deadline_adherence":86,"bug_fix_speed":84,"documentation":90,"team_participation":87,"new_technologies":85,"kpi_avg":86.67},
 
-    {
-      "_note": "Dilnoza Yusupova (index 3) — barqaror, KPI ~72",
-      "employee_index": 3,
-      "month": 2, "year": 2026,
-      "code_quality": 74, "deadline_adherence": 72, "bug_fix_speed": 70,
-      "documentation": 68, "team_participation": 75, "new_technologies": 71,
-      "kpi_avg": 71.67
-    },
-    {
-      "employee_index": 3,
-      "month": 3, "year": 2026,
-      "code_quality": 75, "deadline_adherence": 73, "bug_fix_speed": 71,
-      "documentation": 69, "team_participation": 76, "new_technologies": 72,
-      "kpi_avg": 72.67
-    },
-    {
-      "employee_index": 3,
-      "month": 4, "year": 2026,
-      "code_quality": 76, "deadline_adherence": 74, "bug_fix_speed": 72,
-      "documentation": 70, "team_participation": 77, "new_technologies": 73,
-      "kpi_avg": 73.67
-    },
+    {"ei":3,"month":2,"year":2026,"code_quality":88,"deadline_adherence":87,"bug_fix_speed":86,"documentation":84,"team_participation":90,"new_technologies":87,"kpi_avg":87.0},
+    {"ei":3,"month":3,"year":2026,"code_quality":89,"deadline_adherence":88,"bug_fix_speed":87,"documentation":85,"team_participation":91,"new_technologies":88,"kpi_avg":88.0},
+    {"ei":3,"month":4,"year":2026,"code_quality":90,"deadline_adherence":89,"bug_fix_speed":88,"documentation":86,"team_participation":92,"new_technologies":89,"kpi_avg":89.0},
 
-    {
-      "_note": "Otabek Nazarov (index 4) — barqaror, KPI ~67",
-      "employee_index": 4,
-      "month": 2, "year": 2026,
-      "code_quality": 68, "deadline_adherence": 66, "bug_fix_speed": 65,
-      "documentation": 70, "team_participation": 68, "new_technologies": 64,
-      "kpi_avg": 66.83
-    },
-    {
-      "employee_index": 4,
-      "month": 3, "year": 2026,
-      "code_quality": 69, "deadline_adherence": 67, "bug_fix_speed": 66,
-      "documentation": 71, "team_participation": 69, "new_technologies": 65,
-      "kpi_avg": 67.83
-    },
-    {
-      "employee_index": 4,
-      "month": 4, "year": 2026,
-      "code_quality": 70, "deadline_adherence": 68, "bug_fix_speed": 67,
-      "documentation": 72, "team_participation": 70, "new_technologies": 66,
-      "kpi_avg": 68.83
-    },
+    {"ei":4,"month":2,"year":2026,"code_quality":84,"deadline_adherence":85,"bug_fix_speed":80,"documentation":88,"team_participation":86,"new_technologies":80,"kpi_avg":83.83},
+    {"ei":4,"month":3,"year":2026,"code_quality":85,"deadline_adherence":86,"bug_fix_speed":81,"documentation":89,"team_participation":87,"new_technologies":81,"kpi_avg":84.83},
+    {"ei":4,"month":4,"year":2026,"code_quality":86,"deadline_adherence":87,"bug_fix_speed":82,"documentation":90,"team_participation":88,"new_technologies":82,"kpi_avg":85.83},
 
-    {
-      "_note": "Mohira Tosheva (index 5) — barqaror, KPI ~70",
-      "employee_index": 5,
-      "month": 2, "year": 2026,
-      "code_quality": 72, "deadline_adherence": 70, "bug_fix_speed": 68,
-      "documentation": 74, "team_participation": 71, "new_technologies": 67,
-      "kpi_avg": 70.33
-    },
-    {
-      "employee_index": 5,
-      "month": 3, "year": 2026,
-      "code_quality": 73, "deadline_adherence": 71, "bug_fix_speed": 69,
-      "documentation": 75, "team_participation": 72, "new_technologies": 68,
-      "kpi_avg": 71.33
-    },
-    {
-      "employee_index": 5,
-      "month": 4, "year": 2026,
-      "code_quality": 74, "deadline_adherence": 72, "bug_fix_speed": 70,
-      "documentation": 76, "team_participation": 73, "new_technologies": 69,
-      "kpi_avg": 72.33
-    },
+    {"ei":5,"month":2,"year":2026,"code_quality":92,"deadline_adherence":94,"bug_fix_speed":89,"documentation":90,"team_participation":96,"new_technologies":88,"kpi_avg":91.5},
+    {"ei":5,"month":3,"year":2026,"code_quality":93,"deadline_adherence":95,"bug_fix_speed":90,"documentation":91,"team_participation":96,"new_technologies":89,"kpi_avg":92.33},
+    {"ei":5,"month":4,"year":2026,"code_quality":94,"deadline_adherence":95,"bug_fix_speed":91,"documentation":92,"team_participation":97,"new_technologies":90,"kpi_avg":93.17},
 
-    {
-      "_note": "Ulugbek Razzaqov (index 6) — rivojlanish, KPI ~47",
-      "employee_index": 6,
-      "month": 2, "year": 2026,
-      "code_quality": 48, "deadline_adherence": 45, "bug_fix_speed": 42,
-      "documentation": 50, "team_participation": 52, "new_technologies": 44,
-      "kpi_avg": 46.83
-    },
-    {
-      "employee_index": 6,
-      "month": 3, "year": 2026,
-      "code_quality": 49, "deadline_adherence": 46, "bug_fix_speed": 43,
-      "documentation": 51, "team_participation": 53, "new_technologies": 45,
-      "kpi_avg": 47.83
-    },
-    {
-      "employee_index": 6,
-      "month": 4, "year": 2026,
-      "code_quality": 50, "deadline_adherence": 47, "bug_fix_speed": 44,
-      "documentation": 52, "team_participation": 54, "new_technologies": 46,
-      "kpi_avg": 48.83
-    },
+    {"ei":6,"month":2,"year":2026,"code_quality":75,"deadline_adherence":73,"bug_fix_speed":71,"documentation":70,"team_participation":76,"new_technologies":72,"kpi_avg":72.83},
+    {"ei":6,"month":3,"year":2026,"code_quality":76,"deadline_adherence":74,"bug_fix_speed":72,"documentation":71,"team_participation":77,"new_technologies":73,"kpi_avg":73.83},
+    {"ei":6,"month":4,"year":2026,"code_quality":77,"deadline_adherence":75,"bug_fix_speed":73,"documentation":72,"team_participation":78,"new_technologies":74,"kpi_avg":74.83},
 
-    {
-      "_note": "Gulnora Sobirova (index 7) — rivojlanish, KPI ~42",
-      "employee_index": 7,
-      "month": 2, "year": 2026,
-      "code_quality": 42, "deadline_adherence": 40, "bug_fix_speed": 38,
-      "documentation": 45, "team_participation": 46, "new_technologies": 38,
-      "kpi_avg": 41.5
-    },
-    {
-      "employee_index": 7,
-      "month": 3, "year": 2026,
-      "code_quality": 43, "deadline_adherence": 41, "bug_fix_speed": 39,
-      "documentation": 46, "team_participation": 47, "new_technologies": 39,
-      "kpi_avg": 42.5
-    },
-    {
-      "employee_index": 7,
-      "month": 4, "year": 2026,
-      "code_quality": 44, "deadline_adherence": 42, "bug_fix_speed": 40,
-      "documentation": 47, "team_participation": 48, "new_technologies": 40,
-      "kpi_avg": 43.5
-    },
+    {"ei":7,"month":2,"year":2026,"code_quality":70,"deadline_adherence":68,"bug_fix_speed":66,"documentation":68,"team_participation":72,"new_technologies":67,"kpi_avg":68.5},
+    {"ei":7,"month":3,"year":2026,"code_quality":71,"deadline_adherence":69,"bug_fix_speed":67,"documentation":69,"team_participation":73,"new_technologies":68,"kpi_avg":69.5},
+    {"ei":7,"month":4,"year":2026,"code_quality":72,"deadline_adherence":70,"bug_fix_speed":68,"documentation":70,"team_participation":74,"new_technologies":69,"kpi_avg":70.5},
 
-    {
-      "_note": "Bekzod Qodirov (index 8) — rivojlanish, KPI ~54",
-      "employee_index": 8,
-      "month": 2, "year": 2026,
-      "code_quality": 55, "deadline_adherence": 54, "bug_fix_speed": 50,
-      "documentation": 58, "team_participation": 56, "new_technologies": 50,
-      "kpi_avg": 53.83
-    },
-    {
-      "employee_index": 8,
-      "month": 3, "year": 2026,
-      "code_quality": 56, "deadline_adherence": 55, "bug_fix_speed": 51,
-      "documentation": 59, "team_participation": 57, "new_technologies": 51,
-      "kpi_avg": 54.83
-    },
-    {
-      "employee_index": 8,
-      "month": 4, "year": 2026,
-      "code_quality": 57, "deadline_adherence": 56, "bug_fix_speed": 52,
-      "documentation": 60, "team_participation": 58, "new_technologies": 52,
-      "kpi_avg": 55.83
-    }
+    {"ei":8,"month":2,"year":2026,"code_quality":72,"deadline_adherence":70,"bug_fix_speed":69,"documentation":74,"team_participation":73,"new_technologies":70,"kpi_avg":71.33},
+    {"ei":8,"month":3,"year":2026,"code_quality":73,"deadline_adherence":71,"bug_fix_speed":70,"documentation":75,"team_participation":74,"new_technologies":71,"kpi_avg":72.33},
+    {"ei":8,"month":4,"year":2026,"code_quality":74,"deadline_adherence":72,"bug_fix_speed":71,"documentation":76,"team_participation":75,"new_technologies":72,"kpi_avg":73.33},
+
+    {"ei":9,"month":2,"year":2026,"code_quality":67,"deadline_adherence":65,"bug_fix_speed":64,"documentation":66,"team_participation":68,"new_technologies":65,"kpi_avg":65.83},
+    {"ei":9,"month":3,"year":2026,"code_quality":68,"deadline_adherence":66,"bug_fix_speed":65,"documentation":67,"team_participation":69,"new_technologies":66,"kpi_avg":66.83},
+    {"ei":9,"month":4,"year":2026,"code_quality":69,"deadline_adherence":67,"bug_fix_speed":66,"documentation":68,"team_participation":70,"new_technologies":67,"kpi_avg":67.83},
+
+    {"ei":10,"month":2,"year":2026,"code_quality":66,"deadline_adherence":65,"bug_fix_speed":62,"documentation":70,"team_participation":68,"new_technologies":62,"kpi_avg":65.5},
+    {"ei":10,"month":3,"year":2026,"code_quality":67,"deadline_adherence":66,"bug_fix_speed":63,"documentation":71,"team_participation":69,"new_technologies":63,"kpi_avg":66.5},
+    {"ei":10,"month":4,"year":2026,"code_quality":68,"deadline_adherence":67,"bug_fix_speed":64,"documentation":72,"team_participation":70,"new_technologies":64,"kpi_avg":67.5},
+
+    {"ei":11,"month":2,"year":2026,"code_quality":76,"deadline_adherence":78,"bug_fix_speed":74,"documentation":76,"team_participation":78,"new_technologies":74,"kpi_avg":76.0},
+    {"ei":11,"month":3,"year":2026,"code_quality":77,"deadline_adherence":79,"bug_fix_speed":75,"documentation":77,"team_participation":79,"new_technologies":75,"kpi_avg":77.0},
+    {"ei":11,"month":4,"year":2026,"code_quality":78,"deadline_adherence":80,"bug_fix_speed":76,"documentation":78,"team_participation":80,"new_technologies":76,"kpi_avg":78.0},
+
+    {"ei":12,"month":2,"year":2026,"code_quality":78,"deadline_adherence":80,"bug_fix_speed":76,"documentation":80,"team_participation":78,"new_technologies":76,"kpi_avg":78.0},
+    {"ei":12,"month":3,"year":2026,"code_quality":79,"deadline_adherence":81,"bug_fix_speed":77,"documentation":81,"team_participation":79,"new_technologies":77,"kpi_avg":79.0},
+    {"ei":12,"month":4,"year":2026,"code_quality":80,"deadline_adherence":82,"bug_fix_speed":78,"documentation":82,"team_participation":80,"new_technologies":78,"kpi_avg":80.0},
+
+    {"ei":13,"month":2,"year":2026,"code_quality":73,"deadline_adherence":71,"bug_fix_speed":69,"documentation":75,"team_participation":73,"new_technologies":70,"kpi_avg":71.83},
+    {"ei":13,"month":3,"year":2026,"code_quality":74,"deadline_adherence":72,"bug_fix_speed":70,"documentation":76,"team_participation":74,"new_technologies":71,"kpi_avg":72.83},
+    {"ei":13,"month":4,"year":2026,"code_quality":75,"deadline_adherence":73,"bug_fix_speed":71,"documentation":77,"team_participation":75,"new_technologies":72,"kpi_avg":73.83},
+
+    {"ei":14,"month":2,"year":2026,"code_quality":48,"deadline_adherence":46,"bug_fix_speed":44,"documentation":50,"team_participation":52,"new_technologies":44,"kpi_avg":47.33},
+    {"ei":14,"month":3,"year":2026,"code_quality":49,"deadline_adherence":47,"bug_fix_speed":45,"documentation":51,"team_participation":53,"new_technologies":45,"kpi_avg":48.33},
+    {"ei":14,"month":4,"year":2026,"code_quality":50,"deadline_adherence":48,"bug_fix_speed":46,"documentation":52,"team_participation":54,"new_technologies":46,"kpi_avg":49.33},
+
+    {"ei":15,"month":2,"year":2026,"code_quality":45,"deadline_adherence":43,"bug_fix_speed":41,"documentation":48,"team_participation":48,"new_technologies":42,"kpi_avg":44.5},
+    {"ei":15,"month":3,"year":2026,"code_quality":46,"deadline_adherence":44,"bug_fix_speed":42,"documentation":49,"team_participation":49,"new_technologies":43,"kpi_avg":45.5},
+    {"ei":15,"month":4,"year":2026,"code_quality":47,"deadline_adherence":45,"bug_fix_speed":43,"documentation":50,"team_participation":50,"new_technologies":44,"kpi_avg":46.5},
+
+    {"ei":16,"month":2,"year":2026,"code_quality":52,"deadline_adherence":50,"bug_fix_speed":48,"documentation":54,"team_participation":55,"new_technologies":49,"kpi_avg":51.33},
+    {"ei":16,"month":3,"year":2026,"code_quality":53,"deadline_adherence":51,"bug_fix_speed":49,"documentation":55,"team_participation":56,"new_technologies":50,"kpi_avg":52.33},
+    {"ei":16,"month":4,"year":2026,"code_quality":54,"deadline_adherence":52,"bug_fix_speed":50,"documentation":56,"team_participation":57,"new_technologies":51,"kpi_avg":53.33},
+
+    {"ei":17,"month":2,"year":2026,"code_quality":42,"deadline_adherence":40,"bug_fix_speed":38,"documentation":46,"team_participation":46,"new_technologies":39,"kpi_avg":41.83},
+    {"ei":17,"month":3,"year":2026,"code_quality":43,"deadline_adherence":41,"bug_fix_speed":39,"documentation":47,"team_participation":47,"new_technologies":40,"kpi_avg":42.83},
+    {"ei":17,"month":4,"year":2026,"code_quality":44,"deadline_adherence":42,"bug_fix_speed":40,"documentation":48,"team_participation":48,"new_technologies":41,"kpi_avg":43.83},
+
+    {"ei":18,"month":2,"year":2026,"code_quality":56,"deadline_adherence":55,"bug_fix_speed":52,"documentation":58,"team_participation":57,"new_technologies":52,"kpi_avg":55.0},
+    {"ei":18,"month":3,"year":2026,"code_quality":57,"deadline_adherence":56,"bug_fix_speed":53,"documentation":59,"team_participation":58,"new_technologies":53,"kpi_avg":56.0},
+    {"ei":18,"month":4,"year":2026,"code_quality":58,"deadline_adherence":57,"bug_fix_speed":54,"documentation":60,"team_participation":59,"new_technologies":54,"kpi_avg":57.0},
+
+    {"ei":20,"month":2,"year":2026,"code_quality":95,"deadline_adherence":97,"bug_fix_speed":94,"documentation":96,"team_participation":98,"new_technologies":93,"kpi_avg":95.5},
+    {"ei":20,"month":3,"year":2026,"code_quality":96,"deadline_adherence":97,"bug_fix_speed":95,"documentation":97,"team_participation":98,"new_technologies":94,"kpi_avg":96.17},
+    {"ei":20,"month":4,"year":2026,"code_quality":97,"deadline_adherence":98,"bug_fix_speed":95,"documentation":97,"team_participation":99,"new_technologies":94,"kpi_avg":96.67},
+
+    {"ei":19,"month":2,"year":2026,"code_quality":59,"deadline_adherence":58,"bug_fix_speed":55,"documentation":62,"team_participation":60,"new_technologies":56,"kpi_avg":58.33},
+    {"ei":19,"month":3,"year":2026,"code_quality":60,"deadline_adherence":59,"bug_fix_speed":56,"documentation":63,"team_participation":61,"new_technologies":57,"kpi_avg":59.33},
+    {"ei":19,"month":4,"year":2026,"code_quality":61,"deadline_adherence":60,"bug_fix_speed":57,"documentation":64,"team_participation":62,"new_technologies":58,"kpi_avg":60.33}
   ],
 
   "evaluations": [
-    {
-      "_note": "Jasur Mirzayev (index 0) — rahbar baholash",
-      "employee_index": 0,
-      "eval_type": "rahbar",
-      "work_quality": 9.5, "punctuality": 9.2, "communication": 9.0,
-      "initiative": 9.8, "teamwork": 9.3,
-      "overall_score": 9.4,
-      "comment": "Ajoyib dasturchi, har doim muddatida topshiradi va yangi g'oyalar taklif etadi.",
-      "sentiment": "ijobiy",
-      "is_anonymous": false
-    },
-    {
-      "_note": "Jasur Mirzayev (index 0) — 360 peer feedback",
-      "employee_index": 0,
-      "eval_type": "peer_360",
-      "work_quality": 9.3, "punctuality": 9.0, "communication": 8.8,
-      "initiative": 9.5, "teamwork": 9.2,
-      "overall_score": 9.2,
-      "comment": "Hamkasblar orasida eng kuchli texnik mutaxassis. Har doim yordam beradi.",
-      "sentiment": "ijobiy",
-      "is_anonymous": true
-    },
+    {"ei":0,"eval_type":"rahbar","overall_score":9.5,"work_quality":9.5,"punctuality":9.3,"communication":9.2,"initiative":9.8,"teamwork":9.4,"comment":"Har doim muddatdan oldin topshiradi. Arxitektura bo'yicha eng yaxshi mutaxassis.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":0,"eval_type":"peer_360","overall_score":9.2,"work_quality":9.3,"punctuality":9.0,"communication":9.0,"initiative":9.5,"teamwork":9.2,"comment":"Texnik savollarda eng ishonchli hamkasbimiz.","sentiment":"ijobiy","is_anonymous":true},
+    {"ei":0,"eval_type":"mijoz","overall_score":9.3,"work_quality":9.4,"punctuality":9.2,"communication":9.1,"initiative":9.3,"teamwork":9.2,"comment":"API sifati va dokumentatsiya a'lo darajada.","sentiment":"ijobiy","is_anonymous":false},
 
-    {
-      "_note": "Feruza Abdullayeva (index 1) — rahbar baholash",
-      "employee_index": 1,
-      "eval_type": "rahbar",
-      "work_quality": 9.0, "punctuality": 8.8, "communication": 8.7,
-      "initiative": 8.9, "teamwork": 8.6,
-      "overall_score": 8.8,
-      "comment": "Ma'lumotlarni tahlil qilishda juda kuchli. Hisobotlari aniq va tushunarli.",
-      "sentiment": "ijobiy",
-      "is_anonymous": false
-    },
-    {
-      "_note": "Feruza Abdullayeva (index 1) — 360 peer feedback",
-      "employee_index": 1,
-      "eval_type": "peer_360",
-      "work_quality": 8.8, "punctuality": 8.6, "communication": 8.9,
-      "initiative": 8.7, "teamwork": 8.5,
-      "overall_score": 8.7,
-      "comment": "Juda professional, hamkorlik qilish oson.",
-      "sentiment": "ijobiy",
-      "is_anonymous": true
-    },
+    {"ei":1,"eval_type":"rahbar","overall_score":9.0,"work_quality":9.1,"punctuality":8.9,"communication":8.8,"initiative":9.2,"teamwork":9.0,"comment":"Kuchli backend dasturchi, DevOps bilimi ham ajoyib.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":1,"eval_type":"peer_360","overall_score":8.8,"work_quality":8.9,"punctuality":8.7,"communication":8.6,"initiative":9.0,"teamwork":8.8,"comment":"Kod sifati doim yuqori, review qiladi.","sentiment":"ijobiy","is_anonymous":true},
+    {"ei":1,"eval_type":"mijoz","overall_score":8.9,"work_quality":9.0,"punctuality":8.8,"communication":8.7,"initiative":9.0,"teamwork":8.9,"comment":"Yetkazib berish muddatlariga rioya qiladi.","sentiment":"ijobiy","is_anonymous":false},
 
-    {
-      "_note": "Sanjar Xolmatov (index 2) — rahbar baholash",
-      "employee_index": 2,
-      "eval_type": "rahbar",
-      "work_quality": 8.7, "punctuality": 8.9, "communication": 9.1,
-      "initiative": 8.5, "teamwork": 9.0,
-      "overall_score": 8.8,
-      "comment": "Loyihalarni samarali boshqaradi, jamoa motivatsiyasini yuqori ushlab turadi.",
-      "sentiment": "ijobiy",
-      "is_anonymous": false
-    },
-    {
-      "_note": "Sanjar Xolmatov (index 2) — 360 peer feedback",
-      "employee_index": 2,
-      "eval_type": "peer_360",
-      "work_quality": 8.5, "punctuality": 8.8, "communication": 9.0,
-      "initiative": 8.3, "teamwork": 8.9,
-      "overall_score": 8.7,
-      "comment": "Yaxshi rahbar, muammolarni tez hal qiladi.",
-      "sentiment": "ijobiy",
-      "is_anonymous": true
-    },
+    {"ei":2,"eval_type":"rahbar","overall_score":8.6,"work_quality":8.7,"punctuality":8.5,"communication":8.8,"initiative":8.7,"teamwork":8.5,"comment":"Frontend bo'yicha eng yaxshi mutaxassis, UI sifati zo'r.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":2,"eval_type":"peer_360","overall_score":8.4,"work_quality":8.5,"punctuality":8.3,"communication":8.5,"initiative":8.4,"teamwork":8.3,"comment":"Hamkorlikda ishlash oson, kodni tushuntiradi.","sentiment":"ijobiy","is_anonymous":true},
+    {"ei":2,"eval_type":"mijoz","overall_score":8.5,"work_quality":8.6,"punctuality":8.4,"communication":8.5,"initiative":8.5,"teamwork":8.4,"comment":"UI juda silliq, responsive dizayn mukammal.","sentiment":"ijobiy","is_anonymous":false},
 
-    {
-      "_note": "Dilnoza Yusupova (index 3) — rahbar baholash",
-      "employee_index": 3,
-      "eval_type": "rahbar",
-      "work_quality": 7.5, "punctuality": 7.3, "communication": 7.0,
-      "initiative": 7.2, "teamwork": 7.6,
-      "overall_score": 7.3,
-      "comment": "Yaxshi ishlaydi, lekin yangi texnologiyalarga ko'proq e'tibor berishi kerak.",
-      "sentiment": "ijobiy",
-      "is_anonymous": false
-    },
-    {
-      "_note": "Dilnoza Yusupova (index 3) — 360 peer feedback",
-      "employee_index": 3,
-      "eval_type": "peer_360",
-      "work_quality": 7.2, "punctuality": 7.0, "communication": 6.8,
-      "initiative": 7.0, "teamwork": 7.4,
-      "overall_score": 7.1,
-      "comment": "Vazifalarni bajaradi, lekin mustaqil qaror qabul qilishda qo'shimcha rivojlanish kerak.",
-      "sentiment": "neytral",
-      "is_anonymous": true
-    },
+    {"ei":3,"eval_type":"rahbar","overall_score":8.9,"work_quality":9.0,"punctuality":8.8,"communication":8.7,"initiative":9.0,"teamwork":8.9,"comment":"Mobile bo'yicha eng yaxshi. Flutter bilan ajoyib natijalarga erishadi.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":3,"eval_type":"peer_360","overall_score":8.7,"work_quality":8.8,"punctuality":8.6,"communication":8.5,"initiative":8.9,"teamwork":8.8,"comment":"Muammolarni tez hal qiladi, jamoani qo'llab-quvvatlaydi.","sentiment":"ijobiy","is_anonymous":true},
+    {"ei":3,"eval_type":"mijoz","overall_score":8.8,"work_quality":8.9,"punctuality":8.7,"communication":8.7,"initiative":8.9,"teamwork":8.8,"comment":"App performance a'lo, crash kamaydi.","sentiment":"ijobiy","is_anonymous":false},
 
-    {
-      "_note": "Otabek Nazarov (index 4) — rahbar baholash",
-      "employee_index": 4,
-      "eval_type": "rahbar",
-      "work_quality": 7.0, "punctuality": 6.8, "communication": 7.2,
-      "initiative": 6.5, "teamwork": 7.0,
-      "overall_score": 6.9,
-      "comment": "HR jarayonlarini tushunadi, lekin samaradorlikni oshirish imkoniyati bor.",
-      "sentiment": "neytral",
-      "is_anonymous": false
-    },
-    {
-      "_note": "Otabek Nazarov (index 4) — 360 peer feedback",
-      "employee_index": 4,
-      "eval_type": "peer_360",
-      "work_quality": 6.8, "punctuality": 6.6, "communication": 7.0,
-      "initiative": 6.3, "teamwork": 6.8,
-      "overall_score": 6.7,
-      "comment": "Muloqot yaxshi, lekin tashabbuskorlik oshishi kerak.",
-      "sentiment": "neytral",
-      "is_anonymous": true
-    },
+    {"ei":4,"eval_type":"rahbar","overall_score":8.4,"work_quality":8.5,"punctuality":8.6,"communication":8.7,"initiative":8.3,"teamwork":8.6,"comment":"HR jarayonlarini professional boshqaradi, xodimlar undan mamnun.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":4,"eval_type":"peer_360","overall_score":8.2,"work_quality":8.3,"punctuality":8.4,"communication":8.5,"initiative":8.1,"teamwork":8.4,"comment":"Adolatli va samimiy, muammolarni tezda hal qiladi.","sentiment":"ijobiy","is_anonymous":true},
+    {"ei":4,"eval_type":"mijoz","overall_score":8.3,"work_quality":8.4,"punctuality":8.5,"communication":8.6,"initiative":8.2,"teamwork":8.4,"comment":"Onboarding jarayoni juda silliq o'tdi.","sentiment":"ijobiy","is_anonymous":false},
 
-    {
-      "_note": "Mohira Tosheva (index 5) — rahbar baholash",
-      "employee_index": 5,
-      "eval_type": "rahbar",
-      "work_quality": 7.2, "punctuality": 7.0, "communication": 7.5,
-      "initiative": 7.0, "teamwork": 7.1,
-      "overall_score": 7.2,
-      "comment": "Marketing kampaniyalarni yaxshi rejalaydi, natijalari o'rtacha.",
-      "sentiment": "neytral",
-      "is_anonymous": false
-    },
-    {
-      "_note": "Mohira Tosheva (index 5) — 360 peer feedback",
-      "employee_index": 5,
-      "eval_type": "peer_360",
-      "work_quality": 7.0, "punctuality": 6.8, "communication": 7.3,
-      "initiative": 6.8, "teamwork": 7.0,
-      "overall_score": 7.0,
-      "comment": "Ijodiy yondashuvi bor, lekin natijalar barqaror emas.",
-      "sentiment": "neytral",
-      "is_anonymous": true
-    },
+    {"ei":5,"eval_type":"rahbar","overall_score":9.3,"work_quality":9.2,"punctuality":9.5,"communication":9.4,"initiative":9.3,"teamwork":9.5,"comment":"Loyihalarni a'lo darajada boshqaradi. Sprint maqsadlariga doim erishadi.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":5,"eval_type":"peer_360","overall_score":9.1,"work_quality":9.0,"punctuality":9.3,"communication":9.2,"initiative":9.1,"teamwork":9.3,"comment":"Eng yaxshi menejerimiz. Har kimni eshitadi.","sentiment":"ijobiy","is_anonymous":true},
+    {"ei":5,"eval_type":"mijoz","overall_score":9.2,"work_quality":9.1,"punctuality":9.4,"communication":9.3,"initiative":9.2,"teamwork":9.4,"comment":"Loyiha o'z vaqtida va sifatli topshirildi.","sentiment":"ijobiy","is_anonymous":false},
 
-    {
-      "_note": "Ulugbek Razzaqov (index 6) — rahbar baholash",
-      "employee_index": 6,
-      "eval_type": "rahbar",
-      "work_quality": 4.5, "punctuality": 5.0, "communication": 4.8,
-      "initiative": 4.0, "teamwork": 5.2,
-      "overall_score": 4.7,
-      "comment": "Yangi xodim, asosiy ko'nikmalarni o'rganish jarayonida. Haftalik 1:1 tavsiya etiladi.",
-      "sentiment": "neytral",
-      "is_anonymous": false
-    },
-    {
-      "_note": "Ulugbek Razzaqov (index 6) — 360 peer feedback",
-      "employee_index": 6,
-      "eval_type": "peer_360",
-      "work_quality": 4.3, "punctuality": 4.8, "communication": 4.5,
-      "initiative": 3.8, "teamwork": 5.0,
-      "overall_score": 4.5,
-      "comment": "Harakat qiladi, lekin texnik bilim hali yetarli emas.",
-      "sentiment": "salbiy",
-      "is_anonymous": true
-    },
+    {"ei":6,"eval_type":"rahbar","overall_score":7.5,"work_quality":7.6,"punctuality":7.4,"communication":7.2,"initiative":7.4,"teamwork":7.6,"comment":"Yaxshi ishlaydi, lekin mustaqil qaror qabul qilish kerak.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":6,"eval_type":"peer_360","overall_score":7.3,"work_quality":7.4,"punctuality":7.2,"communication":7.0,"initiative":7.2,"teamwork":7.4,"comment":"Vazifalarni bajaradi, lekin ko'proq tashabbuskor bo'lsa yaxshi.","sentiment":"neytral","is_anonymous":true},
+    {"ei":6,"eval_type":"mijoz","overall_score":7.4,"work_quality":7.5,"punctuality":7.3,"communication":7.2,"initiative":7.3,"teamwork":7.5,"comment":"API ishlaydi, ba'zan kechikishlar bo'ladi.","sentiment":"neytral","is_anonymous":false},
 
-    {
-      "_note": "Gulnora Sobirova (index 7) — rahbar baholash",
-      "employee_index": 7,
-      "eval_type": "rahbar",
-      "work_quality": 4.2, "punctuality": 4.5, "communication": 4.8,
-      "initiative": 3.8, "teamwork": 4.6,
-      "overall_score": 4.4,
-      "comment": "Mijozlar bilan muloqoti yaxshi, lekin sotuv ko'rsatkichlari past. Mentorlik kerak.",
-      "sentiment": "salbiy",
-      "is_anonymous": false
-    },
-    {
-      "_note": "Gulnora Sobirova (index 7) — 360 peer feedback",
-      "employee_index": 7,
-      "eval_type": "peer_360",
-      "work_quality": 4.0, "punctuality": 4.3, "communication": 4.6,
-      "initiative": 3.6, "teamwork": 4.4,
-      "overall_score": 4.2,
-      "comment": "Yangi, ko'p narsani o'rganishi kerak.",
-      "sentiment": "salbiy",
-      "is_anonymous": true
-    },
+    {"ei":7,"eval_type":"rahbar","overall_score":7.0,"work_quality":7.1,"punctuality":6.9,"communication":6.8,"initiative":6.9,"teamwork":7.1,"comment":"O'rta darajada. Texnik bilimini chuqurlashtirish kerak.","sentiment":"neytral","is_anonymous":false},
+    {"ei":7,"eval_type":"peer_360","overall_score":6.8,"work_quality":6.9,"punctuality":6.7,"communication":6.6,"initiative":6.7,"teamwork":6.9,"comment":"Vazifalarni bajaradi, lekin yordam so'rashi kerak ba'zan.","sentiment":"neytral","is_anonymous":true},
+    {"ei":7,"eval_type":"mijoz","overall_score":6.9,"work_quality":7.0,"punctuality":6.8,"communication":6.7,"initiative":6.8,"teamwork":7.0,"comment":"Natija o'rta, ba'zan kechikishlar bor.","sentiment":"neytral","is_anonymous":false},
 
-    {
-      "_note": "Bekzod Qodirov (index 8) — rahbar baholash",
-      "employee_index": 8,
-      "eval_type": "rahbar",
-      "work_quality": 5.5, "punctuality": 5.8, "communication": 5.3,
-      "initiative": 5.0, "teamwork": 5.6,
-      "overall_score": 5.4,
-      "comment": "Moliyaviy hisobotlarni tushunishda rivojlanmoqda. Ko'proq amaliyot kerak.",
-      "sentiment": "neytral",
-      "is_anonymous": false
-    },
-    {
-      "_note": "Bekzod Qodirov (index 8) — 360 peer feedback",
-      "employee_index": 8,
-      "eval_type": "peer_360",
-      "work_quality": 5.3, "punctuality": 5.6, "communication": 5.1,
-      "initiative": 4.8, "teamwork": 5.4,
-      "overall_score": 5.2,
-      "comment": "Puxta ishlaydi, lekin tezkorlik oshishi kerak.",
-      "sentiment": "neytral",
-      "is_anonymous": true
-    }
+    {"ei":8,"eval_type":"rahbar","overall_score":7.2,"work_quality":7.3,"punctuality":7.1,"communication":7.4,"initiative":7.1,"teamwork":7.2,"comment":"Frontend komponentlari yaxshi, CSS bilimi zo'r.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":8,"eval_type":"peer_360","overall_score":7.0,"work_quality":7.1,"punctuality":6.9,"communication":7.2,"initiative":6.9,"teamwork":7.0,"comment":"Hamkorlikda ishlash qulay, lekin ko'proq test yozsa yaxshi.","sentiment":"neytral","is_anonymous":true},
+    {"ei":8,"eval_type":"mijoz","overall_score":7.1,"work_quality":7.2,"punctuality":7.0,"communication":7.3,"initiative":7.0,"teamwork":7.1,"comment":"UI yaxshi ko'rinadi, ba'zan responsive muammolar bor.","sentiment":"neytral","is_anonymous":false},
+
+    {"ei":9,"eval_type":"rahbar","overall_score":6.7,"work_quality":6.8,"punctuality":6.6,"communication":6.5,"initiative":6.6,"teamwork":6.9,"comment":"Flutter bilan ishlaydi, lekin performance optimizatsiya kerak.","sentiment":"neytral","is_anonymous":false},
+    {"ei":9,"eval_type":"peer_360","overall_score":6.5,"work_quality":6.6,"punctuality":6.4,"communication":6.3,"initiative":6.4,"teamwork":6.7,"comment":"Vazifalarni bajaradi, lekin tashabbuskorlik yetishmaydi.","sentiment":"neytral","is_anonymous":true},
+    {"ei":9,"eval_type":"mijoz","overall_score":6.6,"work_quality":6.7,"punctuality":6.5,"communication":6.4,"initiative":6.5,"teamwork":6.8,"comment":"App ishlaydi, lekin tezkor bo'lsa yaxshi edi.","sentiment":"neytral","is_anonymous":false},
+
+    {"ei":10,"eval_type":"rahbar","overall_score":6.6,"work_quality":6.7,"punctuality":6.8,"communication":7.0,"initiative":6.3,"teamwork":6.8,"comment":"HR jarayonlarini o'rganmoqda, rivojlanish dinamikasi bor.","sentiment":"neytral","is_anonymous":false},
+    {"ei":10,"eval_type":"peer_360","overall_score":6.4,"work_quality":6.5,"punctuality":6.6,"communication":6.8,"initiative":6.1,"teamwork":6.6,"comment":"Muloqot yaxshi, lekin mustaqillik oshishi kerak.","sentiment":"neytral","is_anonymous":true},
+    {"ei":10,"eval_type":"mijoz","overall_score":6.5,"work_quality":6.6,"punctuality":6.7,"communication":6.9,"initiative":6.2,"teamwork":6.7,"comment":"Onboarding jarayoni o'rta, ba'zan qo'shimcha savol beradi.","sentiment":"neytral","is_anonymous":false},
+
+    {"ei":11,"eval_type":"rahbar","overall_score":7.7,"work_quality":7.8,"punctuality":7.9,"communication":8.0,"initiative":7.6,"teamwork":7.8,"comment":"Mijozlar bilan munosabat a'lo, sotuv rejasini bajaradi.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":11,"eval_type":"peer_360","overall_score":7.5,"work_quality":7.6,"punctuality":7.7,"communication":7.8,"initiative":7.4,"teamwork":7.6,"comment":"Jamoa uchun motivatsiya yaratadi, tajribasi bor.","sentiment":"ijobiy","is_anonymous":true},
+    {"ei":11,"eval_type":"mijoz","overall_score":7.8,"work_quality":7.9,"punctuality":8.0,"communication":8.2,"initiative":7.7,"teamwork":7.9,"comment":"Bizning ehtiyojlarimizni yaxshi tushunadi.","sentiment":"ijobiy","is_anonymous":false},
+
+    {"ei":12,"eval_type":"rahbar","overall_score":7.9,"work_quality":8.0,"punctuality":8.1,"communication":7.8,"initiative":7.8,"teamwork":7.9,"comment":"Moliyaviy hisobotlar aniq va o'z vaqtida. Byudjet nazoratida yaxshi.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":12,"eval_type":"peer_360","overall_score":7.7,"work_quality":7.8,"punctuality":7.9,"communication":7.6,"initiative":7.6,"teamwork":7.7,"comment":"Raqamlar bilan ishlashda eng ishonchli hamkasbimiz.","sentiment":"ijobiy","is_anonymous":true},
+    {"ei":12,"eval_type":"mijoz","overall_score":7.8,"work_quality":7.9,"punctuality":8.0,"communication":7.7,"initiative":7.7,"teamwork":7.8,"comment":"Hisobotlar aniq va tushunarlI.","sentiment":"ijobiy","is_anonymous":false},
+
+    {"ei":13,"eval_type":"rahbar","overall_score":7.3,"work_quality":7.4,"punctuality":7.2,"communication":7.6,"initiative":7.2,"teamwork":7.3,"comment":"Marketing kampaniyalari ijodiy, lekin ROI ko'rsatkichlari yaxshilanishi kerak.","sentiment":"neytral","is_anonymous":false},
+    {"ei":13,"eval_type":"peer_360","overall_score":7.1,"work_quality":7.2,"punctuality":7.0,"communication":7.4,"initiative":7.0,"teamwork":7.1,"comment":"Ijodiy g'oyalar bor, amalga oshirish sekinroq.","sentiment":"neytral","is_anonymous":true},
+    {"ei":13,"eval_type":"mijoz","overall_score":7.2,"work_quality":7.3,"punctuality":7.1,"communication":7.5,"initiative":7.1,"teamwork":7.2,"comment":"Kontent yaxshi, lekin ko'proq analitika kerak.","sentiment":"neytral","is_anonymous":false},
+
+    {"ei":14,"eval_type":"rahbar","overall_score":4.8,"work_quality":4.9,"punctuality":5.0,"communication":4.7,"initiative":4.5,"teamwork":5.2,"comment":"Yangi xodim, asosiy ko'nikmalarni o'rganish jarayonida. Haftalik 1:1 o'tkazilmoqda.","sentiment":"neytral","is_anonymous":false},
+    {"ei":14,"eval_type":"peer_360","overall_score":4.6,"work_quality":4.7,"punctuality":4.8,"communication":4.5,"initiative":4.3,"teamwork":5.0,"comment":"Harakat qiladi, lekin texnik bilim hali yetarli emas.","sentiment":"salbiy","is_anonymous":true},
+    {"ei":14,"eval_type":"mijoz","overall_score":4.7,"work_quality":4.8,"punctuality":4.9,"communication":4.6,"initiative":4.4,"teamwork":5.1,"comment":"Kichik topshiriqlarni bajara oladi, katta vazifalar qiyin.","sentiment":"neytral","is_anonymous":false},
+
+    {"ei":15,"eval_type":"rahbar","overall_score":4.5,"work_quality":4.6,"punctuality":4.4,"communication":4.3,"initiative":4.2,"teamwork":4.8,"comment":"Asosiy frontend tushunchalarini o'rganmoqda. Qo'shimcha mentorlik kerak.","sentiment":"neytral","is_anonymous":false},
+    {"ei":15,"eval_type":"peer_360","overall_score":4.3,"work_quality":4.4,"punctuality":4.2,"communication":4.1,"initiative":4.0,"teamwork":4.6,"comment":"Yangi, ko'p narsani o'rganishi kerak.","sentiment":"salbiy","is_anonymous":true},
+    {"ei":15,"eval_type":"mijoz","overall_score":4.4,"work_quality":4.5,"punctuality":4.3,"communication":4.2,"initiative":4.1,"teamwork":4.7,"comment":"Oddiy UI vazifalarni bajara oladi.","sentiment":"neytral","is_anonymous":false},
+
+    {"ei":16,"eval_type":"rahbar","overall_score":5.3,"work_quality":5.4,"punctuality":5.2,"communication":5.1,"initiative":5.0,"teamwork":5.6,"comment":"Flutter asoslarini o'zlashtirib bormoqda. O'sish dinamikasi bor.","sentiment":"neytral","is_anonymous":false},
+    {"ei":16,"eval_type":"peer_360","overall_score":5.1,"work_quality":5.2,"punctuality":5.0,"communication":4.9,"initiative":4.8,"teamwork":5.4,"comment":"Hamkorlikda ishlaydi, lekin mustaqil qaror qabul qila olmaydi.","sentiment":"neytral","is_anonymous":true},
+    {"ei":16,"eval_type":"mijoz","overall_score":5.2,"work_quality":5.3,"punctuality":5.1,"communication":5.0,"initiative":4.9,"teamwork":5.5,"comment":"Oddiy featurelarni implement qila oladi.","sentiment":"neytral","is_anonymous":false},
+
+    {"ei":17,"eval_type":"rahbar","overall_score":4.3,"work_quality":4.4,"punctuality":4.2,"communication":4.8,"initiative":4.0,"teamwork":4.6,"comment":"Muloqot yaxshi, lekin sotuv ko'nikmalarini rivojlantirish kerak. Mentorlik kerak.","sentiment":"salbiy","is_anonymous":false},
+    {"ei":17,"eval_type":"peer_360","overall_score":4.1,"work_quality":4.2,"punctuality":4.0,"communication":4.6,"initiative":3.8,"teamwork":4.4,"comment":"Yangi, ishga kirishish qiyin bo'lmoqda.","sentiment":"salbiy","is_anonymous":true},
+    {"ei":17,"eval_type":"mijoz","overall_score":4.2,"work_quality":4.3,"punctuality":4.1,"communication":4.7,"initiative":3.9,"teamwork":4.5,"comment":"Muloqot yaxshi lekin sotuv texnikasi yetishmaydi.","sentiment":"salbiy","is_anonymous":false},
+
+    {"ei":18,"eval_type":"rahbar","overall_score":5.6,"work_quality":5.7,"punctuality":5.8,"communication":5.5,"initiative":5.4,"teamwork":5.7,"comment":"Moliyaviy hisobotlarni tushunishda rivojlanmoqda. Ko'proq amaliyot kerak.","sentiment":"neytral","is_anonymous":false},
+    {"ei":18,"eval_type":"peer_360","overall_score":5.4,"work_quality":5.5,"punctuality":5.6,"communication":5.3,"initiative":5.2,"teamwork":5.5,"comment":"Puxta ishlaydi, lekin tezkorlik oshishi kerak.","sentiment":"neytral","is_anonymous":true},
+    {"ei":18,"eval_type":"mijoz","overall_score":5.5,"work_quality":5.6,"punctuality":5.7,"communication":5.4,"initiative":5.3,"teamwork":5.6,"comment":"Hisobotlar o'rta, ba'zan xatolar uchraydi.","sentiment":"neytral","is_anonymous":false},
+
+    {"ei":19,"eval_type":"rahbar","overall_score":5.9,"work_quality":6.0,"punctuality":5.8,"communication":6.1,"initiative":5.7,"teamwork":6.0,"comment":"Kontent yozishda ijodiy, analitika ko'nikmalarini rivojlantirishi kerak.","sentiment":"neytral","is_anonymous":false},
+    {"ei":19,"eval_type":"peer_360","overall_score":5.7,"work_quality":5.8,"punctuality":5.6,"communication":5.9,"initiative":5.5,"teamwork":5.8,"comment":"G'oyalari bor, amalga oshirish sekinroq.","sentiment":"neytral","is_anonymous":true},
+    {"ei":19,"eval_type":"mijoz","overall_score":5.8,"work_quality":5.9,"punctuality":5.7,"communication":6.0,"initiative":5.6,"teamwork":5.9,"comment":"Kontent yaxshi, ko'proq analitika kerak.","sentiment":"neytral","is_anonymous":false},
+
+    {"ei":20,"eval_type":"rahbar","overall_score":9.7,"work_quality":9.8,"punctuality":9.9,"communication":9.8,"initiative":9.7,"teamwork":9.6,"comment":"Bosh direktor sifatida kompaniya strategiyasini muvaffaqiyatli amalga oshirmoqda. Yetakchilik uslubi ilhomlantiruvchi.","sentiment":"ijobiy","is_anonymous":false},
+    {"ei":20,"eval_type":"peer_360","overall_score":9.5,"work_quality":9.6,"punctuality":9.7,"communication":9.8,"initiative":9.6,"teamwork":9.5,"comment":"Rahbarlik uslubi ilhomlantiruvchi. Barcha bo'limlar bilan ochiq va samarali muloqot olib boradi.","sentiment":"ijobiy","is_anonymous":true},
+    {"ei":20,"eval_type":"mijoz","overall_score":9.6,"work_quality":9.7,"punctuality":9.8,"communication":9.9,"initiative":9.7,"teamwork":9.6,"comment":"Professional va ishonchli sherikmiz. Har doim muddatini bajaradi va o'z so'zida turadi.","sentiment":"ijobiy","is_anonymous":false}
+  ],
+
+  "tasks": [
+    {"ei":0,"title":"Foydalanuvchi autentifikatsiya API yaratish","description":"JWT asosida login, refresh token va logout endpointlarini implement qilish","priority":"high","status":"done","due_date":"2026-03-15","is_done":true},
+    {"ei":0,"title":"Ma'lumotlar bazasi migratsiyasi","description":"Alembic bilan yangi employee_clusters jadvalini qo'shish","priority":"medium","status":"done","due_date":"2026-04-01","is_done":true},
+    {"ei":0,"title":"WebSocket real-time notification","description":"HR bildirishnomalar uchun WebSocket endpoint yozish","priority":"high","status":"hr_check","due_date":"2026-04-25","is_done":true},
+    {"ei":0,"title":"K-Means API endpointi optimallashtirish","description":"Kesh va async ishlov berish orqali klasterlash tezligini oshirish","priority":"medium","status":"in_progress","due_date":"2026-05-10","is_done":false},
+
+    {"ei":1,"title":"Docker Compose konfiguratsiyasi","description":"Backend, frontend va DB uchun production docker-compose.yml yozish","priority":"high","status":"done","due_date":"2026-03-20","is_done":true},
+    {"ei":1,"title":"CI/CD pipeline sozlash","description":"GitHub Actions orqali avtomatik test va deploy sozlash","priority":"high","status":"done","due_date":"2026-04-10","is_done":true},
+    {"ei":1,"title":"Redis kesh integratsiyasi","description":"Tez-tez so'raladigon endpointlar uchun Redis kesh qo'shish","priority":"medium","status":"hr_check","due_date":"2026-04-28","is_done":true},
+    {"ei":1,"title":"API rate limiting","description":"Har IP uchun so'rovlar cheklovi qo'shish","priority":"low","status":"in_progress","due_date":"2026-05-15","is_done":false},
+
+    {"ei":2,"title":"Dashboard sahifasini yaratish","description":"HR paneli uchun asosiy ko'rsatkichlar dashboard komponenti","priority":"high","status":"done","due_date":"2026-03-25","is_done":true},
+    {"ei":2,"title":"Xodim profil sahifasi","description":"Employee detail sahifasi barcha tablar bilan","priority":"high","status":"done","due_date":"2026-04-15","is_done":true},
+    {"ei":2,"title":"K-Means vizualizatsiyasi","description":"Bubble chart asosida klaster ko'rsatkichini redesign qilish","priority":"medium","status":"hr_check","due_date":"2026-04-30","is_done":true},
+    {"ei":2,"title":"Mobile responsive dizayn","description":"Barcha sahifalarni 375px-768px uchun responsive qilish","priority":"medium","status":"in_progress","due_date":"2026-05-20","is_done":false},
+
+    {"ei":3,"title":"Push notification implementatsiya","description":"Firebase FCM orqali iOS va Android push notification","priority":"high","status":"done","due_date":"2026-03-10","is_done":true},
+    {"ei":3,"title":"Offline mode qo'shish","description":"SQLite local kesh orqali internet bo'lmaganda ham ishlash","priority":"high","status":"done","due_date":"2026-04-05","is_done":true},
+    {"ei":3,"title":"Biometrik autentifikatsiya","description":"Face ID va fingerprint orqali kirish imkoniyati","priority":"medium","status":"hr_check","due_date":"2026-04-26","is_done":true},
+    {"ei":3,"title":"App performance optimizatsiya","description":"Rasm yuklash va ro'yxat renderlashni tezlashtirish","priority":"medium","status":"in_progress","due_date":"2026-05-12","is_done":false},
+
+    {"ei":4,"title":"Yangi xodimlar onboarding rejasi","description":"2026 Q2 uchun 5 ta yangi xodim onboarding chek-listini tayyorlash","priority":"high","status":"done","due_date":"2026-03-01","is_done":true},
+    {"ei":4,"title":"Performance review o'tkazish","description":"IT bo'limi 8 ta xodimi uchun choraklik baholash sessiyasi","priority":"high","status":"done","due_date":"2026-04-20","is_done":true},
+    {"ei":4,"title":"Training dasturi rejalashtirish","description":"Backend jamoasi uchun 2 kunlik Python advanced kurs tashkil etish","priority":"medium","status":"hr_check","due_date":"2026-04-29","is_done":true},
+    {"ei":4,"title":"Xodimlar qoniqish so'rovnomasi","description":"Anonimlik so'rovnomani tayyorlash va yuborish","priority":"low","status":"pending","due_date":"2026-05-30","is_done":false},
+
+    {"ei":5,"title":"Q2 Sprint rejalashtirish","description":"April-Iyun oylari uchun barcha jamoalar bilan sprint maqsadlarini belgilash","priority":"high","status":"done","due_date":"2026-03-28","is_done":true},
+    {"ei":5,"title":"Stakeholder hisoboti tayyorlash","description":"Q1 natijalar bo'yicha rahbariyat uchun taqdimot","priority":"high","status":"done","due_date":"2026-04-18","is_done":true},
+    {"ei":5,"title":"Risk baholash matritsasi","description":"Q2 loyihalar uchun risk ro'yxati va kamaytirish rejalari","priority":"medium","status":"hr_check","due_date":"2026-04-27","is_done":true},
+    {"ei":5,"title":"Jamoa retrospektivi o'tkazish","description":"Barcha jamoalar bilan oylik retrospektiv sessiya","priority":"medium","status":"in_progress","due_date":"2026-05-05","is_done":false},
+
+    {"ei":6,"title":"Foydalanuvchi CRUD endpointlari","description":"GET, POST, PUT, DELETE endpointlari yozish","priority":"high","status":"done","due_date":"2026-04-01","is_done":true},
+    {"ei":6,"title":"Parol tiklash funksiyasi","description":"Email orqali parol tiklash endpointi","priority":"medium","status":"in_progress","due_date":"2026-05-08","is_done":false},
+    {"ei":6,"title":"Log tizimi qo'shish","description":"Structlog bilan barcha endpointlarga logging qo'shish","priority":"low","status":"pending","due_date":"2026-05-20","is_done":false},
+    {"ei":6,"title":"API dokumentatsiyasi","description":"Swagger/OpenAPI hujjatlarini to'ldirish","priority":"medium","status":"pending","due_date":"2026-04-10","is_done":false},
+
+    {"ei":7,"title":"Ma'lumotlar importi skripti","description":"CSV fayldan xodimlar ma'lumotini bazaga import qilish","priority":"high","status":"done","due_date":"2026-04-05","is_done":true},
+    {"ei":7,"title":"Qidiruv endpointi","description":"Xodimlar bo'yicha full-text search qo'shish","priority":"medium","status":"in_progress","due_date":"2026-04-25","is_done":false},
+    {"ei":7,"title":"Email bildirishnoma","description":"Vazifa muddati yaqinlashganda email yuborish","priority":"medium","status":"pending","due_date":"2026-04-15","is_done":false},
+    {"ei":7,"title":"Unit testlar yozish","description":"Asosiy service funksiyalari uchun pytest testlari","priority":"high","status":"pending","due_date":"2026-03-20","is_done":false},
+
+    {"ei":8,"title":"Login va registration formasi","description":"Validatsiya va xato xabarlar bilan to'liq forma","priority":"high","status":"done","due_date":"2026-04-08","is_done":true},
+    {"ei":8,"title":"Vazifalar sahifasi redesign","description":"Task list'ni kard ko'rinishga o'tkazish","priority":"medium","status":"hr_check","due_date":"2026-04-28","is_done":true},
+    {"ei":8,"title":"Dark mode implementatsiya","description":"Butun ilova uchun qorong'i mavzu qo'shish","priority":"low","status":"pending","due_date":"2026-05-25","is_done":false},
+    {"ei":8,"title":"Accessibility audit","description":"WCAG 2.1 standartlari bo'yicha tekshiruv","priority":"medium","status":"pending","due_date":"2026-04-12","is_done":false},
+
+    {"ei":9,"title":"API integratsiya (Login)","description":"Backend auth API bilan flutter login ekranini ulash","priority":"high","status":"done","due_date":"2026-04-03","is_done":true},
+    {"ei":9,"title":"Xodim profil ekrani","description":"Flutter da xodim profili va KPI ko'rsatkichlari","priority":"medium","status":"in_progress","due_date":"2026-05-01","is_done":false},
+    {"ei":9,"title":"App crash hisobotlari","description":"Firebase Crashlytics ulash va xatolarni kuzatish","priority":"high","status":"pending","due_date":"2026-04-18","is_done":false},
+    {"ei":9,"title":"UI testing","description":"Widget testlari yozish","priority":"low","status":"pending","due_date":"2026-04-08","is_done":false},
+
+    {"ei":10,"title":"Yangi xodim hujjatlari to'plami","description":"Onboarding uchun kerakli hujjatlar ro'yxati va shablon","priority":"medium","status":"done","due_date":"2026-04-10","is_done":true},
+    {"ei":10,"title":"Ish joylari e'loni","description":"3 ta bo'sh lavozim uchun vakansiya e'lonlarini joylashtirish","priority":"high","status":"in_progress","due_date":"2026-04-20","is_done":false},
+    {"ei":10,"title":"Suhbat savollari tayyorlash","description":"Backend dasturchi uchun texnik suhbat savollari","priority":"medium","status":"pending","due_date":"2026-03-25","is_done":false},
+    {"ei":10,"title":"Xodimlar ma'lumotnomasi yangilash","description":"2026 yil qoidalar va tartib kitobini yangilash","priority":"low","status":"pending","due_date":"2026-03-10","is_done":false},
+
+    {"ei":11,"title":"Q1 sotuv hisoboti","description":"Birinchi chorak sotuv natijalari va tahlil","priority":"high","status":"done","due_date":"2026-04-05","is_done":true},
+    {"ei":11,"title":"Yangi mijoz taqdimoti","description":"TechCorp kompaniyasi uchun demo taqdimot","priority":"high","status":"done","due_date":"2026-04-22","is_done":true},
+    {"ei":11,"title":"Shartnoma imzolash (GlobalIT)","description":"GlobalIT bilan yillik xizmat ko'rsatish shartnomasi","priority":"high","status":"hr_check","due_date":"2026-04-29","is_done":true},
+    {"ei":11,"title":"Q2 sotuv rejasi","description":"April-Iyun uchun sotuv maqsadlari va strategiyasi","priority":"medium","status":"in_progress","due_date":"2026-05-15","is_done":false},
+
+    {"ei":12,"title":"Q1 moliyaviy hisobot","description":"Birinchi chorak daromad va xarajatlar tahlili","priority":"high","status":"done","due_date":"2026-04-10","is_done":true},
+    {"ei":12,"title":"2026 yillik byudjet rejasi","description":"Bo'limlar bo'yicha yillik byudjet taqsimoti","priority":"high","status":"done","due_date":"2026-04-20","is_done":true},
+    {"ei":12,"title":"Audit tayyorgarligi","description":"Tashqi audit uchun hujjatlar va hisobotlarni tartibga solish","priority":"high","status":"hr_check","due_date":"2026-04-28","is_done":true},
+    {"ei":12,"title":"Xarajatlar kamaytirish taklifi","description":"IT infratuzilma xarajatlarini 15% kamaytirish strategiyasi","priority":"medium","status":"in_progress","due_date":"2026-05-20","is_done":false},
+
+    {"ei":13,"title":"Aprel oylik kontent rejasi","description":"Blog, social media va email kampaniyalar uchun kontent taqvimi","priority":"high","status":"done","due_date":"2026-04-01","is_done":true},
+    {"ei":13,"title":"LinkedIn kampaniyasi","description":"Kompaniya brendini oshirish uchun LinkedIn kontent kampaniyasi","priority":"medium","status":"in_progress","due_date":"2026-04-30","is_done":false},
+    {"ei":13,"title":"Raqobatchilar tahlili","description":"Top 5 raqobatchi marketing strategiyasi tahlili","priority":"medium","status":"pending","due_date":"2026-04-15","is_done":false},
+    {"ei":13,"title":"May oylik kontent rejasi","description":"May oyiga kontent taqvimi tayyorlash","priority":"low","status":"pending","due_date":"2026-05-01","is_done":false},
+
+    {"ei":14,"title":"Hello World API","description":"Birinchi FastAPI endpointi yaratish — o'rgatuvchi vazifa","priority":"low","status":"done","due_date":"2026-02-28","is_done":true},
+    {"ei":14,"title":"SQLAlchemy modellari yaratish","description":"Employee va User ORM modellarini yozish","priority":"high","status":"in_progress","due_date":"2026-04-01","is_done":false},
+    {"ei":14,"title":"Unit test o'rganish","description":"Pytest asoslarini o'rganib, bitta test yozish","priority":"medium","status":"pending","due_date":"2026-03-15","is_done":false},
+    {"ei":14,"title":"Kod review jarayonida qatnashish","description":"Senior dasturchi bilan birgalikda kod review qilish","priority":"low","status":"pending","due_date":"2026-03-01","is_done":false},
+
+    {"ei":15,"title":"HTML/CSS asosiy sahifa","description":"Portfolio uchun oddiy HTML sahifasi yaratish","priority":"low","status":"done","due_date":"2026-03-10","is_done":true},
+    {"ei":15,"title":"React komponent yaratish","description":"Login formasini React bilan implement qilish","priority":"high","status":"in_progress","due_date":"2026-04-15","is_done":false},
+    {"ei":15,"title":"CSS Grid va Flexbox","description":"Layout texnikalari bo'yicha amaliyot topshiriqlari","priority":"medium","status":"pending","due_date":"2026-03-20","is_done":false},
+    {"ei":15,"title":"JavaScript asoslari","description":"ES6+ sintaksisni o'zlashtirish va kichik loyiha","priority":"medium","status":"pending","due_date":"2026-03-01","is_done":false},
+
+    {"ei":16,"title":"Flutter \"Salom Dunyo\" ilovasi","description":"Birinchi flutter ilovasi — asosiy widgets","priority":"low","status":"done","due_date":"2026-02-20","is_done":true},
+    {"ei":16,"title":"Navigator va Routing","description":"Flutter navigatsiya tizimini o'rganish va implement","priority":"medium","status":"in_progress","due_date":"2026-04-20","is_done":false},
+    {"ei":16,"title":"HTTP so'rovlar yuborish","description":"Dio package bilan API so'rovlari","priority":"high","status":"pending","due_date":"2026-04-05","is_done":false},
+    {"ei":16,"title":"State management","description":"Provider yoki Riverpod bilan state boshqarish","priority":"high","status":"pending","due_date":"2026-03-20","is_done":false},
+
+    {"ei":17,"title":"Birinchi mijoz telefon qo'ng'irog'i","description":"5 ta potentsial mijozga qo'ng'iroq qilish va ehtiyojlarini aniqlash","priority":"high","status":"in_progress","due_date":"2026-04-01","is_done":false},
+    {"ei":17,"title":"Sotuv skripti yodlash","description":"Mahsulot taqdimoti skriptini o'rganish","priority":"medium","status":"pending","due_date":"2026-03-15","is_done":false},
+    {"ei":17,"title":"CRM tizimini o'rganish","description":"Salesforce CRM asosiy funksiyalarini o'zlashtirish","priority":"medium","status":"pending","due_date":"2026-03-01","is_done":false},
+    {"ei":17,"title":"Birinchi demo taqdimot","description":"Tajribali sales menejer kuzatuvida mijozga demo ko'rsatish","priority":"high","status":"pending","due_date":"2026-04-10","is_done":false},
+
+    {"ei":18,"title":"Excel moliya hisobotlari","description":"Q4 2025 hisobotini Excel formula bilan tayyorlash","priority":"medium","status":"done","due_date":"2026-03-05","is_done":true},
+    {"ei":18,"title":"Byudjet farqlar tahlili","description":"Reja va haqiqiy xarajatlar farqini aniqlash","priority":"high","status":"in_progress","due_date":"2026-04-25","is_done":false},
+    {"ei":18,"title":"1C buxgalteriya o'rganish","description":"1C Enterprise asoslarini o'zlashtirish","priority":"medium","status":"pending","due_date":"2026-04-05","is_done":false},
+    {"ei":18,"title":"Oylik xarajatlar hisoboti","description":"March oyi xarajatlari jadvalini tayyorlash","priority":"high","status":"pending","due_date":"2026-04-03","is_done":false},
+
+    {"ei":19,"title":"Kompaniya blog postlari (5 ta)","description":"IT sohasida trenlar haqida 5 ta maqola yozish","priority":"medium","status":"done","due_date":"2026-03-31","is_done":true},
+    {"ei":19,"title":"Instagram kontent","description":"Aprel oyi uchun 20 ta post va stories tayyorlash","priority":"high","status":"in_progress","due_date":"2026-04-30","is_done":false},
+    {"ei":19,"title":"Google Analytics hisoboti","description":"Sayt traffic tahlili va tavsiyalar","priority":"medium","status":"pending","due_date":"2026-04-10","is_done":false},
+    {"ei":19,"title":"Email marketing kampaniyasi","description":"200 ta obunachiga newsletter yuborish","priority":"medium","status":"pending","due_date":"2026-03-25","is_done":false},
+
+    {"ei":20,"title":"Q2 2026 strategik reja","description":"Ikkinchi chorak uchun kompaniya rivojlanish strategiyasini tasdiqlash va bo'lim boshliqlarga yetkazish","priority":"high","status":"done","due_date":"2026-04-01","is_done":true},
+    {"ei":20,"title":"Yangi investorlar bilan uchrashuv","description":"Series A investitsiya raundi uchun pitch deck tayyorlash va taqdimot o'tkazish","priority":"high","status":"hr_check","due_date":"2026-04-30","is_done":true},
+    {"ei":20,"title":"Xodimlar motivatsiya tizimi yangilash","description":"KPI bonusi va sovg'alar tizimini yangilash — yulduz xodimlar uchun maxsus rag'batlantirish paketi","priority":"medium","status":"in_progress","due_date":"2026-05-15","is_done":false},
+    {"ei":20,"title":"Yangi ofis kengaytirish","description":"IT parkda ikkinchi ofis ochish uchun yer-joy tanlash va ijaraga olish shartnomasini imzolash","priority":"medium","status":"pending","due_date":"2026-06-01","is_done":false}
   ]
 }
