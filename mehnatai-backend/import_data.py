@@ -42,6 +42,14 @@ def parse_date(s: str | None) -> date | None:
     return date(int(y), int(m), int(d))
 
 
+async def ensure_db_enums(db: AsyncSession) -> None:
+    """Ma'lumot importi uchun DB enum qiymatlari model bilan mosligini tekshiradi."""
+    print("-> Enum qiymatlari tekshirilmoqda...")
+    await db.execute(text("ALTER TYPE taskstatusenum ADD VALUE IF NOT EXISTS 'hr_check'"))
+    await db.commit()
+    print("  OK taskstatusenum tayyor")
+
+
 async def wipe_all(db: AsyncSession) -> None:
     """Barcha jadvallarni tozalaydi va ID larni qaytadan 1 dan boshlaydi."""
     print("→ Eski ma'lumotlar o'chirilmoqda...")
@@ -62,6 +70,7 @@ async def main() -> None:
         data = json.load(f)
 
     async with Session() as db:
+        await ensure_db_enums(db)
         await wipe_all(db)
 
         # ── 1. XODIMLAR ────────────────────────────────────────────────
