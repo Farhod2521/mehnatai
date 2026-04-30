@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Brain, Zap, TrendingUp, Users, RefreshCw, ChevronRight, Activity } from "lucide-react";
 import {
-  ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip,
+  XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar,
   RadarChart, Radar, PolarGrid, PolarAngleAxis,
 } from "recharts";
@@ -44,6 +44,158 @@ const S = {
     padding: "20px",
   } as React.CSSProperties,
 };
+
+/* ─── K-Means Bubble Chart ─────────────────────────────────────────────── */
+function KMeansBubble({ clusters, loading }: { clusters: ClusterGroup[]; loading: boolean }) {
+  const [tip, setTip] = useState<{ name: string; usi: number; cl: string; xp: number; yp: number } | null>(null);
+
+  const W = 500, H = 288;
+
+  const VIS = {
+    rivojlanish: { cx: 138, cy: 205, r: 85, fill: "rgba(239,68,68,0.10)", stroke: "#EF4444", color: "#EF4444" },
+    barqaror:    { cx: 260, cy: 148, r: 78, fill: "rgba(99,102,241,0.11)", stroke: "#6366F1", color: "#6366F1" },
+    yulduz:      { cx: 383, cy: 93,  r: 82, fill: "rgba(16,185,129,0.13)", stroke: "#10B981", color: "#10B981" },
+  } as const;
+
+  const LABELS: Record<string, { lines: string[]; cx: number; cy: number; color: string }> = {
+    rivojlanish: { lines: ["RIVOJLANISH", "KERAK"], cx: 138, cy: 205, color: "#EF4444" },
+    barqaror:    { lines: ["O'RTACHILAR"],          cx: 260, cy: 148, color: "#6366F1" },
+    yulduz:      { lines: ["YULDUZLAR"],            cx: 383, cy: 93,  color: "#10B981" },
+  };
+
+  const dots = clusters.flatMap(c => {
+    const v = VIS[c.cluster as keyof typeof VIS];
+    if (!v) return [];
+    const n = Math.max(c.members.length, 1);
+    return (c.members as { id: number; full_name: string; usi_score: number; department: string }[]).map((m, i) => {
+      const angle = i * 2.3999632;
+      const dist = i === 0 ? 0 : Math.sqrt(i / n) * v.r * 0.73;
+      return {
+        x: v.cx + Math.cos(angle) * dist,
+        y: v.cy + Math.sin(angle) * dist,
+        color: v.color, name: m.full_name, usi: m.usi_score, cl: c.cluster,
+      };
+    });
+  });
+
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+        <div>
+          <div style={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
+            K-Means Clustering: Xodimlar Segmentatsiyasi
+          </div>
+          <div style={{ fontSize: "11.5px", color: "#9CA3AF", marginTop: 3 }}>
+            Silhouette Score ≈ 0.68 · Elbow Method asosida optimal k=3
+          </div>
+        </div>
+        <span style={{
+          padding: "4px 12px", borderRadius: "8px",
+          background: "#DCFCE7", border: "1px solid #86EFAC",
+          fontSize: "12px", fontWeight: 800, color: "#166534", flexShrink: 0,
+        }}>K=3</span>
+      </div>
+
+      {loading ? <Skeleton h={260} /> : (
+        <div style={{ position: "relative" }}>
+          <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", display: "block" }}>
+            {/* Y-axis label */}
+            <text
+              transform={`rotate(-90, 13, ${H / 2})`}
+              x={13} y={H / 2}
+              textAnchor="middle" fontSize="8" fill="#9CA3AF" fontWeight="700" letterSpacing="1.5"
+            >SAMARADORLIK</text>
+
+            {/* X-axis label */}
+            <text
+              x={W / 2 + 15} y={H - 2}
+              textAnchor="middle" fontSize="8" fill="#9CA3AF" fontWeight="700" letterSpacing="1.5"
+            >TAJRIBA VA BILIM</text>
+
+            {/* Cluster circles — back to front */}
+            {(["rivojlanish", "barqaror", "yulduz"] as const).map(k => {
+              const v = VIS[k];
+              return (
+                <circle key={k}
+                  cx={v.cx} cy={v.cy} r={v.r}
+                  fill={v.fill} stroke={v.stroke}
+                  strokeWidth="1.5" strokeOpacity="0.38"
+                />
+              );
+            })}
+
+            {/* Cluster labels */}
+            {Object.entries(LABELS).map(([key, lb]) => {
+              const offsetY = lb.lines.length > 1 ? -6 : 4;
+              return lb.lines.map((line, i) => (
+                <text key={`${key}-${i}`}
+                  x={lb.cx} y={lb.cy + offsetY + i * 13}
+                  textAnchor="middle" fontSize="10.5"
+                  fill={lb.color} fontWeight="800" letterSpacing="0.3"
+                >{line}</text>
+              ));
+            })}
+
+            {/* Employee dots */}
+            {dots.map((d, i) => (
+              <circle
+                key={i} cx={d.x} cy={d.y} r={5.5}
+                fill={d.color} opacity={0.88}
+                style={{ cursor: "pointer" }}
+                onMouseEnter={() => setTip({ name: d.name, usi: d.usi, cl: d.cl, xp: d.x / W, yp: d.y / H })}
+                onMouseLeave={() => setTip(null)}
+              />
+            ))}
+          </svg>
+
+          {/* Hover tooltip */}
+          {tip && (() => {
+            const cl = CLUSTER_COLORS[tip.cl] ?? CLUSTER_COLORS.Aniqlanmagan;
+            return (
+              <div style={{
+                position: "absolute",
+                top: `${tip.yp * 100}%`,
+                left: tip.xp > 0.68 ? "auto" : `${tip.xp * 100}%`,
+                right: tip.xp > 0.68 ? `${(1 - tip.xp) * 100}%` : "auto",
+                transform: "translateY(-120%)",
+                background: "#fff", borderRadius: 10,
+                border: `1.5px solid ${cl.border}`,
+                padding: "8px 12px",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+                pointerEvents: "none", zIndex: 10, minWidth: 140,
+              }}>
+                <div style={{ fontWeight: 700, color: "#111827", fontSize: 13 }}>{tip.name}</div>
+                <div style={{ fontSize: 11.5, color: cl.color, fontWeight: 600, marginTop: 3 }}>
+                  {cl.label} · USI: {tip.usi}%
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* Legend */}
+      {!loading && (
+        <div style={{ display: "flex", gap: "8px", marginTop: 14, flexWrap: "wrap" }}>
+          {clusters.map(c => {
+            const cl = CLUSTER_COLORS[c.cluster] ?? CLUSTER_COLORS.Aniqlanmagan;
+            return (
+              <div key={c.cluster} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "5px 12px", borderRadius: "20px", background: cl.bg, border: `1px solid ${cl.border}` }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: cl.color }} />
+                <span style={{ fontSize: "12px", fontWeight: 600, color: cl.color }}>{cl.label}: {c.count}</span>
+              </div>
+            );
+          })}
+          {clusters.length === 0 && (
+            <span style={{ fontSize: "13px", color: "#9CA3AF" }}>
+              Hali klaster ma'lumoti yo'q. Bashorat chiqarilgandan keyin ko'rinadi.
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function MonitoringPage() {
   const [clusters, setClusters] = useState<ClusterGroup[]>([]);
@@ -86,14 +238,6 @@ export default function MonitoringPage() {
     } catch { /* */ }
     finally { setPredicting(false); }
   };
-
-  const scatterData = clusters.flatMap(c =>
-    (c.members as { id: number; full_name: string; usi_score: number; department: string }[]).map((m, i) => ({
-      x: m.usi_score + Math.sin(i * 7.3) * 8,
-      y: m.usi_score + Math.cos(i * 4.1) * 6,
-      cluster: c.cluster, name: m.full_name, dept: m.department, usi: m.usi_score,
-    }))
-  );
 
   const deptMap: Record<string, number> = {};
   employees.forEach(e => { deptMap[e.department] = (deptMap[e.department] ?? 0) + 1; });
@@ -158,58 +302,10 @@ export default function MonitoringPage() {
         ))}
       </div>
 
-      {/* K-Means scatter + model comparison */}
+      {/* K-Means bubble + model comparison */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "16px" }}>
         <div style={S.card}>
-          <div style={{ fontSize: "15px", fontWeight: 700, color: "#111827", marginBottom: 4 }}>
-            K-Means Klasterlash (k=3)
-          </div>
-          <div style={{ fontSize: "12px", color: "#9CA3AF", marginBottom: 16 }}>
-            Silhouette Score ≈ 0.68 · Elbow Method asosida optimal k=3
-          </div>
-          {loadingClusters ? <Skeleton h={240} /> : (
-            <>
-              <ResponsiveContainer width="100%" height={240}>
-                <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: -10 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
-                  <XAxis dataKey="x" domain={[20, 105]} tick={{ fontSize: 11, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />
-                  <YAxis dataKey="y" domain={[20, 105]} tick={{ fontSize: 11, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />
-                  <ZAxis range={[80, 80]} />
-                  <Tooltip content={({ payload }) => {
-                    if (!payload?.length) return null;
-                    const d = payload[0].payload;
-                    const cl = CLUSTER_COLORS[d.cluster] ?? CLUSTER_COLORS.Aniqlanmagan;
-                    return (
-                      <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${cl.border}`, padding: "10px 14px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
-                        <div style={{ fontWeight: 700, color: "#111827", marginBottom: 4 }}>{d.name}</div>
-                        <div style={{ fontSize: 11.5, color: "#6B7280" }}>{d.dept}</div>
-                        <div style={{ fontSize: 11.5, color: cl.color, fontWeight: 600, marginTop: 4 }}>
-                          {cl.label} · USI: {d.usi}%
-                        </div>
-                      </div>
-                    );
-                  }} />
-                  {Object.entries(CLUSTER_COLORS).filter(([k]) => k !== "Aniqlanmagan").map(([key, val]) => {
-                    const pts = scatterData.filter(d => d.cluster === key);
-                    if (!pts.length) return null;
-                    return <Scatter key={key} name={val.label} data={pts} fill={val.color} opacity={0.85} />;
-                  })}
-                </ScatterChart>
-              </ResponsiveContainer>
-              <div style={{ display: "flex", gap: "8px", marginTop: 12, flexWrap: "wrap" }}>
-                {clusters.map(c => {
-                  const cl = CLUSTER_COLORS[c.cluster] ?? CLUSTER_COLORS.Aniqlanmagan;
-                  return (
-                    <div key={c.cluster} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "5px 12px", borderRadius: "20px", background: cl.bg, border: `1px solid ${cl.border}` }}>
-                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: cl.color }} />
-                      <span style={{ fontSize: "12px", fontWeight: 600, color: cl.color }}>{cl.label}: {c.count}</span>
-                    </div>
-                  );
-                })}
-                {totalClustered === 0 && <span style={{ fontSize: "13px", color: "#9CA3AF" }}>Hali klaster ma'lumoti yo'q. Bashorat chiqarilgandan keyin ko'rinadi.</span>}
-              </div>
-            </>
-          )}
+          <KMeansBubble clusters={clusters} loading={loadingClusters} />
         </div>
 
         <div style={S.card}>
