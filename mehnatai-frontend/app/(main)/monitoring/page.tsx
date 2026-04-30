@@ -49,18 +49,18 @@ const S = {
 function KMeansBubble({ clusters, loading }: { clusters: ClusterGroup[]; loading: boolean }) {
   const [tip, setTip] = useState<{ name: string; usi: number; cl: string; xp: number; yp: number } | null>(null);
 
-  const W = 500, H = 288;
+  const W = 500, H = 260;
 
   const VIS = {
-    rivojlanish: { cx: 138, cy: 205, r: 85, fill: "rgba(239,68,68,0.10)", stroke: "#EF4444", color: "#EF4444" },
-    barqaror:    { cx: 260, cy: 148, r: 78, fill: "rgba(99,102,241,0.11)", stroke: "#6366F1", color: "#6366F1" },
-    yulduz:      { cx: 383, cy: 93,  r: 82, fill: "rgba(16,185,129,0.13)", stroke: "#10B981", color: "#10B981" },
+    rivojlanish: { cx: 145, cy: 178, r: 68, fill: "rgba(239,68,68,0.10)", stroke: "#EF4444", color: "#EF4444" },
+    barqaror:    { cx: 262, cy: 138, r: 62, fill: "rgba(99,102,241,0.11)", stroke: "#6366F1", color: "#6366F1" },
+    yulduz:      { cx: 372, cy: 92,  r: 66, fill: "rgba(16,185,129,0.13)", stroke: "#10B981", color: "#10B981" },
   } as const;
 
   const LABELS: Record<string, { lines: string[]; cx: number; cy: number; color: string }> = {
-    rivojlanish: { lines: ["RIVOJLANISH", "KERAK"], cx: 138, cy: 205, color: "#EF4444" },
-    barqaror:    { lines: ["O'RTACHILAR"],          cx: 260, cy: 148, color: "#6366F1" },
-    yulduz:      { lines: ["YULDUZLAR"],            cx: 383, cy: 93,  color: "#10B981" },
+    rivojlanish: { lines: ["RIVOJLANISH", "KERAK"], cx: 145, cy: 178, color: "#EF4444" },
+    barqaror:    { lines: ["O'RTACHILAR"],          cx: 262, cy: 138, color: "#6366F1" },
+    yulduz:      { lines: ["YULDUZLAR"],            cx: 372, cy: 92,  color: "#10B981" },
   };
 
   const dots = clusters.flatMap(c => {
@@ -80,25 +80,25 @@ function KMeansBubble({ clusters, loading }: { clusters: ClusterGroup[]; loading
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 10 }}>
         <div>
-          <div style={{ fontSize: "15px", fontWeight: 700, color: "#111827" }}>
+          <div style={{ fontSize: "13.5px", fontWeight: 700, color: "#111827" }}>
             K-Means Clustering: Xodimlar Segmentatsiyasi
           </div>
-          <div style={{ fontSize: "11.5px", color: "#9CA3AF", marginTop: 3 }}>
+          <div style={{ fontSize: "10.5px", color: "#9CA3AF", marginTop: 3 }}>
             Silhouette Score ≈ 0.68 · Elbow Method asosida optimal k=3
           </div>
         </div>
         <span style={{
-          padding: "4px 12px", borderRadius: "8px",
+          padding: "3px 10px", borderRadius: "8px",
           background: "#DCFCE7", border: "1px solid #86EFAC",
-          fontSize: "12px", fontWeight: 800, color: "#166534", flexShrink: 0,
+          fontSize: "11px", fontWeight: 800, color: "#166534", flexShrink: 0,
         }}>K=3</span>
       </div>
 
-      {loading ? <Skeleton h={260} /> : (
+      {loading ? <Skeleton h={210} /> : (
         <div style={{ position: "relative" }}>
-          <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", display: "block" }}>
+          <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", maxWidth: 720, margin: "0 auto", display: "block" }}>
             {/* Y-axis label */}
             <text
               transform={`rotate(-90, 13, ${H / 2})`}
@@ -119,7 +119,7 @@ function KMeansBubble({ clusters, loading }: { clusters: ClusterGroup[]; loading
                 <circle key={k}
                   cx={v.cx} cy={v.cy} r={v.r}
                   fill={v.fill} stroke={v.stroke}
-                  strokeWidth="1.5" strokeOpacity="0.38"
+                  strokeWidth="1.4" strokeOpacity="0.38"
                 />
               );
             })}
@@ -129,8 +129,8 @@ function KMeansBubble({ clusters, loading }: { clusters: ClusterGroup[]; loading
               const offsetY = lb.lines.length > 1 ? -6 : 4;
               return lb.lines.map((line, i) => (
                 <text key={`${key}-${i}`}
-                  x={lb.cx} y={lb.cy + offsetY + i * 13}
-                  textAnchor="middle" fontSize="10.5"
+                  x={lb.cx} y={lb.cy + offsetY + i * 11}
+                  textAnchor="middle" fontSize="9.5"
                   fill={lb.color} fontWeight="800" letterSpacing="0.3"
                 >{line}</text>
               ));
@@ -139,7 +139,7 @@ function KMeansBubble({ clusters, loading }: { clusters: ClusterGroup[]; loading
             {/* Employee dots */}
             {dots.map((d, i) => (
               <circle
-                key={i} cx={d.x} cy={d.y} r={5.5}
+                key={i} cx={d.x} cy={d.y} r={4.7}
                 fill={d.color} opacity={0.88}
                 style={{ cursor: "pointer" }}
                 onMouseEnter={() => setTip({ name: d.name, usi: d.usi, cl: d.cl, xp: d.x / W, yp: d.y / H })}
@@ -176,13 +176,13 @@ function KMeansBubble({ clusters, loading }: { clusters: ClusterGroup[]; loading
 
       {/* Legend */}
       {!loading && (
-        <div style={{ display: "flex", gap: "8px", marginTop: 14, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "6px", marginTop: 8, flexWrap: "wrap" }}>
           {clusters.map(c => {
             const cl = CLUSTER_COLORS[c.cluster] ?? CLUSTER_COLORS.Aniqlanmagan;
             return (
-              <div key={c.cluster} style={{ display: "flex", alignItems: "center", gap: "6px", padding: "5px 12px", borderRadius: "20px", background: cl.bg, border: `1px solid ${cl.border}` }}>
-                <div style={{ width: 8, height: 8, borderRadius: "50%", background: cl.color }} />
-                <span style={{ fontSize: "12px", fontWeight: 600, color: cl.color }}>{cl.label}: {c.count}</span>
+              <div key={c.cluster} style={{ display: "flex", alignItems: "center", gap: "5px", padding: "4px 10px", borderRadius: "20px", background: cl.bg, border: `1px solid ${cl.border}` }}>
+                <div style={{ width: 7, height: 7, borderRadius: "50%", background: cl.color }} />
+                <span style={{ fontSize: "11px", fontWeight: 600, color: cl.color }}>{cl.label}: {c.count}</span>
               </div>
             );
           })}
@@ -303,7 +303,7 @@ export default function MonitoringPage() {
       </div>
 
       {/* K-Means bubble + model comparison */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "16px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 0.72fr) 340px", gap: "16px" }}>
         <div style={S.card}>
           <KMeansBubble clusters={clusters} loading={loadingClusters} />
         </div>

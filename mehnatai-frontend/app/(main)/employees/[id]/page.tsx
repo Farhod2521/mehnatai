@@ -506,7 +506,9 @@ export default function EmployeeProfilePage({ params }: { params: Promise<{ id: 
     );
   }
 
-  const R = 64, C = 2 * Math.PI * R;
+  const scoreSize = 116;
+  const scoreCenter = scoreSize / 2;
+  const R = 50, C = 2 * Math.PI * R;
   const offset = C - (employee.usi_score / 100) * C;
 
   const latestKpi = kpiRecords[0];
@@ -618,17 +620,17 @@ export default function EmployeeProfilePage({ params }: { params: Promise<{ id: 
         </div>
 
         {/* Score ring */}
-        <div style={{ borderRadius: "24px", padding: "28px", background: "linear-gradient(160deg, #001f18, #00352c)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.2)" }}>
+        <div style={{ borderRadius: "24px", padding: "24px", background: "linear-gradient(160deg, #001f18, #00352c)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.2)" }}>
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,184,160,0.3) 0%, transparent 60%)" }} />
           <div style={{ position: "relative", zIndex: 1 }}>
-            <div style={{ position: "relative", width: "144px", height: "144px", margin: "0 auto 16px" }}>
-              <svg width="144" height="144" style={{ transform: "rotate(-90deg)" }}>
-                <circle cx="72" cy="72" r={R} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
-                <circle cx="72" cy="72" r={R} fill="none" stroke="#00B8A0" strokeWidth="8" strokeDasharray={C} strokeDashoffset={offset} strokeLinecap="round" />
+            <div style={{ position: "relative", width: scoreSize, height: scoreSize, margin: "0 auto 14px" }}>
+              <svg width={scoreSize} height={scoreSize} style={{ display: "block", transform: "rotate(-90deg)" }}>
+                <circle cx={scoreCenter} cy={scoreCenter} r={R} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="7" />
+                <circle cx={scoreCenter} cy={scoreCenter} r={R} fill="none" stroke="#00B8A0" strokeWidth="7" strokeDasharray={C} strokeDashoffset={offset} strokeLinecap="round" />
               </svg>
               <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ fontSize: "36px", fontWeight: 800, color: "white", lineHeight: 1 }}>{employee.usi_score}%</span>
-                <span style={{ fontSize: "9px", fontWeight: 700, color: "rgba(255,255,255,0.5)", letterSpacing: "1.5px", marginTop: "4px" }}>UMUMIY USI</span>
+                <span style={{ fontSize: "28px", fontWeight: 800, color: "white", lineHeight: 1 }}>{employee.usi_score}%</span>
+                <span style={{ fontSize: "8px", fontWeight: 700, color: "rgba(255,255,255,0.5)", letterSpacing: "1.2px", marginTop: "4px" }}>UMUMIY USI</span>
               </div>
             </div>
             <p style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.65)", lineHeight: 1.5, maxWidth: "180px" }}>

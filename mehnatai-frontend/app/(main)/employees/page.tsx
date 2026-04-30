@@ -568,7 +568,7 @@ export default function EmployeesPage() {
                       <StatusBadge status={STATUS_MAP[emp.status] as "YUQORI" | "O'RTA" | "RIVOJLANISH KERAK"} />
                     </td>
                     <td style={S.td}>
-                      <CircularProgress value={emp.usi_score} size={44} strokeWidth={3.5} color="auto" textSize="text-[10px]" />
+                      <CircularProgress value={emp.usi_score} size={36} strokeWidth={3.2} color="auto" textSize={8.5} />
                     </td>
                     <td style={S.td}>
                       <Link

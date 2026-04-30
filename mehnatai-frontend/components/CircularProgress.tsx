@@ -7,7 +7,7 @@ interface CircularProgressProps {
   color?: string;
   bgColor?: string;
   showText?: boolean;
-  textSize?: string;
+  textSize?: string | number;
 }
 
 export default function CircularProgress({
@@ -17,11 +17,12 @@ export default function CircularProgress({
   color = "#00B8A0",
   bgColor = "#E5E7EB",
   showText = true,
-  textSize = "text-xs",
+  textSize = 10,
 }: CircularProgressProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (value / 100) * circumference;
+  const displayValue = Number.isInteger(value) ? value : Number(value.toFixed(1));
 
   const getColor = () => {
     if (color !== "auto") return color;
@@ -31,10 +32,15 @@ export default function CircularProgress({
   };
 
   const strokeColor = color === "auto" ? getColor() : color;
+  const resolvedTextSize = typeof textSize === "number"
+    ? `${textSize}px`
+    : textSize.startsWith("text-")
+      ? undefined
+      : textSize;
 
   return (
-    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="-rotate-90">
+    <div style={{ position: "relative", display: "inline-flex", alignItems: "center", justifyContent: "center", width: size, height: size, flexShrink: 0 }}>
+      <svg width={size} height={size} style={{ display: "block", transform: "rotate(-90deg)" }}>
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -57,10 +63,22 @@ export default function CircularProgress({
       </svg>
       {showText && (
         <span
-          className={`absolute font-bold ${textSize}`}
-          style={{ color: strokeColor }}
+          className={typeof textSize === "string" && textSize.startsWith("text-") ? textSize : undefined}
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: strokeColor,
+            fontSize: resolvedTextSize,
+            fontWeight: 800,
+            lineHeight: 1,
+            textAlign: "center",
+            letterSpacing: "-0.2px",
+          }}
         >
-          {value}%
+          {displayValue}%
         </span>
       )}
     </div>
