@@ -49,7 +49,7 @@ SENTIMENT_MAP = {
 
 
 async def import_data():
-    data_path = Path(__file__).parent.parent / "data.json"
+    data_path = Path(__file__).parent / "data.json"
     with open(data_path, encoding="utf-8") as f:
         data = json.load(f)
 

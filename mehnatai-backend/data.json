@@ -1,0 +1,576 @@
+{
+  "_meta": {
+    "description": "MehnatAI — K-Means uchun test ma'lumotlari. 9 ta xodim: 3 yulduz / 3 barqaror / 3 rivojlanish.",
+    "how_to_import": "python import_data.py",
+    "clusters": {
+      "yulduz":      "usi_score >= 80 (indekslar: 0, 1, 2)",
+      "barqaror":    "usi_score 60-79 (indekslar: 3, 4, 5)",
+      "rivojlanish": "usi_score < 60 (indekslar: 6, 7, 8)"
+    }
+  },
+
+  "employees": [
+    {
+      "_index": 0,
+      "_cluster": "yulduz",
+      "first_name": "Jasur",
+      "last_name": "Mirzayev",
+      "position": "Senior Backend Developer",
+      "department": "IT",
+      "status": "yuqori",
+      "usi_score": 93.5,
+      "experience_years": 6,
+      "email": "jasur.mirzayev@mehnatai.uz",
+      "phone": "+998901234561",
+      "hired_date": "2019-03-10",
+      "cluster": "yulduz",
+      "bio": "Python va FastAPI bo'yicha ekspert. Mikroservis arxitekturasini loyihalaydi."
+    },
+    {
+      "_index": 1,
+      "_cluster": "yulduz",
+      "first_name": "Feruza",
+      "last_name": "Abdullayeva",
+      "position": "Data Analyst",
+      "department": "IT",
+      "status": "yuqori",
+      "usi_score": 88.0,
+      "experience_years": 4,
+      "email": "feruza.abdullayeva@mehnatai.uz",
+      "phone": "+998901234562",
+      "hired_date": "2020-07-15",
+      "cluster": "yulduz",
+      "bio": "Ma'lumotlar tahlili va vizualizatsiya bo'yicha mutaxassis. SQL va Python bilan ishlaydi."
+    },
+    {
+      "_index": 2,
+      "_cluster": "yulduz",
+      "first_name": "Sanjar",
+      "last_name": "Xolmatov",
+      "position": "Project Manager",
+      "department": "Boshqaruv",
+      "status": "yuqori",
+      "usi_score": 84.5,
+      "experience_years": 7,
+      "email": "sanjar.xolmatov@mehnatai.uz",
+      "phone": "+998901234563",
+      "hired_date": "2018-11-01",
+      "cluster": "yulduz",
+      "bio": "Agile va Scrum metodologiyalari bo'yicha sertifikatlangan loyiha menejeri."
+    },
+    {
+      "_index": 3,
+      "_cluster": "barqaror",
+      "first_name": "Dilnoza",
+      "last_name": "Yusupova",
+      "position": "Frontend Developer",
+      "department": "IT",
+      "status": "yuqori",
+      "usi_score": 74.0,
+      "experience_years": 3,
+      "email": "dilnoza.yusupova@mehnatai.uz",
+      "phone": "+998901234564",
+      "hired_date": "2022-02-14",
+      "cluster": "barqaror",
+      "bio": "React va Next.js bilan ishlaydigan frontend dasturchi."
+    },
+    {
+      "_index": 4,
+      "_cluster": "barqaror",
+      "first_name": "Otabek",
+      "last_name": "Nazarov",
+      "position": "HR Specialist",
+      "department": "HR",
+      "status": "orta",
+      "usi_score": 68.5,
+      "experience_years": 3,
+      "email": "otabek.nazarov@mehnatai.uz",
+      "phone": "+998901234565",
+      "hired_date": "2022-05-20",
+      "cluster": "barqaror",
+      "bio": "Xodimlarni jalb qilish va onboarding jarayonlarini boshqaradi."
+    },
+    {
+      "_index": 5,
+      "_cluster": "barqaror",
+      "first_name": "Mohira",
+      "last_name": "Tosheva",
+      "position": "Marketing Manager",
+      "department": "Marketing",
+      "status": "orta",
+      "usi_score": 71.0,
+      "experience_years": 4,
+      "email": "mohira.tosheva@mehnatai.uz",
+      "phone": "+998901234566",
+      "hired_date": "2021-09-01",
+      "cluster": "barqaror",
+      "bio": "Raqamli marketing va ijtimoiy tarmoqlar strategiyasi bo'yicha mutaxassis."
+    },
+    {
+      "_index": 6,
+      "_cluster": "rivojlanish",
+      "first_name": "Ulugbek",
+      "last_name": "Razzaqov",
+      "position": "Junior Developer",
+      "department": "IT",
+      "status": "rivojlanish",
+      "usi_score": 48.0,
+      "experience_years": 1,
+      "email": "ulugbek.razzaqov@mehnatai.uz",
+      "phone": "+998901234567",
+      "hired_date": "2024-01-15",
+      "cluster": "rivojlanish",
+      "bio": "Yangi xodim, Python asoslarini o'rganmoqda."
+    },
+    {
+      "_index": 7,
+      "_cluster": "rivojlanish",
+      "first_name": "Gulnora",
+      "last_name": "Sobirova",
+      "position": "Sales Representative",
+      "department": "Sotuv",
+      "status": "rivojlanish",
+      "usi_score": 42.5,
+      "experience_years": 1,
+      "email": "gulnora.sobirova@mehnatai.uz",
+      "phone": "+998901234568",
+      "hired_date": "2024-03-01",
+      "cluster": "rivojlanish",
+      "bio": "Mijozlar bilan ishlashda tajriba orttirmoqda."
+    },
+    {
+      "_index": 8,
+      "_cluster": "rivojlanish",
+      "first_name": "Bekzod",
+      "last_name": "Qodirov",
+      "position": "Finance Analyst",
+      "department": "Moliya",
+      "status": "rivojlanish",
+      "usi_score": 55.0,
+      "experience_years": 2,
+      "email": "bekzod.qodirov@mehnatai.uz",
+      "phone": "+998901234569",
+      "hired_date": "2023-06-10",
+      "cluster": "rivojlanish",
+      "bio": "Moliyaviy hisobotlarni tahlil qilishni o'rganmoqda."
+    }
+  ],
+
+  "kpi_records": [
+    {
+      "_note": "Jasur Mirzayev (index 0) — yulduz, KPI ~91",
+      "employee_index": 0,
+      "month": 2, "year": 2026,
+      "code_quality": 94, "deadline_adherence": 92, "bug_fix_speed": 90,
+      "documentation": 85, "team_participation": 93, "new_technologies": 91,
+      "kpi_avg": 90.83
+    },
+    {
+      "employee_index": 0,
+      "month": 3, "year": 2026,
+      "code_quality": 95, "deadline_adherence": 91, "bug_fix_speed": 92,
+      "documentation": 86, "team_participation": 94, "new_technologies": 92,
+      "kpi_avg": 91.67
+    },
+    {
+      "employee_index": 0,
+      "month": 4, "year": 2026,
+      "code_quality": 96, "deadline_adherence": 93, "bug_fix_speed": 91,
+      "documentation": 87, "team_participation": 95, "new_technologies": 93,
+      "kpi_avg": 92.5
+    },
+
+    {
+      "_note": "Feruza Abdullayeva (index 1) — yulduz, KPI ~86",
+      "employee_index": 1,
+      "month": 2, "year": 2026,
+      "code_quality": 88, "deadline_adherence": 87, "bug_fix_speed": 82,
+      "documentation": 90, "team_participation": 85, "new_technologies": 84,
+      "kpi_avg": 86.0
+    },
+    {
+      "employee_index": 1,
+      "month": 3, "year": 2026,
+      "code_quality": 89, "deadline_adherence": 88, "bug_fix_speed": 83,
+      "documentation": 91, "team_participation": 86, "new_technologies": 85,
+      "kpi_avg": 87.0
+    },
+    {
+      "employee_index": 1,
+      "month": 4, "year": 2026,
+      "code_quality": 90, "deadline_adherence": 89, "bug_fix_speed": 84,
+      "documentation": 92, "team_participation": 87, "new_technologies": 86,
+      "kpi_avg": 88.0
+    },
+
+    {
+      "_note": "Sanjar Xolmatov (index 2) — yulduz, KPI ~83",
+      "employee_index": 2,
+      "month": 2, "year": 2026,
+      "code_quality": 85, "deadline_adherence": 88, "bug_fix_speed": 80,
+      "documentation": 82, "team_participation": 90, "new_technologies": 78,
+      "kpi_avg": 83.83
+    },
+    {
+      "employee_index": 2,
+      "month": 3, "year": 2026,
+      "code_quality": 86, "deadline_adherence": 89, "bug_fix_speed": 81,
+      "documentation": 83, "team_participation": 91, "new_technologies": 79,
+      "kpi_avg": 84.83
+    },
+    {
+      "employee_index": 2,
+      "month": 4, "year": 2026,
+      "code_quality": 87, "deadline_adherence": 90, "bug_fix_speed": 82,
+      "documentation": 84, "team_participation": 92, "new_technologies": 80,
+      "kpi_avg": 85.83
+    },
+
+    {
+      "_note": "Dilnoza Yusupova (index 3) — barqaror, KPI ~72",
+      "employee_index": 3,
+      "month": 2, "year": 2026,
+      "code_quality": 74, "deadline_adherence": 72, "bug_fix_speed": 70,
+      "documentation": 68, "team_participation": 75, "new_technologies": 71,
+      "kpi_avg": 71.67
+    },
+    {
+      "employee_index": 3,
+      "month": 3, "year": 2026,
+      "code_quality": 75, "deadline_adherence": 73, "bug_fix_speed": 71,
+      "documentation": 69, "team_participation": 76, "new_technologies": 72,
+      "kpi_avg": 72.67
+    },
+    {
+      "employee_index": 3,
+      "month": 4, "year": 2026,
+      "code_quality": 76, "deadline_adherence": 74, "bug_fix_speed": 72,
+      "documentation": 70, "team_participation": 77, "new_technologies": 73,
+      "kpi_avg": 73.67
+    },
+
+    {
+      "_note": "Otabek Nazarov (index 4) — barqaror, KPI ~67",
+      "employee_index": 4,
+      "month": 2, "year": 2026,
+      "code_quality": 68, "deadline_adherence": 66, "bug_fix_speed": 65,
+      "documentation": 70, "team_participation": 68, "new_technologies": 64,
+      "kpi_avg": 66.83
+    },
+    {
+      "employee_index": 4,
+      "month": 3, "year": 2026,
+      "code_quality": 69, "deadline_adherence": 67, "bug_fix_speed": 66,
+      "documentation": 71, "team_participation": 69, "new_technologies": 65,
+      "kpi_avg": 67.83
+    },
+    {
+      "employee_index": 4,
+      "month": 4, "year": 2026,
+      "code_quality": 70, "deadline_adherence": 68, "bug_fix_speed": 67,
+      "documentation": 72, "team_participation": 70, "new_technologies": 66,
+      "kpi_avg": 68.83
+    },
+
+    {
+      "_note": "Mohira Tosheva (index 5) — barqaror, KPI ~70",
+      "employee_index": 5,
+      "month": 2, "year": 2026,
+      "code_quality": 72, "deadline_adherence": 70, "bug_fix_speed": 68,
+      "documentation": 74, "team_participation": 71, "new_technologies": 67,
+      "kpi_avg": 70.33
+    },
+    {
+      "employee_index": 5,
+      "month": 3, "year": 2026,
+      "code_quality": 73, "deadline_adherence": 71, "bug_fix_speed": 69,
+      "documentation": 75, "team_participation": 72, "new_technologies": 68,
+      "kpi_avg": 71.33
+    },
+    {
+      "employee_index": 5,
+      "month": 4, "year": 2026,
+      "code_quality": 74, "deadline_adherence": 72, "bug_fix_speed": 70,
+      "documentation": 76, "team_participation": 73, "new_technologies": 69,
+      "kpi_avg": 72.33
+    },
+
+    {
+      "_note": "Ulugbek Razzaqov (index 6) — rivojlanish, KPI ~47",
+      "employee_index": 6,
+      "month": 2, "year": 2026,
+      "code_quality": 48, "deadline_adherence": 45, "bug_fix_speed": 42,
+      "documentation": 50, "team_participation": 52, "new_technologies": 44,
+      "kpi_avg": 46.83
+    },
+    {
+      "employee_index": 6,
+      "month": 3, "year": 2026,
+      "code_quality": 49, "deadline_adherence": 46, "bug_fix_speed": 43,
+      "documentation": 51, "team_participation": 53, "new_technologies": 45,
+      "kpi_avg": 47.83
+    },
+    {
+      "employee_index": 6,
+      "month": 4, "year": 2026,
+      "code_quality": 50, "deadline_adherence": 47, "bug_fix_speed": 44,
+      "documentation": 52, "team_participation": 54, "new_technologies": 46,
+      "kpi_avg": 48.83
+    },
+
+    {
+      "_note": "Gulnora Sobirova (index 7) — rivojlanish, KPI ~42",
+      "employee_index": 7,
+      "month": 2, "year": 2026,
+      "code_quality": 42, "deadline_adherence": 40, "bug_fix_speed": 38,
+      "documentation": 45, "team_participation": 46, "new_technologies": 38,
+      "kpi_avg": 41.5
+    },
+    {
+      "employee_index": 7,
+      "month": 3, "year": 2026,
+      "code_quality": 43, "deadline_adherence": 41, "bug_fix_speed": 39,
+      "documentation": 46, "team_participation": 47, "new_technologies": 39,
+      "kpi_avg": 42.5
+    },
+    {
+      "employee_index": 7,
+      "month": 4, "year": 2026,
+      "code_quality": 44, "deadline_adherence": 42, "bug_fix_speed": 40,
+      "documentation": 47, "team_participation": 48, "new_technologies": 40,
+      "kpi_avg": 43.5
+    },
+
+    {
+      "_note": "Bekzod Qodirov (index 8) — rivojlanish, KPI ~54",
+      "employee_index": 8,
+      "month": 2, "year": 2026,
+      "code_quality": 55, "deadline_adherence": 54, "bug_fix_speed": 50,
+      "documentation": 58, "team_participation": 56, "new_technologies": 50,
+      "kpi_avg": 53.83
+    },
+    {
+      "employee_index": 8,
+      "month": 3, "year": 2026,
+      "code_quality": 56, "deadline_adherence": 55, "bug_fix_speed": 51,
+      "documentation": 59, "team_participation": 57, "new_technologies": 51,
+      "kpi_avg": 54.83
+    },
+    {
+      "employee_index": 8,
+      "month": 4, "year": 2026,
+      "code_quality": 57, "deadline_adherence": 56, "bug_fix_speed": 52,
+      "documentation": 60, "team_participation": 58, "new_technologies": 52,
+      "kpi_avg": 55.83
+    }
+  ],
+
+  "evaluations": [
+    {
+      "_note": "Jasur Mirzayev (index 0) — rahbar baholash",
+      "employee_index": 0,
+      "eval_type": "rahbar",
+      "work_quality": 9.5, "punctuality": 9.2, "communication": 9.0,
+      "initiative": 9.8, "teamwork": 9.3,
+      "overall_score": 9.4,
+      "comment": "Ajoyib dasturchi, har doim muddatida topshiradi va yangi g'oyalar taklif etadi.",
+      "sentiment": "ijobiy",
+      "is_anonymous": false
+    },
+    {
+      "_note": "Jasur Mirzayev (index 0) — 360 peer feedback",
+      "employee_index": 0,
+      "eval_type": "peer_360",
+      "work_quality": 9.3, "punctuality": 9.0, "communication": 8.8,
+      "initiative": 9.5, "teamwork": 9.2,
+      "overall_score": 9.2,
+      "comment": "Hamkasblar orasida eng kuchli texnik mutaxassis. Har doim yordam beradi.",
+      "sentiment": "ijobiy",
+      "is_anonymous": true
+    },
+
+    {
+      "_note": "Feruza Abdullayeva (index 1) — rahbar baholash",
+      "employee_index": 1,
+      "eval_type": "rahbar",
+      "work_quality": 9.0, "punctuality": 8.8, "communication": 8.7,
+      "initiative": 8.9, "teamwork": 8.6,
+      "overall_score": 8.8,
+      "comment": "Ma'lumotlarni tahlil qilishda juda kuchli. Hisobotlari aniq va tushunarli.",
+      "sentiment": "ijobiy",
+      "is_anonymous": false
+    },
+    {
+      "_note": "Feruza Abdullayeva (index 1) — 360 peer feedback",
+      "employee_index": 1,
+      "eval_type": "peer_360",
+      "work_quality": 8.8, "punctuality": 8.6, "communication": 8.9,
+      "initiative": 8.7, "teamwork": 8.5,
+      "overall_score": 8.7,
+      "comment": "Juda professional, hamkorlik qilish oson.",
+      "sentiment": "ijobiy",
+      "is_anonymous": true
+    },
+
+    {
+      "_note": "Sanjar Xolmatov (index 2) — rahbar baholash",
+      "employee_index": 2,
+      "eval_type": "rahbar",
+      "work_quality": 8.7, "punctuality": 8.9, "communication": 9.1,
+      "initiative": 8.5, "teamwork": 9.0,
+      "overall_score": 8.8,
+      "comment": "Loyihalarni samarali boshqaradi, jamoa motivatsiyasini yuqori ushlab turadi.",
+      "sentiment": "ijobiy",
+      "is_anonymous": false
+    },
+    {
+      "_note": "Sanjar Xolmatov (index 2) — 360 peer feedback",
+      "employee_index": 2,
+      "eval_type": "peer_360",
+      "work_quality": 8.5, "punctuality": 8.8, "communication": 9.0,
+      "initiative": 8.3, "teamwork": 8.9,
+      "overall_score": 8.7,
+      "comment": "Yaxshi rahbar, muammolarni tez hal qiladi.",
+      "sentiment": "ijobiy",
+      "is_anonymous": true
+    },
+
+    {
+      "_note": "Dilnoza Yusupova (index 3) — rahbar baholash",
+      "employee_index": 3,
+      "eval_type": "rahbar",
+      "work_quality": 7.5, "punctuality": 7.3, "communication": 7.0,
+      "initiative": 7.2, "teamwork": 7.6,
+      "overall_score": 7.3,
+      "comment": "Yaxshi ishlaydi, lekin yangi texnologiyalarga ko'proq e'tibor berishi kerak.",
+      "sentiment": "ijobiy",
+      "is_anonymous": false
+    },
+    {
+      "_note": "Dilnoza Yusupova (index 3) — 360 peer feedback",
+      "employee_index": 3,
+      "eval_type": "peer_360",
+      "work_quality": 7.2, "punctuality": 7.0, "communication": 6.8,
+      "initiative": 7.0, "teamwork": 7.4,
+      "overall_score": 7.1,
+      "comment": "Vazifalarni bajaradi, lekin mustaqil qaror qabul qilishda qo'shimcha rivojlanish kerak.",
+      "sentiment": "neytral",
+      "is_anonymous": true
+    },
+
+    {
+      "_note": "Otabek Nazarov (index 4) — rahbar baholash",
+      "employee_index": 4,
+      "eval_type": "rahbar",
+      "work_quality": 7.0, "punctuality": 6.8, "communication": 7.2,
+      "initiative": 6.5, "teamwork": 7.0,
+      "overall_score": 6.9,
+      "comment": "HR jarayonlarini tushunadi, lekin samaradorlikni oshirish imkoniyati bor.",
+      "sentiment": "neytral",
+      "is_anonymous": false
+    },
+    {
+      "_note": "Otabek Nazarov (index 4) — 360 peer feedback",
+      "employee_index": 4,
+      "eval_type": "peer_360",
+      "work_quality": 6.8, "punctuality": 6.6, "communication": 7.0,
+      "initiative": 6.3, "teamwork": 6.8,
+      "overall_score": 6.7,
+      "comment": "Muloqot yaxshi, lekin tashabbuskorlik oshishi kerak.",
+      "sentiment": "neytral",
+      "is_anonymous": true
+    },
+
+    {
+      "_note": "Mohira Tosheva (index 5) — rahbar baholash",
+      "employee_index": 5,
+      "eval_type": "rahbar",
+      "work_quality": 7.2, "punctuality": 7.0, "communication": 7.5,
+      "initiative": 7.0, "teamwork": 7.1,
+      "overall_score": 7.2,
+      "comment": "Marketing kampaniyalarni yaxshi rejalaydi, natijalari o'rtacha.",
+      "sentiment": "neytral",
+      "is_anonymous": false
+    },
+    {
+      "_note": "Mohira Tosheva (index 5) — 360 peer feedback",
+      "employee_index": 5,
+      "eval_type": "peer_360",
+      "work_quality": 7.0, "punctuality": 6.8, "communication": 7.3,
+      "initiative": 6.8, "teamwork": 7.0,
+      "overall_score": 7.0,
+      "comment": "Ijodiy yondashuvi bor, lekin natijalar barqaror emas.",
+      "sentiment": "neytral",
+      "is_anonymous": true
+    },
+
+    {
+      "_note": "Ulugbek Razzaqov (index 6) — rahbar baholash",
+      "employee_index": 6,
+      "eval_type": "rahbar",
+      "work_quality": 4.5, "punctuality": 5.0, "communication": 4.8,
+      "initiative": 4.0, "teamwork": 5.2,
+      "overall_score": 4.7,
+      "comment": "Yangi xodim, asosiy ko'nikmalarni o'rganish jarayonida. Haftalik 1:1 tavsiya etiladi.",
+      "sentiment": "neytral",
+      "is_anonymous": false
+    },
+    {
+      "_note": "Ulugbek Razzaqov (index 6) — 360 peer feedback",
+      "employee_index": 6,
+      "eval_type": "peer_360",
+      "work_quality": 4.3, "punctuality": 4.8, "communication": 4.5,
+      "initiative": 3.8, "teamwork": 5.0,
+      "overall_score": 4.5,
+      "comment": "Harakat qiladi, lekin texnik bilim hali yetarli emas.",
+      "sentiment": "salbiy",
+      "is_anonymous": true
+    },
+
+    {
+      "_note": "Gulnora Sobirova (index 7) — rahbar baholash",
+      "employee_index": 7,
+      "eval_type": "rahbar",
+      "work_quality": 4.2, "punctuality": 4.5, "communication": 4.8,
+      "initiative": 3.8, "teamwork": 4.6,
+      "overall_score": 4.4,
+      "comment": "Mijozlar bilan muloqoti yaxshi, lekin sotuv ko'rsatkichlari past. Mentorlik kerak.",
+      "sentiment": "salbiy",
+      "is_anonymous": false
+    },
+    {
+      "_note": "Gulnora Sobirova (index 7) — 360 peer feedback",
+      "employee_index": 7,
+      "eval_type": "peer_360",
+      "work_quality": 4.0, "punctuality": 4.3, "communication": 4.6,
+      "initiative": 3.6, "teamwork": 4.4,
+      "overall_score": 4.2,
+      "comment": "Yangi, ko'p narsani o'rganishi kerak.",
+      "sentiment": "salbiy",
+      "is_anonymous": true
+    },
+
+    {
+      "_note": "Bekzod Qodirov (index 8) — rahbar baholash",
+      "employee_index": 8,
+      "eval_type": "rahbar",
+      "work_quality": 5.5, "punctuality": 5.8, "communication": 5.3,
+      "initiative": 5.0, "teamwork": 5.6,
+      "overall_score": 5.4,
+      "comment": "Moliyaviy hisobotlarni tushunishda rivojlanmoqda. Ko'proq amaliyot kerak.",
+      "sentiment": "neytral",
+      "is_anonymous": false
+    },
+    {
+      "_note": "Bekzod Qodirov (index 8) — 360 peer feedback",
+      "employee_index": 8,
+      "eval_type": "peer_360",
+      "work_quality": 5.3, "punctuality": 5.6, "communication": 5.1,
+      "initiative": 4.8, "teamwork": 5.4,
+      "overall_score": 5.2,
+      "comment": "Puxta ishlaydi, lekin tezkorlik oshishi kerak.",
+      "sentiment": "neytral",
+      "is_anonymous": true
+    }
+  ]
+}
